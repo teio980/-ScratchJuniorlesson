@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insertStmt->bindParam(':email', $email);
             $insertStmt->bindParam(':password', $hashedPassword);
             $insertStmt->execute(); 
-            header("Location: Main_page.php");
+            header("Location: ../login.php");
             exit;
         }
         
