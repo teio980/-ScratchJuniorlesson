@@ -1,0 +1,22 @@
+.tutorial-container{
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #f3e5f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.tutorial-container h2{
+    color: var(--secondary-color);
+}
+
+#lesson-content{
+    text-align: left;
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
