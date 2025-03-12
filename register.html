@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cssfile/register.css">
+    <link rel="stylesheet" href="cssfile/header.css">
+    <title>Register</title>
+</head>
+<body>
+    <div class="main_header">
+        <div class="leftsection">
+            <div class="logo"><img src="" alt=""></div>
+            <div class="menu_choice">
+                <a href="landingpage.html">Home</a>
+                <a href="AboutUs.html">About Us</a>
+                <a href="Course.html">Course</a>
+                <a href="contactUs.html">Contact Us</a>
+            </div>
+        </div>
+        <div class="rightsection">
+            <a href="login.php">Sign In</a>
+            <a href="register.html">Create Account</a>
+            <a href="frequencyAskQuestions.html">FAQ</a>
+        </div>
+    </div>
+    <div class="main">
+        <div class="form" >
+            <form class="Register_form" action="includes/registerFunction.php" method="POST">
+                
+                <label for="U_Username">Username:</label>
+                <input type="text" id="U_Username" name="U_Username" placeholder="Username">
+                <p id="errMessage_Username">Username is required</p>
+
+                <label for="U_Email">Email:</label>
+                <input type="email" id="U_Email" name="U_Email" placeholder="e.g.: abc123@gmail.com">
+                <p id="errMessage_Email" >Email is required</p>
+
+                <label for="U_Password">Password:</label>
+                <input type="password" id="U_Password" name="U_Password" placeholder="Password">
+                <p id="errMessage_Password">Password is required</p>
+
+                <label for="U_Confirmed_Password">Confirmed Password:</label>
+                <input type="password" id="U_Confirmed_Password" placeholder="Password">
+                <p id="errMessage_Confirmed_Password">Confirmed Password is required</p>
+
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+    <script src="register.js"></script>
+</body>
+</html>

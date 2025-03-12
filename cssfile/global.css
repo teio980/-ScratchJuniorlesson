@@ -1,0 +1,13 @@
+:root {
+    --primary-color: #44195e;
+    --secondary-color: #9101df;
+    --text-dark: #13313c;
+    --text-light: rgb(97, 97, 97);
+    --white: #ffffff;
+  }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    color: #000;
+}

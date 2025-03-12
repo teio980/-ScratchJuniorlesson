@@ -1,0 +1,75 @@
+html{
+    height: 100%;
+    margin: 0px;
+}
+
+body{
+    height: 100%;
+    margin: 0px;
+}
+
+.main{
+    background-color: lightblue;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aqua;
+    border-radius: 10px;
+    border-color: black;
+    border: 1px solid;
+    margin: 5% 1% 5% 2px;
+    width: 66%;
+    height: 70%;
+}
+
+.Register_form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 35%;
+}
+
+.Register_form button{
+    width: 50%;
+    background: #fff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 550; 
+    align-self: center;
+}
+
+.Register_form input{
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 40px;
+    font-size: 15px;
+    color: #fff;
+    padding: 5px 5px 5px 5px;
+}
+
+.Register_form span{
+    font-size: 18px;
+}
+
+p{
+    color: red;
+    display: block;
+    margin: 0px;
+}
