@@ -1,0 +1,50 @@
+html{
+    height: 100%;
+    margin: 0px;
+}
+
+body{
+    height: 100%;
+    margin: 0px;
+}
+
+iframe{
+    height: 26px;
+}
+
+h1{
+    height: 20%;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main_form{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_content{
+    width: 66%;
+    display: flex;
+    flex-direction: column; 
+    gap: 10px; 
+}
+
+.form_content input {
+    width: 30%;
+}
+
+.form_content button{
+    width: 20%;
+    align-self: center;
+}
+
+.form_content textarea{
+    max-width: 100%;
+    width: 100%;
+    min-height: 50px;
+}

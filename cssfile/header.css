@@ -1,0 +1,46 @@
+html{
+    height: 100%;
+    margin: 0px;
+}
+
+body{
+    height: 100%;
+    margin: 0px;
+}
+
+.main_header{
+    background-color: lightblue;
+    margin: 0;
+    padding: 0.25rem 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.leftsection{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 50px;
+}
+
+
+.rightsection{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 10px;
+}
+
+a{
+    margin: 0 5px;
+    color: black;
+    text-decoration: none;
+}
+
+a:hover{
+    font-weight: bold;
+    color: rgb(94, 92, 92);
+}
