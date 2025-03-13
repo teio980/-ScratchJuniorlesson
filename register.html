@@ -27,10 +27,10 @@
     </div>
     <div class="main">
         <div class="form" >
-            <form class="Register_form" action="includes/registerFunction.php" method="POST">
+            <form class="Register_form" id="Register_form" action="includes/registerFunction.php" method="POST">
                 
-                <label for="U_Username">Username:</label>
-                <input type="text" id="U_Username" name="U_Username" placeholder="Username" required>
+                <label for="U_Username">Username (6-12 Characters):</label>
+                <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">
                 <p id="errMessage_Username" class="errMessage">Username is required</p>
 
                 <label for="U_Email">Email:</label>

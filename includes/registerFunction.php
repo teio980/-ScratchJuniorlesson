@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insertStmt->bindParam(':email', $email);
             $insertStmt->bindParam(':password', $hashedPassword);
             $insertStmt->execute(); 
-            header("Location: ../login.php");
+            header("Location: ../login.html");
             exit;
         }
         
@@ -32,6 +32,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Connection Failed:" . $e->getMessage();
     }
 }
-
 
 ?>

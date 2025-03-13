@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../phpfile/connect.php'; 
 
 $sql = "SELECT lesson_id, title, description, create_time FROM lessons ORDER BY create_time DESC";

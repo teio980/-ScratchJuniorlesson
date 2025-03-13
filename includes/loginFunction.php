@@ -16,13 +16,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($user && password_verify($password, $user['S_Password'])) {
             $_SESSION['user_id'] = $user['S_ID'];
             $_SESSION['username'] = $user['S_Username'];
-            echo "Login successful! Welcome, " . htmlspecialchars($user['S_Username']) . ".";
+            header("Location: ../Student/Main_page.php");
+            exit;
         } else {
             echo "Invalid username or password.";
         }
         
     } catch (PDOException $e) {
         echo "Connection Failed:" . $e->getMessage();
+        exit;
     }
 }
 ?>
