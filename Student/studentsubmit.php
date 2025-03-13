@@ -20,9 +20,9 @@
         <input type="hidden" name="lesson_id" value="<?php echo $lesson_id; ?>">
         
         <label for="file">Choose the file need to submit</label>
-        <input type="file" id="file" name="file" accept=".sjr" required>
+        <input type="file" id="file" name="file" required>
         <br><br>
-        <button type="submit">Upload</button>
+        <button type="submit" name="savebtn">Upload</button>
     </form>
 
     <script src="../javascriptfile/studentsubmit.js"></script>

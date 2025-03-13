@@ -1,7 +1,7 @@
 <?php
 include 'connect.php'; 
 
-
+if (isset($_POST["savebtn"])) {
 $title = $_POST['title'];
 $description = $_POST['description'];
 
@@ -13,11 +13,9 @@ $stmt->bind_param("ss", $title, $description);
 
 if ($stmt->execute()) {
     echo "Lesson submitted successfully!";
-} else {
-    echo "Error: " . $stmt->error;
-}
-
+} 
 
 $stmt->close();
+}
 $connect->close();
 ?>
