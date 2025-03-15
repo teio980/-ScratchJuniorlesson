@@ -2,7 +2,7 @@
 session_start();
 include '../phpfile/connect.php'; 
 
-$sql = "SELECT lesson_id, title, description, create_time FROM lessons ORDER BY create_time DESC";
+$sql = "SELECT lesson_id, title, description,expire_date FROM lessons ORDER BY lesson_id ASC";
 $result = $connect->query($sql);
 ?>
 
@@ -22,7 +22,7 @@ $result = $connect->query($sql);
         <th>Lesson</th>
         <th>Title</th>
         <th>Description</th>
-        <th>Submitted On</th>
+        <th>Expired date</th>
         <th>Action</th>
     </tr>
 
@@ -33,7 +33,7 @@ $result = $connect->query($sql);
                     <td>{$row['lesson_id']}</td>
                     <td>{$row['title']}</td>
                     <td>{$row['description']}</td>
-                    <td>{$row['create_time']}</td>
+                    <td>{$row['expire_date']}</td>
                     <td>
                         <form action='studentsubmit.php' method='GET'>
                             <input type='hidden' name='lesson_id' value='{$row['lesson_id']}'>

@@ -16,6 +16,9 @@
         <label for="description">Lesson Description:</label>
         <textarea id="description" name="description" rows="4" required></textarea><br><br>
 
+        <label for="expire_date">Expire Date:</label>
+        <input type="datetime-local" id="expire_date" name="expire_date" required><br><br>
+    
         <button type="submit" name="savebtn">Submit Lesson</button>
     </form>
 

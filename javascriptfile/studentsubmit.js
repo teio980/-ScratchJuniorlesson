@@ -1,4 +1,3 @@
-
 document.getElementById('uploadForm').addEventListener('submit', function(event) {
     var fileInput = document.getElementById('file');
     var filePath = fileInput.value;
@@ -7,3 +6,5 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
         event.preventDefault();
     }
 });
+
+
