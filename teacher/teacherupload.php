@@ -5,6 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Submit ScratchJr Lesson</title>
+    <script>
+        function downloadAll() {
+            // Get all download links in the table
+            var links = document.querySelectorAll('.download-link');
+            links.forEach(function(link) {
+                var a = document.createElement('a');
+                a.href = link.href;
+                a.download = link.getAttribute('data-filename'); // Set a filename if desired
+                a.click(); // Trigger the download
+            });
+        }
+    </script>
 </head>
 <body>
 
@@ -23,6 +35,8 @@
     </form>
 
     <h2>Student Uploaded Lessons</h2>
+
+    <button onclick="downloadAll()">Download All Lessons</button><br><br>
 
     <table border="1">
         <thead>
@@ -44,7 +58,7 @@
                 <td><?php echo $row['id']; ?></td>
                 <td><?php echo $row['lesson_id']; ?></td>
                 <td><?php echo $row['filename']; ?></td>
-                <td><a href="<?php echo $row['filepath']; ?>" download>Download</a></td>
+                <td><a href="<?php echo $row['filepath']; ?>" class="download-link" data-filename="<?php echo $row['filename']; ?>" download>Download</a></td>
             </tr>
             <?php
                     }
