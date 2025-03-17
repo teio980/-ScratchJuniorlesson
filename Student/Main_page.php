@@ -4,6 +4,8 @@ include '../phpfile/connect.php';
 
 $sql = "SELECT lesson_id, title, description,expire_date FROM lessons ORDER BY lesson_id ASC";
 $result = $connect->query($sql);
+
+include '../header.php';
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +13,7 @@ $result = $connect->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../cssfile/header.css">
     <link rel="stylesheet" href="cssfile/Main_page.css">
     <title>Profile Page</title>
 </head>

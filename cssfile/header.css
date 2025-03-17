@@ -1,46 +1,105 @@
-html{
-    height: 100%;
-    margin: 0px;
-}
+@import url('global.css');
 
 body{
+    background-image: url(../img_logo/???);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+nav{
+    background-color: var(--white);
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.5);
+}
+
+nav ul{
+    width: 100%;
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+nav li{
+    height: 50px;
+}
+
+nav a{
     height: 100%;
-    margin: 0px;
-}
-
-.main_header{
-    background-color: lightblue;
-    margin: 0;
-    padding: 0.25rem 1rem;
-    position: relative;
+    padding: 0 20px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.leftsection{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: 50px;
-}
-
-
-.rightsection{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 10px;
-}
-
-a{
-    margin: 0 5px;
-    color: black;
     text-decoration: none;
+    color: var(--textdark);
+    align-items: center;
 }
 
-a:hover{
-    font-weight: bold;
-    color: rgb(94, 92, 92);
+nav .spe{
+    margin-right: 20px;
 }
+
+nav .spe:hover{
+    color: var(--secondary-color);
+    transition: 0.15s ease-in-out;
+    transform: scale(1.2);
+}
+
+
+nav li:first-child{
+    margin-right: auto;
+}
+
+.side {
+    position: fixed;
+    top: 0; 
+    right: -450px; 
+    height: 100vh;
+    width: 250px;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.4);
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    transition: right 0.2s ease-in-out; 
+}
+
+.side.show {
+    right: 0;
+}
+
+.side li {
+    width: 100%;
+}
+
+.side a {
+    width: 100%;
+}
+
+.menu-button {
+    display: none;
+}
+
+@media (max-width: 800px) {
+    .hideOnMobile {
+        display: none;
+    }
+    .menu-button {
+        display: block;
+    }
+    nav .spe:hover{
+        transition: 0.15s ease-in-out;
+        transform: scale(1.01);
+    }
+}
+
+
+@media (max-width: 400px) {
+    .side {
+        width: 100%;
+    }
+}
+
+
