@@ -17,10 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($insertStmt->execute()) {
             echo "<script>
                     alert('Massage Successful Submitted!');
-                    window.location.href = '../contactUs.html';
+                    window.location.href = '../contactUs.php';
                   </script>";
         } else {
-            // 使用普通的 alert
             echo "<script>
                     alert('Some Error Happened, Please Try Again Later!');
                   </script>";

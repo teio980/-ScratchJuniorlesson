@@ -13,6 +13,8 @@ if (!$user) {
     echo "Invalid or expired token.";
     exit;
 }
+include '../header.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -22,32 +24,25 @@ if (!$user) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password</title>
     <link rel="stylesheet" href="../cssfile/header.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 <body>
-    <div class="main_header">
-        <div class="leftsection">
-            <div class="logo"><img src="" alt=""></div>
-            <div class="menu_choice">
-                <a href="landingpage.html">Home</a>
-                <a href="AboutUs.html">About Us</a>
-                <a href="Course.html">Course</a>
-                <a href="contactUs.html">Contact Us</a>
-            </div>
-        </div>
-        <div class="rightsection">
-            <a href="login.php">Sign In</a>
-            <a href="register.html">Create Account</a>
-            <a href="frequencyAskQuestions.html">FAQ</a>
-        </div>
-    </div>
     <h1>Reset Password</h1>
     <form action="process_reset_password.php" method="post">
         <input type="hidden" name="token" value="<?=htmlspecialchars($token)?>">
         <label for="U_Password">Password:</label>
         <input type="password" id="U_Password" name="U_Password" placeholder="Password" required>
+        <div>
+            <p id="password_condition_length" class="password_condition"><span class="material-symbols-outlined">close</span> Length is between 8-12 Characters</p>
+            <p id="password_condition_digit" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one number</p>
+            <p id="password_condition_upper" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one Uppercase</p>
+            <p id="password_condition_lower" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one Lowercase</p>
+            <p id="password_condition_symbol" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one Symbol</p>
+        </div>
         <label for="U_Confirmed_Password">Confirmed Password:</label>
         <input type="password" id="U_Confirmed_Password" placeholder="Password" required>
         <button type="submit">Reset</button>
     </form>
+    <script src="register.js"></script>
 </body>
 </html>
