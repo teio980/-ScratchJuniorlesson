@@ -22,7 +22,7 @@ include '../header.php';
 <h2>Available Lessons</h2>
 <table border="1">
     <tr>
-        <th>Lesson</th>
+        <th>Lesson</th> 
         <th>Title</th>
         <th>Description</th>
         <th>Expired date</th>
