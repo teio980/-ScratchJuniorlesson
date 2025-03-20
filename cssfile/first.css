@@ -1,0 +1,71 @@
+@import url('global.css');
+
+
+body{
+    background-image: linear-gradient(rgba(3,9,30,0.6),rgba(3,9,30,0.6)),url(../img_logo/backgrd.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.stay{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.text {
+    color: var(--white);
+    text-align: center;
+    padding: 20px 100px;
+}
+
+.text h1{
+    font-size: 60px;
+}
+
+.text p{
+    margin: 10px 0 40px;
+    font-size: 25px;
+}
+
+.learnmore{
+    display: inline-block;
+    text-decoration: none;
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 12px 30px;
+    font-size: 20px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.learnmore:hover{
+    border: 1px solid var(--text-dark);
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    transition: 1ms;
+}
+
+@media (max-width: 800px){
+    .text {
+        padding: 20px 50px;
+    }
+    .text h1{
+        font-size: 45px;
+    }
+    .text p{
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 400px){
+    .text h1{
+        font-size: 35px;
+    }
+    .text p{
+        font-size: 18px;
+    }
+}

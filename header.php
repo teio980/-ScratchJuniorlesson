@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="cssfile/header.css">
-    <title>ScratchJUnior lesson</title>
+    <link rel="stylesheet" href="cssfile/reshead.css">
+    <title>LK Scratch Kids</title>
 </head>
 <body>
     <nav>
@@ -18,7 +18,7 @@
             <li><a href="register.php" class="spe">Create Account</a></li>
         </ul>
         <ul>
-            <li><a href="#">ScratchJunior</a></li>
+            <li><a href="#">LK Scratch Kids</a></li>
             <li><a href="landingpage.php" class="hideOnMobile spe">Home</a></li>
             <li><a href="AboutUs.php" class="hideOnMobile spe">About Us</a></li>
             <li><a href="Course.php"class="hideOnMobile spe">Course</a></li>
