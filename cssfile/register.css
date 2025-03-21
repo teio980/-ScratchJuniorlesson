@@ -62,6 +62,7 @@ body{
     font-size: 15px;
     color: #fff;
     padding: 5px 5px 5px 5px;
+    width: 90%;
 }
 
 .Register_form span{
@@ -87,4 +88,20 @@ body{
     'wght' 400,
     'GRAD' 0,
     'opsz' 24 
+}
+
+.password-box {
+    position: relative;
+    width: 100%;
+}
+
+.password-box span {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #333; 
+    font-size: 20px; 
+    margin-right: 5%;
 }
