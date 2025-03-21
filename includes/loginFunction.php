@@ -19,7 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ../Student/Main_page.php");
             exit;
         } else {
-            echo "Invalid username or password.";
+            echo "";
+            echo "<script>
+            alert('Invalid username or password.Please Try Again.');
+            window.location.href = '../login.php';
+            </script>";
+            exit();
         }
         
     } catch (PDOException $e) {

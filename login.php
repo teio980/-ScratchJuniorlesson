@@ -12,13 +12,13 @@ include 'header.php';
 </head>
 <body>
     <div class="main">
-        <div class="left"><img src="" alt=""></div>
+        <div class="left"><img src="img_logo/knowledge-4171793_1280.jpg" alt=""></div>
         <div class="right" >
             <div class="login">
-                <form action="includes/loginFunction.php" method="POST" >
-                    <span>Username</span>
+                <form action="includes/loginFunction.php" method="POST">
+                    <label for="U_Username">Username:</label>
                     <input type="text"  name="U_Username" id="U_Username" placeholder="Username" required>
-                    <span>Password</span>
+                    <label for="U_Password">Password:</label>
                     <input type="password" name="U_Password" id="U_Password" placeholder="Password" required>
                     <div class="link">
                     <a href="forgotPassword.php">Forgot Password?</a>
