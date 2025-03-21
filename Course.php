@@ -1,5 +1,5 @@
 <?php
-include 'header.php';
+include 'reshead.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

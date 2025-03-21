@@ -2,18 +2,18 @@
 
 
 body{
-    background-image: linear-gradient(rgba(3,9,30,0.6),rgba(3,9,30,0.6)),url(../img_logo/backgrd.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
     font-family: 'Times New Roman', Times, serif;
 }
 
 .stay{
+    background-image: linear-gradient(rgba(3,9,30,0.6),rgba(3,9,30,0.6)),url(../img_logo/backgrd.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .text {
@@ -49,6 +49,74 @@ body{
     transition: 1ms;
 }
 
+.service{
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+.service h1{
+    font-size: 60px;
+    font-weight: 600;
+}
+
+.service p{
+    color: var(--text-light);
+    font-size: 25px;
+    line-height: 20px;
+    padding: 10px;
+}
+
+.courselist{
+    margin: 5% 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.course{
+    flex-basis: 31%;
+    background-color: var(--third-color);
+    border-radius: 10px;
+    margin-bottom: 5%;
+    padding: 20px 10px;
+    box-sizing: border-box;
+}
+
+
+.course{
+    transition: transform 0.4s ease-out, opacity 0.1s ease-out;
+    opacity: 0;
+    transform: translateX(-100px);
+}
+
+
+.course.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+.course.hide {
+    opacity: 0;
+    transform: perspective(600px) rotateY(-90deg) translateX(50px);
+    transition: transform 0.3s ease-in, opacity 0.1s ease-in; /* Faster Flip */
+}
+
+.course p{
+    color: var(--text-light);
+    font-size: 20px;
+}
+
+.course:hover{
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+
 @media (max-width: 800px){
     .text {
         padding: 20px 50px;
@@ -59,13 +127,47 @@ body{
     .text p{
         font-size: 20px;
     }
+    .service h1{
+        font-size: 45px;
+    }
+    .service p{
+        font-size: 20px;
+    }
+    .courselist{
+        margin: 10% 25%;
+        flex-direction: column;
+    }
+    .course{
+        margin-top: 10%;
+    }
+    .course h3{
+        font-size:20px;
+    }
+    .course p{
+        font-size: 15px;
+    }
 }
 
 @media (max-width: 400px){
     .text h1{
-        font-size: 35px;
+        font-size: 32px;
     }
     .text p{
-        font-size: 18px;
+        font-size: 16px;
+    }
+    .service h1{
+        font-size: 32px;
+    }
+    .service p{
+        font-size: 16px;
+    }
+    .courselist{
+        margin: 10% 15%;
+    }
+    .course h3{
+        font-size:18px;
+    }
+    .course p{
+        font-size: 15px;
     }
 }

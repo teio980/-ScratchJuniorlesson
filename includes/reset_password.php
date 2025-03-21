@@ -13,7 +13,7 @@ if (!$user) {
     echo "Invalid or expired token.";
     exit;
 }
-include '../header.php';
+include '../reshead.php';
 
 ?>
 
