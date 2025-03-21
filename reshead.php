@@ -18,7 +18,7 @@
             <li><a href="register.php" class="spe">Create Account</a></li>
         </ul>
         <ul>
-            <li><a href="#">LK Scratch Kids</a></li>
+            <li><a href="#"><strong>LK Scratch Kids</strong></a></li>
             <li><a href="landingpage.php" class="hideOnMobile spe">Home</a></li>
             <li><a href="AboutUs.php" class="hideOnMobile spe">About Us</a></li>
             <li><a href="Course.php"class="hideOnMobile spe">Course</a></li>

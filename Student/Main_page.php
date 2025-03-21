@@ -5,7 +5,7 @@ include '../phpfile/connect.php';
 $sql = "SELECT lesson_id, title, description,expire_date FROM lessons ORDER BY lesson_id ASC";
 $result = $connect->query($sql);
 
-include '../header.php';
+include '../reshead.php';
 ?>
 
 <!DOCTYPE html>
