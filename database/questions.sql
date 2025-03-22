@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2025-03-22 05:51:33
+-- 生成日期： 2025-03-22 07:35:54
 -- 服务器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -20,49 +20,6 @@ SET time_zone = "+00:00";
 --
 -- 数据库： `scratchjunior`
 --
-
--- --------------------------------------------------------
-
---
--- 表的结构 `lessons`
---
-
-CREATE TABLE `lessons` (
-  `lesson_id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `expire_date` datetime DEFAULT NULL,
-  `create_time` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转存表中的数据 `lessons`
---
-
-INSERT INTO `lessons` (`lesson_id`, `title`, `description`, `expire_date`, `create_time`) VALUES
-(1, 'adf', 'adf', '2025-03-17 15:30:00', '2025-03-15 08:07:16');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `projects`
---
-
-CREATE TABLE `projects` (
-  `id` int(11) NOT NULL,
-  `lesson_id` int(11) NOT NULL,
-  `filename` varchar(255) NOT NULL,
-  `filepath` varchar(255) NOT NULL,
-  `upload_time` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转存表中的数据 `projects`
---
-
-INSERT INTO `projects` (`id`, `lesson_id`, `filename`, `filepath`, `upload_time`) VALUES
-(1, 2, 'Project1 - Copy.sjr', '../phpfile/uploads/Project1 - Copy.sjr', '2025-03-15 07:12:50'),
-(2, 1, 'Project1.sjr', '../phpfile/uploads/Project1.sjr', '2025-03-15 08:25:32');
 
 -- --------------------------------------------------------
 
@@ -112,18 +69,6 @@ INSERT INTO `questions` (`id`, `level`, `question`, `option_a`, `option_b`, `opt
 --
 
 --
--- 表的索引 `lessons`
---
-ALTER TABLE `lessons`
-  ADD PRIMARY KEY (`lesson_id`);
-
---
--- 表的索引 `projects`
---
-ALTER TABLE `projects`
-  ADD PRIMARY KEY (`id`);
-
---
 -- 表的索引 `questions`
 --
 ALTER TABLE `questions`
@@ -132,18 +77,6 @@ ALTER TABLE `questions`
 --
 -- 在导出的表使用AUTO_INCREMENT
 --
-
---
--- 使用表AUTO_INCREMENT `lessons`
---
-ALTER TABLE `lessons`
-  MODIFY `lesson_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- 使用表AUTO_INCREMENT `projects`
---
-ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `questions`
