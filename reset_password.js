@@ -1,18 +1,5 @@
 let P_isValid = true ;
 
-function checkInput(inputId, errMessageId){
-    const input = document.getElementById(inputId);
-    const errMessage = document.getElementById(errMessageId);
-
-    input.addEventListener("input", function () {
-        if (input.value.trim() === '') {
-            errMessage.style.display = 'block'; 
-        } else {
-            errMessage.style.display = 'none'; 
-        }
-    });
-}
-
 function showPassword() {
     const passwordInput = document.getElementById('U_Password');
     const icon = document.getElementById('showPassword_icon');
@@ -128,13 +115,9 @@ function validatePasswordCondition(){
     return isValid;
 }*/
 
-checkInput('U_Username', 'errMessage_Username');
-checkInput('U_Email', 'errMessage_Email');
-checkInput('U_Password', 'errMessage_Password');
-checkInput('U_Confirmed_Password', 'errMessage_Confirmed_Password');
 validatePasswordCondition();
 
-document.getElementById("Register_form").addEventListener("submit", function (event) {
+document.getElementById("resetPassword_form").addEventListener("submit", function (event) {
     event.preventDefault(); 
 
     const password = document.getElementById("U_Password").value;

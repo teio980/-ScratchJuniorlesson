@@ -25,7 +25,10 @@ include 'reshead.php';
                 <p id="errMessage_Email" class="errMessage">Email is required</p>
 
                 <label for="U_Password">Password:</label>
-                <input type="password" id="U_Password" name="U_Password" placeholder="Password" required>
+                <div class="password-box">
+                    <input type="password" id="U_Password" name="U_Password" placeholder="Password" required>
+                    <span class="material-symbols-outlined" id="showPassword_icon" onclick="showPassword() ">visibility_off</span>
+                </div>
                 <div>
                     <p id="password_condition_length" class="password_condition"><span class="material-symbols-outlined">close</span> Length is between 8-12 Characters</p>
                     <p id="password_condition_digit" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one number</p>
@@ -36,7 +39,10 @@ include 'reshead.php';
                 <p id="errMessage_Password" class="errMessage">Password is required</p>
 
                 <label for="U_Confirmed_Password">Confirmed Password:</label>
-                <input type="password" id="U_Confirmed_Password" placeholder="Password" required>
+                <div class="password-box">
+                    <input type="password" id="U_Confirmed_Password" placeholder="Password" required>
+                    <span class="material-symbols-outlined" id="showConfirmedPassword_icon" onclick="showConfirmedPassword() ">visibility_off</span>
+                </div>
                 <p id="errMessage_Confirmed_Password" class="errMessage">Confirmed Password is required</p>
 
                 <button type="submit">Register</button>
