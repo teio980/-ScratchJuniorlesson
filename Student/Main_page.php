@@ -5,6 +5,10 @@ include '../phpfile/connect.php';
 $sql = "SELECT lesson_id, title, description,expire_date FROM lessons ORDER BY lesson_id ASC";
 $result = $connect->query($sql);
 
+// Fetch quiz questions by difficult
+$sql_quiz = "SELECT DISTINCT difficult FROM questions ORDER BY difficult ASC";
+$result_quiz = $connect->query($sql_quiz);
+
 include '../reshead.php';
 ?>
 
@@ -47,10 +51,40 @@ include '../reshead.php';
         }
     } else {
         echo "<tr><td colspan='5'>No lessons available</td></tr>";
+    }?>
+    </table>
+    <h2>Quiz Levels</h2>
+<table border="1">
+    <tr>
+        <th>Level</th>
+        <th>Available</th>
+        <th>Percentage</th>
+        <th>Action</th>
+        
+    </tr>
+    <?php
+    if ($result_quiz->num_rows > 0) {
+        while ($row = $result_quiz->fetch_assoc()) {
+            echo "<tr>
+                    <td>Level {$row['difficult']}</td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <button>
+                            <a href='Questionpaper.php?difficult={$row['difficult']}'>Answer</a>
+                        </button>
+                    </td>
+                    </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='2'>No quiz data available</td></tr>";
     }
-    $connect->close();
     ?>
 </table>
 
 </body>
 </html>
+<?php
+$connect->close();
+?>
+    

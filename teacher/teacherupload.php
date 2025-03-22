@@ -7,13 +7,12 @@
     <title>Teacher Submit ScratchJr Lesson</title>
     <script>
         function downloadAll() {
-            // Get all download links in the table
             var links = document.querySelectorAll('.download-link');
             links.forEach(function(link) {
                 var a = document.createElement('a');
                 a.href = link.href;
-                a.download = link.getAttribute('data-filename'); // Set a filename if desired
-                a.click(); // Trigger the download
+                a.download = link.getAttribute('data-filename'); 
+                a.click(); 
             });
         }
     </script>
@@ -68,5 +67,7 @@
             ?>
         </tbody>
     </table>
+    <br><br><br>
+    <button><a href="quizupload.php">Upload question</a></button>
 </body>
 </html>

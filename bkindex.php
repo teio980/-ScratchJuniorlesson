@@ -44,21 +44,19 @@ function checkScroll() {
     courses.forEach((course, index) => {
         const rect = course.getBoundingClientRect();
         
-        // Calculate how much to delay each course (each step is 25% of viewport height)
-        let step = (index + 1) * 0.15; // 1st = 25%, 2nd = 50%, 3rd = 75%
+        let step = (index + 1) * 0.1; 
         let progress = (windowHeight - rect.top) / (windowHeight * step);
 
-        progress = Math.min(Math.max(progress, 0), 1); // Clamp between 0 and 1
+        progress = Math.min(Math.max(progress, 0), 1); 
 
-        // Apply smooth sliding and fading
         course.style.opacity = progress;
-        course.style.transform = `translateX(${(1 - progress) * -500}px)`; // Moves from left to right
+        course.style.transform = `translateX(${(1 - progress) * -500}px)`; 
     });
 }
 
-// Listen for scroll events
+
 window.addEventListener("scroll", checkScroll);
-checkScroll(); // Run on load in case elements are already in view
+checkScroll(); 
 
     </script>
 </body>
