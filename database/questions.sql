@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- 主机： 127.0.0.1
--- 生成日期： 2025-03-22 07:35:54
--- 服务器版本： 10.4.32-MariaDB
--- PHP 版本： 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Mar 22, 2025 at 10:20 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,71 +18,58 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 数据库： `scratchjunior`
+-- Database: `scratchjunior`
 --
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `questions`
+-- Table structure for table `questions`
 --
 
 CREATE TABLE `questions` (
   `id` int(11) NOT NULL,
-  `level` varchar(10) NOT NULL,
   `question` text NOT NULL,
-  `option_a` varchar(255) NOT NULL,
-  `option_b` varchar(255) NOT NULL,
-  `option_c` varchar(255) NOT NULL,
-  `option_d` varchar(255) NOT NULL,
-  `correct_answer` varchar(1) NOT NULL
+  `difficult` int(11) NOT NULL,
+  `option1` varchar(255) NOT NULL,
+  `option2` varchar(255) NOT NULL,
+  `option3` varchar(255) NOT NULL,
+  `option4` varchar(255) NOT NULL,
+  `answer` int(11) NOT NULL CHECK (`answer` between 1 and 4)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- 转存表中的数据 `questions`
+-- Dumping data for table `questions`
 --
 
-INSERT INTO `questions` (`id`, `level`, `question`, `option_a`, `option_b`, `option_c`, `option_d`, `correct_answer`) VALUES
-(4, 'easy', 'What does the \"Green Flag\" button do in ScratchJr?', 'Starts the project', 'Stops the project', 'Deletes the project', 'Saves the project', 'A'),
-(5, 'easy', 'What is the function of the \"Move Right\" block?', 'Moves the character to the left', 'Moves the character to the right', 'Makes the character jump', 'Stops the character', 'B'),
-(6, 'easy', 'Which block makes a character jump?', 'Move Right', 'Move Left', 'Jump', 'Stop', 'C'),
-(7, 'easy', 'What does the \"Move Left\" block do?', 'Moves the character to the right', 'Moves the character up', 'Moves the character to the left', 'Stops the character', 'C'),
-(8, 'easy', 'Which block makes a character say something?', 'Speak', 'Jump', 'Hide', 'Stop', 'A'),
-(9, 'easy', 'What does the \"Hide\" block do?', 'Makes the character invisible', 'Moves the character up', 'Stops the project', 'Deletes the character', 'A'),
-(10, 'easy', 'What happens when you use the \"Stop\" block?', 'The project stops completely', 'The character moves faster', 'The character jumps', 'The project restarts', 'A'),
-(11, 'easy', 'Which block makes the character grow bigger?', 'Shrink', 'Enlarge', 'Jump', 'Hide', 'B'),
-(12, 'easy', 'Which block makes the character shrink?', 'Shrink', 'Enlarge', 'Move Right', 'Speak', 'A'),
-(13, 'easy', 'What is the function of the \"Wait\" block?', 'Makes the character move faster', 'Delays the next action', 'Stops the project', 'Speeds up the project', 'B'),
-(14, 'easy', 'What does the \"Go to Start\" block do?', 'Moves the character to a random position', 'Moves the character to its starting position', 'Deletes the character', 'Speeds up the project', 'B'),
-(15, 'easy', 'Which block makes the character rotate?', 'Move Right', 'Rotate', 'Jump', 'Stop', 'B'),
-(16, 'easy', 'What does the \"Repeat\" block do?', 'Stops the project', 'Makes the action repeat multiple times', 'Speeds up the project', 'Moves the character in a random direction', 'B'),
-(17, 'easy', 'What happens when you use the \"End\" block?', 'The project restarts', 'The project stops at the current moment', 'The character disappears', 'The character moves faster', 'B'),
-(18, 'easy', 'Which block makes a character appear again after using the \"Hide\" block?', 'Jump', 'Show', 'Move Right', 'Stop', 'B'),
-(19, 'easy', 'Which block is used to change the background?', 'Change Background', 'Move Left', 'Jump', 'Stop', 'A'),
-(20, 'easy', 'What does the \"Speed\" block do?', 'Changes the speed of a character\'s movement', 'Makes the character jump higher', 'Stops the project', 'Deletes the character', 'A'),
-(21, 'easy', 'What does the \"Send Message\" block do?', 'Sends a message to another character or scene', 'Moves the character to a random position', 'Stops the project', 'Speeds up the project', 'A'),
-(22, 'easy', 'Which block waits for a message before starting an action?', 'Move Right', 'Wait for Message', 'Jump', 'Stop', 'B'),
-(23, 'easy', 'What does the \"Play Sound\" block do?', 'Plays a sound or recorded voice', 'Stops the project', 'Makes the character move faster', 'Deletes the character', 'A');
+INSERT INTO `questions` (`id`, `question`, `difficult`, `option1`, `option2`, `option3`, `option4`, `answer`) VALUES
+(1, 'What is Scratch Junior used for?', 1, 'To create and edit documents', 'To design 3D models', 'To program interactive stories and games', 'To browse the internet', 3),
+(2, 'rwgaharwe', 2, 'rsfhgahg', 'wra', 'rshf', 'wr', 1),
+(3, 'wrwhw', 1, 'hrwhwrh', 'heh', 'rhehh', 'hrehreh', 2),
+(4, 'adfdafafg', 1, 'gweadgdeg', 'wrg', 'g', 'wgwreg', 4),
+(5, 'rwgrwg', 2, 'grwgw', 'wrgrw', 'rwg', 'rwg', 3),
+(6, 'rwggrw', 3, 'rwggrw', 'wrgrwg', 'wrgrwg', 'wrgrwgwr', 4),
+(7, 'cbnn', 9, 'cbnbgcfn', 'gnds', 'dgsnn', 'dgngdsn', 4);
 
 --
--- 转储表的索引
+-- Indexes for dumped tables
 --
 
 --
--- 表的索引 `questions`
+-- Indexes for table `questions`
 --
 ALTER TABLE `questions`
   ADD PRIMARY KEY (`id`);
 
 --
--- 在导出的表使用AUTO_INCREMENT
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- 使用表AUTO_INCREMENT `questions`
+-- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
