@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST["U_Username"];  
         $email = $_POST["U_Email"];
         $password = $_POST["U_Password"];
-        $identity = "student";  
+        $identity = "teacher";  
 
         $checkUsernameSql = "SELECT U_Username FROM user WHERE U_Username = :username";
         $checkUsernameStmt = $pdo->prepare($checkUsernameSql);
@@ -21,13 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if($checkUsernameStmt->rowCount() > 0){
             echo "<script>
             alert('Username Exists. Please change your username and Try Again.');
-            window.location.href = '../register.php';
+            window.location.href = '../addTeacher.php';
             </script>";
             exit();
         } elseif($checkEmailStmt->rowCount() > 0){
             echo "<script>
             alert('Email Exists. Use other email to register.');
-            window.location.href = '../register.php';
+            window.location.href = '../addTeacher.php';
             </script>";
             exit();
         }
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insertStmt->execute();
             echo "<script>
             alert('Register Successful!');
-            window.location.href = '../login.php';
+            window.location.href = '../addTeacher.php';
             </script>";
             exit();
         }

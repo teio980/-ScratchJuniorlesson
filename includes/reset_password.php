@@ -4,7 +4,7 @@ include 'connect_DB.php';
 $token = $_GET["token"];
 $token_hash = hash("sha256",$token);
 
-$sql = "SELECT * FROM student WHERE reset_token = ? AND reset_token_expires > NOW()";
+$sql = "SELECT * FROM user WHERE reset_token = ? AND reset_token_expires > NOW()";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$token_hash]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);

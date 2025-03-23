@@ -4,7 +4,7 @@ $password = $_POST["U_Password"];
 $token = $_POST["token"];
 $token_hash = hash("sha256",$token);
 
-$sql = "SELECT * FROM student WHERE reset_token = ? AND reset_token_expires > NOW()";
+$sql = "SELECT * FROM user WHERE reset_token = ? AND reset_token_expires > NOW()";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$token_hash]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -36,9 +36,9 @@ if (!preg_match('/[^a-zA-Z0-9\s]/', $password)) {
 
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-$sql = "UPDATE student SET S_Password = ?, reset_token = NULL ,  reset_token_expires = NULL WHERE S_ID = ?";
+$sql = "UPDATE user SET U_Password = ?, reset_token = NULL ,  reset_token_expires = NULL WHERE U_ID = ?";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$hashedPassword,$user["S_ID"]]);
+$stmt->execute([$hashedPassword,$user["U_ID"]]);
 
 echo "Password Successful Updated."
 ?>

@@ -7,17 +7,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST["U_Username"];  
         $password = $_POST["U_Password"];  
 
-        $checkSql = "SELECT * FROM student WHERE S_Username = :username";
+        $checkSql = "SELECT * FROM user WHERE U_Username = :username";
         $checkStmt = $pdo->prepare($checkSql);
         $checkStmt->bindParam(':username', $username);
         $checkStmt->execute();
         $user = $checkStmt->fetch();
 
-        if ($user && password_verify($password, $user['S_Password'])) {
-            $_SESSION['user_id'] = $user['S_ID'];
-            $_SESSION['username'] = $user['S_Username'];
-            header("Location: ../Student/Main_page.php");
-            exit;
+        if ($user && password_verify($password, $user['U_Password'])) {
+            $_SESSION['user_id'] = $user['U_ID'];
+            $_SESSION['username'] = $user['U_Username'];
+            switch($user['identity']){
+                case 'admin':
+                    header('Location: ../Admin/Main_page.php');
+                    break;
+                case 'teacher':
+                    header('Location: ../teacher/Main_page.php');
+                    break;
+                case 'student':
+                    header('Location: ../Student/Main_page.php');
+                    break;
+            }
         } else {
             echo "";
             echo "<script>

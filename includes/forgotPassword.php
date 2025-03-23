@@ -3,7 +3,7 @@ include 'connect_DB.php';
 
 if (isset($_POST["reset_password_button"])) {
     $email = $_POST["email"];
-    $sql_check_email = "SELECT S_Mail FROM student WHERE S_Mail = ?";
+    $sql_check_email = "SELECT U_Mail FROM user WHERE U_Mail = ?";
     $stmt_check_email = $pdo->prepare($sql_check_email);
     $stmt_check_email->execute([$email]);
 
@@ -13,7 +13,7 @@ if (isset($_POST["reset_password_button"])) {
         date_default_timezone_set('Asia/Shanghai');
         $expiry = date("Y-m-d H:i:s", time() + 60 * 30);
 
-        $sql = "UPDATE student SET reset_token = ?, reset_token_expires = ? WHERE S_Mail = ?";
+        $sql = "UPDATE user SET reset_token = ?, reset_token_expires = ? WHERE U_Mail = ?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$token_hash, $expiry, $email]);
 
