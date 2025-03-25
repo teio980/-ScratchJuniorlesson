@@ -1,15 +1,21 @@
+<?php
+session_start();
+include '../resheadAfterLogin.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="cssfile/add_teacher.css">
+    <link rel="stylesheet" href="../cssfile/add_teacher.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="../cssfile/reshead.css">
     <title>Add Teacher</title>
 </head>
 <body>
     <div class="main">
-        <form class="Register_form" id="Register_form" action="includes/addTeacherFunction.php" method="POST">
+        <form class="Register_form" id="Register_form" action="../includes/addTeacherFunction.php" method="POST">
             
             <label for="U_Username">Username (6-12 Characters):</label>
             <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">

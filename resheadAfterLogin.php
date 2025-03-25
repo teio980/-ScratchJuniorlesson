@@ -10,21 +10,13 @@
     <nav>
         <ul class="side">
             <li onclick=hideSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 96 960 960" width="26"><path d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z"/></svg></a></li>
-            <li><a href="bkindex.php" class="spe">Home</a></li>
-            <li><a href="AboutUs.php" class="spe">About Us</a></li>
-            <li><a href="Course.php" class="spe">Course</a></li>
-            <li><a href="contactUs.php" class="spe">Contact Us</a></li>
-            <li><a href="login.php" class="spe">Sign In</a></li>
-            <li><a href="register.php" class="spe">Create Account</a></li>
+            <li><a href="Main_page.php" class="spe">Home</a></li>
+            <li><a href="../includes/logout.php" class="spe">Sign Out</a></li>
         </ul>
         <ul>
             <li><a href="#"><strong>LK Scratch Kids</strong></a></li>
-            <li><a href="bkindex.php" class="hideOnMobile spe">Home</a></li>
-            <li><a href="AboutUs.php" class="hideOnMobile spe">About Us</a></li>
-            <li><a href="Course.php"class="hideOnMobile spe">Course</a></li>
-            <li><a href="contactUs.php"class="hideOnMobile spe">Contact Us</a></li>
-            <li><a href="login.php" class="hideOnMobile spe">Sign In</a></li>
-            <li><a href="register.php" class="hideOnMobile spe">Create Account</a></li>
+            <li><a href="Main_page.php" class="spe">Home</a></li>
+            <li><a href="../includes/logout.php" class="spe">Sign Out</a></li>
             <li class="menu-button" onclick=showSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 96 960 960" width="26"><path d="M120 816v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z"/></svg></a></li>
         </ul>
     </nav>

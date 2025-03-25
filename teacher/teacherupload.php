@@ -1,4 +1,8 @@
-<?php include '../phpfile/connect.php'; ?>
+<?php 
+session_start();
+include '../phpfile/connect.php'; 
+include '../resheadAfterLogin.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

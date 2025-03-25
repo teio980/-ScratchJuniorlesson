@@ -21,13 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if($checkUsernameStmt->rowCount() > 0){
             echo "<script>
             alert('Username Exists. Please change your username and Try Again.');
-            window.location.href = '../addTeacher.php';
+            window.location.href = '../Admin/addTeacher.php';
             </script>";
             exit();
         } elseif($checkEmailStmt->rowCount() > 0){
             echo "<script>
             alert('Email Exists. Use other email to register.');
-            window.location.href = '../addTeacher.php';
+            window.location.href = '../Admin/addTeacher.php';
             </script>";
             exit();
         }
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insertStmt->execute();
             echo "<script>
             alert('Register Successful!');
-            window.location.href = '../addTeacher.php';
+            window.location.href = '../Admin/addTeacher.php';
             </script>";
             exit();
         }

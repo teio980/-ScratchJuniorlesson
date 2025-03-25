@@ -11,7 +11,7 @@ $result = $connect->query($sql);
 $sql_quiz = "SELECT DISTINCT difficult FROM questions ORDER BY difficult ASC";
 $result_quiz = $connect->query($sql_quiz);
 
-include '../reshead.php';
+include '../resheadAfterLogin.php';
 ?>
 
 <!DOCTYPE html>

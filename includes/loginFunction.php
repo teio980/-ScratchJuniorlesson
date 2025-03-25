@@ -16,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($user && password_verify($password, $user['U_Password'])) {
             $_SESSION['user_id'] = $user['U_ID'];
             $_SESSION['username'] = $user['U_Username'];
+            $_SESSION['identity'] = $user['identity'];
             switch($user['identity']){
                 case 'admin':
                     header('Location: ../Admin/Main_page.php');

@@ -12,7 +12,7 @@ $difficulty = intval($_GET['difficult']);
 $sql = "SELECT * FROM questions WHERE difficult = $difficulty";
 $result = $connect->query($sql);
 
-include '../reshead.php';
+include '../resheadAfterLogin.php';
 ?>
 
 <!DOCTYPE html>

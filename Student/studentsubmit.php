@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Submission</title>
-</head>
-<body>
-
 <?php
+session_start();
 include '../phpfile/connect.php';
 
 if (isset($_GET['lesson_id'])) {
@@ -26,6 +18,14 @@ if (isset($_GET['lesson_id'])) {
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Submission</title>
+</head>
+<body>
 
 <h2>Submit Your ScratchJr Project for Lesson <?php echo $lesson['lesson_id']; ?></h2>
 <p><strong>Title:</strong> <?php echo htmlspecialchars($lesson['title']); ?></p>
