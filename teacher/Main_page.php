@@ -1,6 +1,8 @@
 <?php
 session_start();
+include '../phpfile/connect.php';
 include '../resheadAfterLogin.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -13,5 +15,11 @@ include '../resheadAfterLogin.php';
 </head>
 <body>
     <h1>Teacher page</h1>
+
+    <div class="teacher-options">
+        <button onclick="location.href='upload_lesson.php'">Upload New Lesson</button>
+        <button onclick="location.href='view_submissions.php'">View Student Submissions</button>
+        <button onclick="location.href='quizupload.php'">Upload Quiz Questions</button>
+    </div>
 </body>
 </html>
