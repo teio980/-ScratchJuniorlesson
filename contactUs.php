@@ -14,13 +14,11 @@ include 'reshead.php';
     <h1>Leave Us A Massage</h1>
     <div class="main_form">
         <form action="includes/insert_UserMassage.php" method="post" class="form_content">
-        <label for="Email">E-mail:</label>
-        <input type="email" id="Email" name="U_Mail" required>
-        <label for="Subject">Subject:</label>
-        <input type="text" id="Subject" name="U_Massage_Subject" maxlength="50" placeholder="Maximum Length of Subject is 50" required>
+        <label for="Email">Phones No.:</label>
+        <input type="tel" name="phoneNumber" id="phoneNumber" required>
         <label for="Massage">Massage:</label>
         <textarea id="Massage" name="U_Massage" maxlength="500" placeholder="Maximum Length of Massage is 500" required></textarea>
-        <button type="submit">Submit</button>
+        <button type="submit">Send Massage Through WhatsApp</button>
         </form>
     </div>
 </body>
