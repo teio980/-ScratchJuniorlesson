@@ -4,27 +4,26 @@ include 'connect_DB.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {  
     try {
-        $subject = $_POST["U_Massage_Subject"];  
-        $email = $_POST["U_Mail"];
+        $phoneNumber = $_POST["phoneNumber"];
         $massage = $_POST["U_Massage"];  
 
-        $insertSql = "INSERT INTO massage (U_Mail , massage_Subject , massage_Content) VALUES ( :email, :subject , :massage )";
+        $insertSql = "INSERT INTO massage (U_phoneNumber , massage_Content) VALUES ( :phoneNumber, :massage )";
         $insertStmt = $pdo->prepare($insertSql);
 
-        $insertStmt->bindParam(':email', $email);
-        $insertStmt->bindParam(':subject', $subject);
+        $insertStmt->bindParam(':phoneNumber', $phoneNumber);
         $insertStmt->bindParam(':massage', $massage);
         if ($insertStmt->execute()) {
-            echo "<script>
-                    alert('Massage Successful Submitted!');
-                    window.location.href = '../contactUs.php';
-                  </script>";
+            $whatsappText = "New Message from Website:\n\nPhone No.: $phoneNumber\n\nMessage: $massage";
+            $whatsappUrl = "https://wa.me/60102648282?text=" . urlencode($whatsappText);
+            header("Location: $whatsappUrl");
+            exit();
         } else {
             echo "<script>
                     alert('Some Error Happened, Please Try Again Later!');
                   </script>";
+            header("Location: ../contactUs.php");
+            exit();
         }
-        exit;
     } catch (PDOException $e) {
         echo "Connection Failed:" . $e->getMessage();
     }
