@@ -17,6 +17,10 @@ include '../resheadAfterLogin.php';
     <div class="main">
         <form class="Register_form" id="Register_form" action="../includes/addTeacherFunction.php" method="POST">
             
+            <label for="identity">Identity</label>
+            <input type="radio" name="identity" value="student">
+            <input type="radio" name="identity" value="teacher">
+
             <label for="U_Username">Username (6-12 Characters):</label>
             <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">
             <p id="errMessage_Username" class="errMessage">Username is required</p>

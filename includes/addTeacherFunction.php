@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST["U_Username"];  
         $email = $_POST["U_Email"];
         $password = $_POST["U_Password"];
-        $identity = "teacher";  
+        $identity = $_POST['identity'];;  
 
         $checkUsernameSql = "SELECT U_Username FROM user WHERE U_Username = :username";
         $checkUsernameStmt = $pdo->prepare($checkUsernameSql);

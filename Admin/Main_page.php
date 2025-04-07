@@ -13,6 +13,8 @@ include '../resheadAfterLogin.php';
 </head>
 <body>
     <h1>Admin page</h1>
-    <a href="addTeacher.php">add teacher</a>
+    <a href="addUser.php">Register User Account</a>
+    <a href="manageUser.php">Manage User</a>
+    <a href="evaluationreport.php">Evaluation Report</a>
 </body>
 </html>
