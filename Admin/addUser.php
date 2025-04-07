@@ -16,10 +16,6 @@ include '../resheadAfterLogin.php';
 <body>
     <div class="main">
         <form class="Register_form" id="Register_form" action="../includes/addTeacherFunction.php" method="POST">
-            
-            <label for="identity">Identity</label>
-            <input type="radio" name="identity" value="student">
-            <input type="radio" name="identity" value="teacher">
 
             <label for="U_Username">Username (6-12 Characters):</label>
             <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">
@@ -49,6 +45,10 @@ include '../resheadAfterLogin.php';
                 <span class="material-symbols-outlined" id="showConfirmedPassword_icon" onclick="showConfirmedPassword() ">visibility_off</span>
             </div>
             <p id="errMessage_Confirmed_Password" class="errMessage">Confirmed Password is required</p>
+
+            <label for="identity">Identity</label>
+            <input type="radio" name="identity" value="student"> Student
+            <input type="radio" name="identity" value="teacher"> Teacher
 
             <button type="submit">Register</button>
         </form>
