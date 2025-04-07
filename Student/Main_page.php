@@ -7,7 +7,6 @@ $user_id = $_SESSION['user_id'];
 $sql = "SELECT lesson_id, title, description,expire_date FROM lessons ORDER BY lesson_id ASC";
 $result = $connect->query($sql);
 
-// Fetch quiz questions by difficult
 $sql_quiz = "SELECT DISTINCT difficult FROM questions ORDER BY difficult ASC";
 $result_quiz = $connect->query($sql_quiz);
 
@@ -21,6 +20,7 @@ include '../resheadAfterLogin.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../cssfile/reshead.css">
     <link rel="stylesheet" href="cssfile/Main_page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Profile Page</title>
 </head>
 <body>
@@ -54,18 +54,22 @@ include '../resheadAfterLogin.php';
     } else {
         echo "<tr><td colspan='5'>No lessons available</td></tr>";
     }?>
-    </table>
+</table>
+
     <h2>Quiz Levels</h2>
+    <p>***above 80% unlock next level</p>
     <table border="1">
         <tr>
             <th>Level</th>
             <th>Available</th>
+            <th>Correct</th>
             <th>Percentage</th>
             <th>Action</th>
             
         </tr>
         <?php
     if ($result_quiz->num_rows > 0) {
+        $previous = true;
         while ($row = $result_quiz->fetch_assoc()) {
             $difficulty = $row['difficult'];
 
@@ -79,19 +83,31 @@ include '../resheadAfterLogin.php';
 
             $sql_total = "SELECT COUNT(*) as total FROM questions WHERE difficult = '$difficulty'";
             $result_total = $connect->query($sql_total);
-            $total_questions = ($result_total->num_rows > 0) ? $result_total->fetch_assoc()['total'] : 1; // Prevent division by zero
+            $total_questions = ($result_total->num_rows > 0) ? $result_total->fetch_assoc()['total'] : 1;
+    
+            $score_display = "$total_correct / $total_questions";
+            $percen = round(($total_correct / $total_questions) * 100, 2);
 
-            $percentage = round(($total_correct / $total_questions) * 100, 2) . '%';
+            if ($previous) {
+                $lock_icon = "<i class='fa fa-check'></i>"; 
+                $action_button = "<button><a href='Questionpaper.php?difficult=$difficulty'>Answer</a></button>";
+                if($percen >=80){
+                    $previous = true;
+                }else{
+                    $previous = false;
+                }
+            } else {
+                $lock_icon = "<i class='fa fa-lock'></i>"; 
+                $action_button = "<span>Unavailable</span>";
+            }
+
 
             echo "<tr>
                     <td>Level $difficulty</td>
-                    <td></td> <!-- Empty Available Column -->
-                    <td>$percentage</td>
-                    <td>
-                        <button>
-                            <a href='Questionpaper.php?difficult=$difficulty'>Answer</a>
-                        </button>
-                    </td>
+                    <td>$lock_icon</td>
+                    <td>$score_display</td>
+                    <td>$percen%</td>
+                    <td>$action_button</td>
                   </tr>";
         }
     } else {
