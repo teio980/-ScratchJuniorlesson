@@ -19,6 +19,7 @@ include 'reshead.php';
                 <form action="includes/loginFunction.php" method="POST">
                     <label for="U_Username">Username:</label>
                     <input type="text"  name="U_Username" id="U_Username" placeholder="Username" required>
+                    <label for="U_Password">Password:</label>
                     <div class="password-box">
                         <input type="password" id="U_Password" name="U_Password" placeholder="Password" required>
                         <span class="material-symbols-outlined" id="showPassword_icon" onclick="showPassword() ">visibility_off</span>

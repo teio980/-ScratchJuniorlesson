@@ -20,7 +20,7 @@ function showEditForm() {
         document.getElementById('identity_T').checked = true;
     }
 
-    document.getElementById('editFormModal').style.display = 'block';
+    document.getElementById('editFormModal').style.display = 'flex';
 }
 
 

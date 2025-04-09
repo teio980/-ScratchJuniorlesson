@@ -87,3 +87,16 @@ body{
     font-size: 20px; 
     margin-right: 8%;
 }
+
+.radio_box{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.radio_option{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 5px;
+}

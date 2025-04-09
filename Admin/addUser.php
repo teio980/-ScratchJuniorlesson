@@ -45,14 +45,20 @@ include '../resheadAfterLogin.php';
                 <span class="material-symbols-outlined" id="showConfirmedPassword_icon" onclick="showConfirmedPassword() ">visibility_off</span>
             </div>
             <p id="errMessage_Confirmed_Password" class="errMessage">Confirmed Password is required</p>
-
-            <label for="identity">Identity</label>
-            <input type="radio" name="identity" value="student"> Student
-            <input type="radio" name="identity" value="teacher"> Teacher
-
+            <div class="radio_box">
+                <label for="identity">Identity:</label>
+                <div class="radio_option">
+                    <label for="identity_S">Student</label>
+                    <input type="radio" name="identity" id="identity_S" value="student"> 
+                </div>
+                <div class="radio_option">
+                    <label for="identity_T">Teacher</label>
+                    <input type="radio" name="identity" id="identity_T" value="teacher"> 
+                </div>
+            </div>
             <button type="submit">Register</button>
         </form>
     </div>
-    <script src="register.js"></script>
+    <script src="../register.js"></script>
 </body>
 </html>

@@ -2,10 +2,22 @@
 session_start();
 include '../resheadAfterLogin.php';
 include '../includes/connect_DB.php';
-$Sql = "SELECT * FROM user WHERE identity != 'admin'";
-$Stmt = $pdo->prepare($Sql);
-$Stmt -> execute();
-$users = $Stmt->fetchAll();
+
+$users = [];
+$keywords = '';
+if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])) {
+    $keywords = $_POST['query'];
+    $sql = "SELECT * FROM user WHERE identity != 'admin' AND U_Username LIKE :keywords";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':keywords', '%' . $keywords . '%');
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    $sql = "SELECT * FROM user WHERE identity != 'admin'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $users = $stmt->fetchAll();
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +31,16 @@ $users = $Stmt->fetchAll();
     <title>Manage Teacher</title>
 </head>
 <body>
+    <div class="search-container">
+        <form action="" method="post">
+            <input type="text" name="query" id="searchInput" placeholder="Search..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
+            <button type="submit" class="search-button" name="search">
+                <span class="material-symbols-outlined">search</span>
+            </button>
+        </form>
+        <a href="manageUser.php" class="clear_search"><span class="material-symbols-outlined">close</span></a>
+    </div>
+    
     <form method="post" action="delete_users.php" name="ManageMainForm" id="ManageMainForm">
         <table>
             <thead>
@@ -41,30 +63,48 @@ $users = $Stmt->fetchAll();
                 </tr>
             <?php endforeach; ?>
             </tbody>
-        </table>
-        <button type="button" onclick="showEditForm()">Edit</button>
-        <button type="submit" >Delete</button>
+        </table> 
+        <button type="button" onclick="showEditForm()" class="edit_btn">Edit</button>
+        <button type="submit" class="delete_btn">Delete</button>
     </form>
 
     <div id="editFormModal" class="editFormModal">
-        <div class="editFormContent">
-            <span class="close" onclick="closeModal() ">&times;</span>
-            <h2>Edit User</h2>
-            <form id="editForm" method="post" action="update_users.php">
-            <input type="hidden" id="editUserId" name="UserID">
+        <div class="modalContent">
+            <div class="modalHeader">
+                <h2>Edit User</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="editFormContent">
+                <form id="editForm" method="post" action="update_users.php">
+                    <input type="hidden" id="editUserId" name="UserID">
 
-            <label for="U_Username">Username (6-12 Characters):</label>
-            <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">
+                <div class="form-group">
+                    <label for="U_Username">Username (6-12 Characters):</label>
+                    <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">
+                </div>
 
-            <label for="U_Email">Email:</label>
-            <input type="email" id="U_Email" name="U_Email" placeholder="e.g.: abc123@gmail.com" required>
+                <div class="form-group">
+                    <label for="U_Email">Email:</label>
+                    <input type="email" id="U_Email" name="U_Email" placeholder="e.g.: abc123@gmail.com" required>
+                </div>
 
-            <label for="identity">Identity</label>
-            <input type="radio" name="identity" id="identity_S" value="student"> Student
-            <input type="radio" name="identity" id="identity_T" value="teacher"> Teacher
+                <div class="form-group">
+                    <label>Identity</label>
+                    <div class="radio-group">
+                        <label>
+                            Student
+                            <input type="radio" name="identity" id="identity_S" value="student">
+                        </label>
+                        <label>
+                            Teacher
+                            <input type="radio" name="identity" id="identity_T" value="teacher">
+                        </label>
+                    </div>
+                </div>
 
-            <button type="submit">Save Changes</button>
-            </form>
+                <button type="submit" class="save_btn">Save Changes</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>
