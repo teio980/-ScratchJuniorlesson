@@ -55,6 +55,7 @@ include '../resheadAfterLogin.php';
         echo "<tr><td colspan='5'>No lessons available</td></tr>";
     }?>
 </table>
+<br><br><br>
 
     <h2>Quiz Levels</h2>
     <p>***above 80% unlock next level</p>
@@ -103,7 +104,7 @@ include '../resheadAfterLogin.php';
 
 
             echo "<tr>
-                    <td>Level $difficulty</td>
+                    <td>Quiz $difficulty</td>
                     <td>$lock_icon</td>
                     <td>$score_display</td>
                     <td>$percen%</td>
@@ -115,6 +116,9 @@ include '../resheadAfterLogin.php';
     }
     ?>
 </table>
+<br>
+
+<button><a href="ranking.php">View Ranking</a></button>
 
 </body>
 </html>

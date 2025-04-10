@@ -2,11 +2,6 @@
 session_start();
 include '../phpfile/connect.php';
 
-if (!isset($_GET['difficult']) || !is_numeric($_GET['difficult'])) {
-    echo "Invalid difficulty level.";
-    exit;
-}
-
 $difficulty = intval($_GET['difficult']);
 
 $sql = "SELECT * FROM questions WHERE difficult = $difficulty";
@@ -26,7 +21,8 @@ include '../resheadAfterLogin.php';
 </head>
 <body>
 
-<h2>Question Paper - Level <?php echo $difficulty; ?></h2>
+<h2>Quiz - Level <?php echo $difficulty; ?></h2>
+<br>
 
 <?php
 if ($result->num_rows > 0) {
