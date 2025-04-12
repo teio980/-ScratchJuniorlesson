@@ -28,7 +28,7 @@ $difficulties = $connect->query("SELECT DISTINCT difficulty FROM student_answers
     <form method="get">
         <?php while($d = $difficulties->fetch_assoc()): ?>
             <button type="submit" name="difficulty" value="<?= $d['difficulty'] ?>">
-                Difficulty <?= $d['difficulty'] ?>
+                Quiz <?= $d['difficulty'] ?>
             </button>
         <?php endwhile; ?>
     </form>

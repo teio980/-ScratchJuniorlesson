@@ -5,10 +5,10 @@ include '../phpfile/connect.php';
 $user_id = $_SESSION['user_id'];
 
 $sql = "SELECT lesson_id, title, description,expire_date FROM lessons ORDER BY lesson_id ASC";
-$result = $connect->query($sql);
+$result = mysqli_query($connect, $sql);
 
 $sql_quiz = "SELECT DISTINCT difficult FROM questions ORDER BY difficult ASC";
-$result_quiz = $connect->query($sql_quiz);
+$result_quiz = mysqli_query($connect, $sql_quiz);
 
 include '../resheadAfterLogin.php';
 ?>
@@ -58,7 +58,7 @@ include '../resheadAfterLogin.php';
 <br><br><br>
 
     <h2>Quiz Levels</h2>
-    <p>***above 80% unlock next level</p>
+    <p>***Achieve over 80% to advance to the next level.</p>
     <table border="1">
         <tr>
             <th>Level</th>
@@ -79,26 +79,35 @@ include '../resheadAfterLogin.php';
                             WHERE student_answers.student_id = $user_id 
                             AND questions.difficult = '$difficulty' 
                             AND student_answers.is_correct = 1";
-            $result_correct = $connect->query($sql_correct);
-            $total_correct = ($result_correct->num_rows > 0) ? $result_correct->fetch_assoc()['correct'] : 0;
+            $result_correct = mysqli_query($connect, $sql_correct);
+
+            if ($result_correct->num_rows > 0) {
+                $row_correct = $result_correct->fetch_assoc();
+                $total_correct = $row_correct['correct'];
+            }
 
             $sql_total = "SELECT COUNT(*) as total FROM questions WHERE difficult = '$difficulty'";
-            $result_total = $connect->query($sql_total);
-            $total_questions = ($result_total->num_rows > 0) ? $result_total->fetch_assoc()['total'] : 1;
-    
+            $result_total =  mysqli_query($connect, $sql_total);
+            
+            if ($result_total->num_rows > 0) {
+                $row_total = $result_total->fetch_assoc();
+                $total_questions = $row_total['total'];
+            }
+
             $score_display = "$total_correct / $total_questions";
             $percen = round(($total_correct / $total_questions) * 100, 2);
 
             if ($previous) {
-                $lock_icon = "<i class='fa fa-check'></i>"; 
-                $action_button = "<button><a href='Questionpaper.php?difficult=$difficulty'>Answer</a></button>";
-                if($percen >=80){
+                $lock_icon = "<i class='fa fa-check'></i>";
+                if ($percen >= 80) {
+                    $action_button = "<span>Completed</span>";
                     $previous = true;
-                }else{
+                } else {
+                    $action_button = "<button><a href='Questionpaper.php?difficult=$difficulty'>Answer</a></button>";
                     $previous = false;
                 }
             } else {
-                $lock_icon = "<i class='fa fa-lock'></i>"; 
+                $lock_icon = "<i class='fa fa-lock'></i>";
                 $action_button = "<span>Unavailable</span>";
             }
 
@@ -109,7 +118,7 @@ include '../resheadAfterLogin.php';
                     <td>$score_display</td>
                     <td>$percen%</td>
                     <td>$action_button</td>
-                  </tr>";
+                 </tr>";
         }
     } else {
         echo "<tr><td colspan='2'>No quiz data available</td></tr>";

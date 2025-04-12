@@ -2,8 +2,8 @@
 session_start();
 include '../includes/connect_DB.php'; 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $difficulty = intval($_POST['difficult']);
+if (isset($_POST['savebtn'])) {
+    $difficulty = $_POST['difficult'];
     $user_id = $_SESSION['user_id'];
     $user_answers = $_POST['answer'];
 

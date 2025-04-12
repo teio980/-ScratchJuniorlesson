@@ -2,10 +2,10 @@
 session_start();
 include '../phpfile/connect.php';
 
-$difficulty = intval($_GET['difficult']);
+$difficulty = $_GET['difficult'];
 
 $sql = "SELECT * FROM questions WHERE difficult = $difficulty";
-$result = $connect->query($sql);
+$result =  mysqli_query($connect, $sql);
 
 include '../resheadAfterLogin.php';
 ?>
@@ -27,7 +27,7 @@ include '../resheadAfterLogin.php';
 <?php
 if ($result->num_rows > 0) {
     echo "<form action='submit_answers.php' method='POST'>";
-    echo "<input type='hidden' name='difficult' value='$difficulty'>";
+    echo "<input type='hidden' name='difficult' value='$difficulty'>"; 
     $i = 1;
     while ($row = $result->fetch_assoc()) {
         echo "<p><b>Q$i: {$row['question']}</b></p>";
@@ -37,7 +37,7 @@ if ($result->num_rows > 0) {
         echo "<input type='radio' name='answer[$row[id]]' value='4'> {$row['option4']}<br><br>";
         $i++;
     }
-    echo "<input type='submit' value='Submit Answers'>";
+    echo "<input type='submit' value='Submit Answers' name='savebtn'>";
     echo "</form>";
 }
 $connect->close();
