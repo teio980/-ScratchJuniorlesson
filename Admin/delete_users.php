@@ -3,22 +3,24 @@ session_start();
 include '../includes/connect_DB.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['selected_ids'])) {
-        $selectedIds = $_POST['selected_ids'];
-        
-        $placeholders = implode(',', array_fill(0, count($selectedIds), '?'));
-        $sql = "DELETE FROM user WHERE U_ID IN ($placeholders)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($selectedIds);
-        
-        echo "<script>
-            alert('Success delete " . $stmt->rowCount() . " users.');
-            window.location.href = 'manageUser.php';
-        </script>";
-        exit;
+    if (isset($_POST['selected_users'])) {
+        $selected_users = $_POST['selected_users'];
+    
+        foreach ($selected_users as $user_data) {
+            list($user_id, $identity) = explode('|', $user_data);
+            
+            if ($identity === 'student') {
+                $sql = "DELETE FROM student WHERE student_id = ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$user_id]);
+            } elseif ($identity === 'teacher') {
+                $sql = "DELETE FROM teacher WHERE teacher_id = ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$user_id]);
+        }
+    }
     }
 }
-
 header("Location: manageUser.php");
 exit;
 ?>

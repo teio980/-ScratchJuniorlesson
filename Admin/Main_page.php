@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../includes/check_session_admin.php';
 include '../resheadAfterLogin.php';
 ?>

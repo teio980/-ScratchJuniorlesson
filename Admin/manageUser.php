@@ -7,13 +7,17 @@ $users = [];
 $keywords = '';
 if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])) {
     $keywords = $_POST['query'];
-    $sql = "SELECT * FROM user WHERE identity != 'admin' AND U_Username LIKE :keywords";
+    $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student WHERE S_Username LIKE :keywords
+            UNION ALL
+            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':keywords', '%' . $keywords . '%');
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $sql = "SELECT * FROM user WHERE identity != 'admin'";
+    $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student 
+            UNION ALL
+            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $users = $stmt->fetchAll();
@@ -55,7 +59,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
             <tbody>
             <?php foreach ($users as $user): ?>
                 <tr>   
-                    <td><input type="checkbox" name="selected_ids[]" value="<?php echo $user['U_ID'] ?>"></td>
+                    <td><input type="checkbox" name="selected_users[]" value="<?php echo $user['U_ID'] . '|' . $user['identity']?>"></td>
                     <td><?php echo htmlspecialchars($user['U_ID']) ?></td>
                     <td><?php echo htmlspecialchars($user['U_Username']) ?></td>
                     <td><?php echo htmlspecialchars($user['U_Mail']) ?></td>
@@ -65,7 +69,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
             </tbody>
         </table> 
         <button type="button" onclick="showEditForm()" class="edit_btn">Edit</button>
-        <button type="submit" class="delete_btn">Delete</button>
+        <button type="submit" class="delete_btn" onclick="return confirmDelete()">Delete</button>
     </form>
 
     <div id="editFormModal" class="editFormModal">

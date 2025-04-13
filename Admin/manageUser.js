@@ -1,5 +1,5 @@
 function showEditForm() {
-    const checkboxes = document.querySelectorAll('input[name="selected_ids[]"]:checked');
+    const checkboxes = document.querySelectorAll('input[name="selected_users[]"]:checked');
 
     if (checkboxes.length > 1) {
         alert("Please select only ONE user to edit.");
@@ -32,4 +32,15 @@ window.onclick = function(event) {
     if (event.target == document.getElementById('editFormModal')) {
         closeModal();
     }
+}
+
+function confirmDelete() {
+    const checkboxes = document.querySelectorAll('input[name="selected_users[]"]:checked');
+    
+    if (checkboxes.length === 0) {
+        alert("Please select at least one user to delete.");
+        return false;
+    }
+    
+    return confirm(`Are you sure you want to delete ${checkboxes.length} user(s)?`);
 }

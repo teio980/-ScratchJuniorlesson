@@ -4,39 +4,56 @@ include 'connect_DB.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {  
     try {
-        $username = $_POST["U_Username"];  
-        $password = $_POST["U_Password"];  
+        $username = $_POST["U_Username"];
+        $password = $_POST["U_Password"];
 
-        $checkSql = "SELECT * FROM user WHERE U_Username = :username";
-        $checkStmt = $pdo->prepare($checkSql);
-        $checkStmt->bindParam(':username', $username);
-        $checkStmt->execute();
-        $user = $checkStmt->fetch();
+        $checkUserSql = "
+            SELECT identity , student_id AS U_ID , S_Username AS username, S_Password AS password FROM student WHERE S_Username = :username
+            UNION ALL
+            SELECT identity , teacher_id AS U_ID , T_Username AS username, T_Password AS password FROM teacher WHERE T_Username = :username
+            UNION ALL
+            SELECT identity , admin_id AS U_ID , A_Username AS username, A_Password AS password FROM admin WHERE A_Username = :username
+            LIMIT 1
+        ";
 
-        if ($user && password_verify($password, $user['U_Password'])) {
-            $_SESSION['user_id'] = $user['U_ID'];
-            $_SESSION['username'] = $user['U_Username'];
-            $_SESSION['identity'] = $user['identity'];
-            switch($user['identity']){
-                case 'admin':
-                    header('Location: ../Admin/Main_page.php');
-                    break;
-                case 'teacher':
-                    header('Location: ../teacher/Main_page.php');
-                    break;
-                case 'student':
-                    header('Location: ../Student/Main_page.php');
-                    break;
+        $checkUserStmt = $pdo->prepare($checkUserSql);
+        $checkUserStmt->bindParam(':username', $username);
+        $checkUserStmt->execute();
+        $user = $checkUserStmt->fetch();
+
+        if ($user) {
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['U_ID'];
+                $_SESSION['identity'] = $user['identity'];
+                $_SESSION['username'] = $user['username'];
+                
+                switch ($user['identity']) {
+                    case 'student':
+                        header('Location: ../Student/Main_page.php');
+                        break;
+                    case 'teacher':
+                        header('Location: ../teacher/Main_page.php');
+                        break;
+                    case 'admin':
+                        header('Location: ../Admin/Main_page.php');
+                        break;
+                }
+                exit();
+            } else {
+                echo "<script>
+                alert('Invalid Password.Please Try Again.');
+                window.location.href = '../login.php';
+                </script>";
+                exit();
             }
         } else {
-            echo "";
             echo "<script>
-            alert('Invalid username or password.Please Try Again.');
+            alert('Invalid Username.Please Try Again.');
             window.location.href = '../login.php';
             </script>";
             exit();
         }
-        
+
     } catch (PDOException $e) {
         echo "Connection Failed:" . $e->getMessage();
         exit;
