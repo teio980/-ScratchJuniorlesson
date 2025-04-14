@@ -3,16 +3,16 @@ include '../phpfile/connect.php';
 
 $difficulty = $_GET['difficulty'] ?? null;
 
-$sql = "SELECT u.U_Username, COUNT(*) AS correct_answers
-        FROM student_answers sa
-        JOIN user u ON sa.student_id = u.U_ID
-        WHERE sa.is_correct = 1" 
-        . ($difficulty ? " AND sa.difficulty = $difficulty" : "") . 
-        " GROUP BY u.U_Username
-         ORDER BY correct_answers DESC";
+$sql = "SELECT student.S_Username, COUNT(*) AS correct_answers
+        FROM student_answers
+        JOIN student ON student_answers.student_id = student.student_id
+        WHERE student_answers.is_correct = 1" 
+        . ($difficulty ? " AND student_answers.difficult = '$difficulty'" : "") . 
+        " GROUP BY student.S_Username
+          ORDER BY correct_answers DESC";
 
 $result = $connect->query($sql);
-$difficulties = $connect->query("SELECT DISTINCT difficulty FROM student_answers WHERE is_correct = 1");
+$difficulties = $connect->query("SELECT DISTINCT difficult FROM student_answers WHERE is_correct = 1");
 ?>
 
 <!DOCTYPE html>
@@ -27,8 +27,8 @@ $difficulties = $connect->query("SELECT DISTINCT difficulty FROM student_answers
     
     <form method="get">
         <?php while($d = $difficulties->fetch_assoc()): ?>
-            <button type="submit" name="difficulty" value="<?= $d['difficulty'] ?>">
-                Quiz <?= $d['difficulty'] ?>
+            <button type="submit" name="difficult" value="<?= $d['difficult'] ?>">
+                Quiz <?= $d['difficult'] ?>
             </button>
         <?php endwhile; ?>
     </form>
@@ -38,13 +38,13 @@ $difficulties = $connect->query("SELECT DISTINCT difficulty FROM student_answers
             <tr><th>Username</th><th>Correct</th></tr>
             <?php while($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><?= $row['U_Username'] ?></td>
+                    <td><?= $row['S_Username'] ?></td>
                     <td><?= $row['correct_answers'] ?></td>
                 </tr>
             <?php endwhile; ?>
         </table>
     <?php else: ?>
-        <p>No results found<?= $difficulty ? " for difficulty $difficulty" : "" ?>.</p>
+        <p>No results found<?= $difficulty ? " for difficult $difficulty" : "" ?>.</p>
     <?php endif; ?>
 
     <a href="Main_page.php">

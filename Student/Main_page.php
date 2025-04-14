@@ -83,7 +83,7 @@
 
                             $sql_correct = "SELECT COUNT(*) as correct FROM student_answers 
                                             JOIN questions ON student_answers.question_id = questions.id
-                                            WHERE student_answers.student_id = $user_id 
+                                            WHERE student_answers.student_id = '$user_id'
                                             AND questions.difficult = '$difficulty' 
                                             AND student_answers.is_correct = 1";
                             $result_correct = mysqli_query($connect, $sql_correct);
@@ -131,8 +131,6 @@
                                     $button
                                 </div>";
                         }
-                    } else {
-                        echo "<div class='quiz-card'><div class='text'><h3>No quiz data</h3><p>Please check back later.</p></div></div>";
                     }
                     ?>
                 </div>
