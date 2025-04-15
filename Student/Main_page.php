@@ -78,8 +78,16 @@
                     <?php
                     if ($result_quiz->num_rows > 0) {
                         $previous = true;
+
+                        $total_correct_all = 0;
+                        $total_questions_all = 0;
+
+                        $total_quizzes = 0;
+                        $completed_quizzes = 0;
+
                         while ($row = $result_quiz->fetch_assoc()) {
                             $difficulty = $row['difficult'];
+                            $total_quizzes++;
 
                             $sql_correct = "SELECT COUNT(*) as correct FROM student_answers 
                                             JOIN questions ON student_answers.question_id = questions.id
@@ -102,7 +110,15 @@
                                 $total_questions = $row_total['total'];
                             }
 
+                            $total_correct_all += $total_correct;
+                            $total_questions_all += $total_questions;
+
                             $percen = $total_questions > 0 ? round(($total_correct / $total_questions) * 100, 2) : 0;
+
+                            if ($percen >= 80) {
+                                $completed_quizzes++;
+                            }
+                            
                             $score_display = "$total_correct / $total_questions";
                             $active_class = $previous ? "quiz-card active" : "quiz-card";
 
@@ -131,6 +147,23 @@
                                     $button
                                 </div>";
                         }
+                        $overall_percent = $total_questions_all > 0 ? round(($total_correct_all / $total_questions_all) * 100, 2) : 0;
+                        $progress_circle_1 = "<div class='progress-circle progressbar1' data-percentage='$overall_percent'>
+                                                <svg class='progress-ring' width='120' height='120'>
+                                                    <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                    <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                </svg>
+                                                <div class='progress-text'>$overall_percent%</div>
+                                            </div>";
+    
+                        $quiz_percent = $total_quizzes > 0 ? round(($completed_quizzes / $total_quizzes) * 100, 2) : 0;
+                        $progress_circle_2 = "<div class='progress-circle progressbar2' data-percentage='$quiz_percent'>
+                                                <svg class='progress-ring' width='120' height='120'>
+                                                    <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                    <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                </svg>
+                                                <div class='progress-text'>$completed_quizzes / $total_quizzes</div>
+                                            </div>";
                     }
                     ?>
                 </div>
@@ -138,11 +171,13 @@
             <div class="quizcurve"></div>
 
             <div class="quizright">
+                <?php 
+                    echo $progress_circle_1;
+                    echo $progress_circle_2;
+                ?>
                 <button class="btfour"><a href="ranking.php">View Ranking</a></button>
             </div>
         </div>
-        
-
         
 
     </div>
@@ -229,6 +264,45 @@ $connect->close();
                 alert("Achieve over 80% to advance to the next level.");
             });
         });
+
+        /*circle color */
+
+        document.querySelectorAll('.progress-circle').forEach(circle => {
+    const percent = parseFloat(circle.getAttribute('data-percentage'));
+    const radius = 54;  // match the circle's radius
+    const circumference = 2 * Math.PI * radius;
+    const progress = circle.querySelector('.progress-ring__circle');
+    const text = circle.querySelector('.progress-text');
+
+    // Set initial stroke dasharray and dashoffset for the progress circle
+    progress.style.strokeDasharray = `${circumference}`;
+    progress.style.strokeDashoffset = circumference;
+
+    let currentPercent = 0;
+    const stepTime = 10; // Update every 10ms for smooth animation
+    const increment = percent / 100; // Small increment for each step
+
+    const updateProgress = () => {
+        if (currentPercent <= percent) {
+            // Calculate strokeDashoffset based on current percentage
+            const offset = circumference - (currentPercent / 100) * circumference;
+            progress.style.strokeDashoffset = offset;
+            text.textContent = `${Math.round(currentPercent)}%`;  // Update number inside circle
+
+            currentPercent += increment;  // Increase the percentage
+            requestAnimationFrame(updateProgress);  // Request next frame
+        } else {
+            // Once animation is complete, ensure the final value is set
+            text.textContent = `${percent}%`;
+        }
+    };
+
+    // Start the animation
+    updateProgress();
+});
+
+
+
 </script>
 
     

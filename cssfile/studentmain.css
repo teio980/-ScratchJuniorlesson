@@ -257,9 +257,42 @@ body::-webkit-scrollbar {
 
 .btfour{
   height: 50px;
-  min-width: 200px;
-  margin-left: 450px;
+  min-width: 200px
 }
+
+.progress-circle {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 20px auto;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring__circle-bg,
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.5s ease;
+  transform-origin: 50% 50%;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: bold;
+}
+.progressbar1 .progress-ring__circle {
+  stroke: var(--secondary-color); 
+}
+
+.progressbar2 .progress-ring__circle {
+  stroke: var(--secondary-color); 
+}
+
 
 
 @media (max-width: 1400px){
@@ -295,6 +328,8 @@ body::-webkit-scrollbar {
     margin-top: 10px;
   }
 }
+
+
 
 
 

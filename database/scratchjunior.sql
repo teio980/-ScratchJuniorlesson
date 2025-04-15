@@ -252,7 +252,8 @@ CREATE TABLE `student` (
   `identity` enum('student') NOT NULL DEFAULT 'student',
   PRIMARY KEY (`student_id`),
   UNIQUE KEY `S_Username` (`S_Username`),
-  UNIQUE KEY `S_Mail` (`S_Mail`)
+  UNIQUE KEY `S_Mail` (`S_Mail`),
+  FULLTEXT KEY `student_id` (`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -262,8 +263,39 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES ('STU2025000001','Student_1','','Student1@gmail.com','student');
+INSERT INTO `student` VALUES ('STU2025000001','Student_1','','Student1@gmail.com','student'),('STU2025000002','Kong666','$2y$10$g/St7xxOzsZn9ALWq4GQ9.ctBUCQA92nChiXKyPKBmCuSvrvUsZNy','kongwenkhang@gmail.com','student'),('STU2025000003','Kong2383','$2y$10$vu4Kyb.gL92Vrci6o.ryGurqpe5nw4IqnGqNnFJE8XuJI6kAOZ28a','kongwenkhangg@gmail.com','student');
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `student_answers`
+--
+
+DROP TABLE IF EXISTS `student_answers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student_answers` (
+  `student_question_id` varchar(20) NOT NULL,
+  `student_id` varchar(20) DEFAULT NULL,
+  `question_id` int(11) DEFAULT NULL,
+  `student_answer` varchar(50) DEFAULT NULL,
+  `is_correct` tinyint(1) DEFAULT NULL,
+  `difficult` int(11) DEFAULT NULL,
+  PRIMARY KEY (`student_question_id`),
+  KEY `student_id` (`student_id`),
+  KEY `question_id` (`question_id`),
+  CONSTRAINT `student_answers_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`) ON DELETE CASCADE,
+  CONSTRAINT `student_answers_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_answers`
+--
+
+LOCK TABLES `student_answers` WRITE;
+/*!40000 ALTER TABLE `student_answers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `student_answers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -297,34 +329,31 @@ LOCK TABLES `student_class` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `student_questions`
+-- Table structure for table `student_level`
 --
 
-DROP TABLE IF EXISTS `student_questions`;
+DROP TABLE IF EXISTS `student_level`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `student_questions` (
-  `student_question_id` varchar(20) NOT NULL,
-  `student_id` varchar(20) NOT NULL,
-  `question_id` int(11) NOT NULL,
-  `student_answer` varchar(50) DEFAULT NULL,
-  `is_correct` tinyint(1) DEFAULT NULL,
-  `difficult` int(11) DEFAULT NULL,
-  PRIMARY KEY (`student_question_id`),
-  KEY `student_id` (`student_id`),
-  KEY `question_id` (`question_id`),
-  CONSTRAINT `student_questions_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`) ON DELETE CASCADE,
-  CONSTRAINT `student_questions_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `student_level` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` varchar(20) DEFAULT NULL,
+  `experience` int(11) DEFAULT 0,
+  `level` int(11) DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `student_level_ibfk_1` (`student_id`),
+  CONSTRAINT `student_level_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `student_questions`
+-- Dumping data for table `student_level`
 --
 
-LOCK TABLES `student_questions` WRITE;
-/*!40000 ALTER TABLE `student_questions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `student_questions` ENABLE KEYS */;
+LOCK TABLES `student_level` WRITE;
+/*!40000 ALTER TABLE `student_level` DISABLE KEYS */;
+INSERT INTO `student_level` VALUES (20,'STU2025000003',54,8),(21,'STU2025000002',14,4);
+/*!40000 ALTER TABLE `student_level` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -393,4 +422,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-14 14:44:25
+-- Dump completed on 2025-04-15 19:00:45
