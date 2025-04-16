@@ -135,24 +135,35 @@ if (isset($_POST['savebtn'])) {
 
     echo "</div></div>";
 
-$xp_check_stmt = $pdo->prepare("SELECT experience, level FROM student_level WHERE student_id = ?");
-$xp_check_stmt->execute([$user_id]);
-
-if ($xp_row = $xp_check_stmt->fetch(PDO::FETCH_ASSOC)) {
-    $current_xp = (int)$xp_row['experience'];
-    $current_level = (int)$xp_row['level'];
-
-    $level_ups = floor($current_xp / 100);  // 1 level up per 100 XP
-    $remaining_xp = $current_xp % 100;
-
-    if ($level_ups > 0) {
-        $new_level = $current_level + $level_ups;
-
-        // Update the DB with new level and remaining experience
-        $stmt_update_lvl = $pdo->prepare("UPDATE student_level SET experience = ?, level = ? WHERE student_id = ?");
-        $stmt_update_lvl->execute([$remaining_xp, $new_level, $user_id]);
+    $xp_check_stmt = $pdo->prepare("SELECT experience, level FROM student_level WHERE student_id = ?");
+    $xp_check_stmt->execute([$user_id]);
+    
+    if ($xp_row = $xp_check_stmt->fetch(PDO::FETCH_ASSOC)) {
+        $current_xp = (int)$xp_row['experience'];
+        $current_level = (int)$xp_row['level'];
+    
+        $level = $current_level;
+        $xp = $current_xp;
+    
+        // Loop to calculate how many levels the student gains
+        while (true) {
+            $xp_needed = 100 + ($level - 1) * 50;
+    
+            if ($xp >= $xp_needed) {
+                $xp -= $xp_needed;
+                $level++;
+            } else {
+                break;
+            }
+        }
+    
+        // If the level has changed, update the database
+        if ($level != $current_level) {
+            $stmt_update_lvl = $pdo->prepare("UPDATE student_level SET experience = ?, level = ? WHERE student_id = ?");
+            $stmt_update_lvl->execute([$xp, $level, $user_id]);
+        }
     }
-}
+    
 
 
 
