@@ -2,19 +2,40 @@
 include 'connect_DB.php';
 $password = $_POST["U_Password"];
 $token = $_POST["token"];
+$identity = $_POST["identity"];
 $token_hash = hash("sha256",$token);
 
-$sql = "SELECT * FROM user WHERE reset_token = ? AND reset_token_expires > NOW()";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$token_hash]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+if($identity == 'student') {
+    $sql = "SELECT * FROM student 
+            WHERE reset_token = ? AND reset_token_expires > NOW()";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$token_hash]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+} elseif($identity == 'teacher') {
+    $sql = "SELECT * FROM teacher 
+            WHERE reset_token = ? AND reset_token_expires > NOW()";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$token_hash]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+} elseif($identity == 'admin') {
+    $sql = "SELECT * FROM admin 
+            WHERE reset_token = ? AND reset_token_expires > NOW()";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$token_hash]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+} else {
+    die("Invalid user type");
+}
 
 if (!$user) {
     echo "Invalid or expired token.";
     exit;
 }
 
-if (strlen($password) <= 8 && strlen($password) >= 12) {
+if (strlen($password) <= 8 || strlen($password) >= 12) {
     die("Password length must between 8-12 characters");
 }
 
@@ -36,9 +57,36 @@ if (!preg_match('/[^a-zA-Z0-9\s]/', $password)) {
 
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-$sql = "UPDATE user SET U_Password = ?, reset_token = NULL ,  reset_token_expires = NULL WHERE U_ID = ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$hashedPassword,$user["U_ID"]]);
+if($identity == 'student') {
+    $sql = "UPDATE student SET 
+            S_Password = ?, 
+            reset_token = NULL, 
+            reset_token_expires = NULL 
+            WHERE student_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$hashedPassword, $user['student_id']]);
+    
+} elseif($identity == 'teacher') {
+    $sql = "UPDATE teacher SET 
+            T_Password = ?, 
+            reset_token = NULL, 
+            reset_token_expires = NULL 
+            WHERE teacher_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$hashedPassword, $user['teacher_id']]);
+    
+} elseif($identity == 'admin') {
+    $sql = "UPDATE admin SET 
+            A_Password = ?, 
+            reset_token = NULL, 
+            reset_token_expires = NULL 
+            WHERE admin_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$hashedPassword, $user['admin_id']]);
+    
+} else {
+    die("Invalid user type");
+}
 
 echo "Password Successful Updated."
 ?>

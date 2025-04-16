@@ -2,12 +2,33 @@
 include 'connect_DB.php';
 
 $token = $_GET["token"];
+$identity = $_GET['identity'] ?? '';
 $token_hash = hash("sha256",$token);
 
-$sql = "SELECT * FROM user WHERE reset_token = ? AND reset_token_expires > NOW()";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$token_hash]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+if($identity == 'student') {
+    $sql = "SELECT * FROM student 
+            WHERE reset_token = ? AND reset_token_expires > NOW()";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$token_hash]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+} elseif($identity == 'teacher') {
+    $sql = "SELECT * FROM teacher 
+            WHERE reset_token = ? AND reset_token_expires > NOW()";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$token_hash]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+} elseif($identity == 'admin') {
+    $sql = "SELECT * FROM admin 
+            WHERE reset_token = ? AND reset_token_expires > NOW()";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$token_hash]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+} else {
+    die("Invalid user type");
+}
 
 if (!$user) {
     echo "Invalid or expired token.";
@@ -30,6 +51,7 @@ include '../reshead.php';
     <h1>Reset Password</h1>
     <form action="process_reset_password.php" method="post" id="resetPassword_form">
         <input type="hidden" name="token" value="<?=htmlspecialchars($token)?>">
+        <input type="hidden" name="identity" value="<?=htmlspecialchars($identity)?>">
         <label for="U_Password">Password:</label>
         <div class="password-box">
             <input type="password" id="U_Password" name="U_Password" placeholder="Password" required>
