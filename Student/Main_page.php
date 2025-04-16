@@ -24,7 +24,7 @@
     <title>Profile Page</title>
 </head>
 <body>
-
+    <a href="Personal_Profile.php">Personal_Profile</a>
 <div class="tabs wrapper">
     <div class="tab active" data-tab="recent">EXERCISE</div>
     <div class="tab" data-tab="quiz">QUIZ</div>

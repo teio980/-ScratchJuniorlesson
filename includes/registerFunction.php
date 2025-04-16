@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt_S_checkQty->execute();
             $student_Qty = $stmt_S_checkQty->fetchColumn();
             $student_id = 'STU'.$currentYear.str_pad($student_Qty + 1, 6, '0', STR_PAD_LEFT);
+            
             $insertSql = "INSERT INTO student (student_id, S_Username, S_Password , S_Mail, identity) VALUES ( :S_ID, :name, :password , :email , :identity)";
             $insertStmt = $pdo->prepare($insertSql);
 
