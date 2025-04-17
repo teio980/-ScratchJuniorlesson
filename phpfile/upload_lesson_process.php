@@ -5,32 +5,66 @@ include 'connect.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['savebtn'])) {
     $title = $_POST['title'];
     $description = $_POST['description'];
-    $expire_date = $_POST['expire_date'];
-    
-    $filepath = null;
+
     if (!empty($_FILES['lesson_file']['name'])) {
-        $target_dir = "../uploads/lesson_files/";
+        $target_dir = __DIR__ . "/../phpfile/uploads_teacher/";
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0755, true);
         }
-        
-        $filename = basename($_FILES['lesson_file']['name']);
-        $target_file = $target_dir . $filename;
-        
-        if (move_uploaded_file($_FILES['lesson_file']['tmp_name'], $target_file)) {
-            $filepath = $target_file;
+
+        if ($_FILES['lesson_file']['error'] === UPLOAD_ERR_OK) {
+            $lesson_file_name = basename($_FILES['lesson_file']['name']);
+            $target_file = $target_dir . $lesson_file_name;
+
+            if (move_uploaded_file($_FILES['lesson_file']['tmp_name'], $target_file)) {
+                $lesson_file_path = "/phpfile/uploads/" . $lesson_file_name;
+            } else {
+                $_SESSION['error'] = "Failed to move uploaded lesson file!";
+                header("Location: ../teacher/upload_lesson.php");
+                exit();
+            }
+        } else {
+            $_SESSION['error'] = "Lesson file upload error: " . $_FILES['lesson_file']['error'];
+            header("Location: ../teacher/upload_lesson.php");
+            exit();
         }
     }
-    
-    $stmt = $connect->prepare("INSERT INTO lessons (title, description, expire_date) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $title, $description, $expire_date);
-    
+
+    if (!empty($_FILES['thumbnail_image']['name'])) {
+        $target_dir = __DIR__ . "/../phpfile/uploads/thumbnail/";
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0755, true);
+        }
+
+        if ($_FILES['thumbnail_image']['error'] === UPLOAD_ERR_OK) {
+            $thumbnail_name = basename($_FILES['thumbnail_image']['name']);
+            $target_file = $target_dir . $thumbnail_name;
+
+            if (move_uploaded_file($_FILES['thumbnail_image']['tmp_name'], $target_file)) {
+                $thumbnail_path = "/phpfile/uploads/thumbnail/" . $thumbnail_name;
+            } else {
+                $_SESSION['error'] = "Failed to move uploaded thumbnail!";
+                header("Location: ../teacher/upload_lesson.php");
+                exit();
+            }
+        } else {
+            $_SESSION['error'] = "Thumbnail upload error: " . $_FILES['thumbnail_image']['error'];
+            header("Location: ../teacher/upload_lesson.php");
+            exit();
+        }
+    }
+
+    $stmt = $connect->prepare("INSERT INTO lessons 
+        (title, description, lesson_file_name, file_path, thumbnail_name, thumbnail_path)
+        VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $title, $description, $lesson_file_name, $lesson_file_path, $thumbnail_name, $thumbnail_path);
+
     if ($stmt->execute()) {
-        $_SESSION['message'] = "Lesson submitted successfully!";
+        $_SESSION['message'] = "Lesson uploaded successfully!";
     } else {
         $_SESSION['error'] = "Error submitting lesson: " . $stmt->error;
     }
-    
+
     $stmt->close();
     header("Location: ../teacher/upload_lesson.php");
     exit();
