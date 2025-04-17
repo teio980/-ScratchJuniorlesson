@@ -4,6 +4,7 @@
     include '../resheadAfterLogin.php';
 
     $user_id = $_SESSION['user_id'];
+    $user_name = $_SESSION['username'];
 
     $sql = "SELECT lesson_id, title, description,expire_date FROM lessons ORDER BY lesson_id ASC";
     $result = mysqli_query($connect, $sql);
@@ -148,22 +149,70 @@
                                 </div>";
                         }
                         $overall_percent = $total_questions_all > 0 ? round(($total_correct_all / $total_questions_all) * 100, 2) : 0;
-                        $progress_circle_1 = "<div class='progress-circle progressbar1' data-percentage='$overall_percent'>
-                                                <svg class='progress-ring' width='120' height='120'>
-                                                    <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                    <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                </svg>
-                                                <div class='progress-text'>$overall_percent%</div>
+                        $progress_circle_1 = "<div class='progresswrapper'>
+                                                <div class='progress-label'>Overall Percentage <br>for whole quiz: $overall_percent%</div>
+                                                <div class='progress-circle progressbar1' data-percentage='$overall_percent'>
+                                                    <svg class='progress-ring' width='120' height='120'>
+                                                        <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                        <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                    </svg>
+                                                    <div class='progress-text'>$overall_percent%</div>
+                                                </div>
                                             </div>";
+
     
                         $quiz_percent = $total_quizzes > 0 ? round(($completed_quizzes / $total_quizzes) * 100, 2) : 0;
-                        $progress_circle_2 = "<div class='progress-circle progressbar2' data-percentage='$quiz_percent'>
-                                                <svg class='progress-ring' width='120' height='120'>
-                                                    <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                    <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                </svg>
-                                                <div class='progress-text'>$completed_quizzes / $total_quizzes</div>
+                        $progress_circle_2 = "<div class='progresswrapper'>
+                                                <div class='progress-label'>Quizzes <br>Completed: $completed_quizzes out of $total_quizzes</div>
+                                                <div class='progress-circle progressbar2' data-percentage='$quiz_percent'>
+                                                    <svg class='progress-ring' width='120' height='120'>
+                                                        <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                        <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                    </svg>
+                                                    <div class='progress-text'>$completed_quizzes / $total_quizzes</div>
+                                                </div>
                                             </div>";
+                                            
+
+                                            $xp_sql = "SELECT experience, level FROM student_level WHERE student_id = '$user_id'";
+                                            $xp_result = mysqli_query($connect, $xp_sql);
+                                            
+                                            $current_xp = 0;
+                                            $current_level = 1;
+                                            
+                                            if ($xp_result && mysqli_num_rows($xp_result) > 0) {
+                                                $xp_row = mysqli_fetch_assoc($xp_result);
+                                                $current_xp = (int)$xp_row['experience'];
+                                                $current_level = (int)$xp_row['level'];
+                                            }
+                                            
+                                            $xp_needed = 100 + ($current_level - 1) * 50;
+                                            $xp_percent = $xp_needed > 0 ? round(($current_xp / $xp_needed) * 100, 2) : 0;
+                                            
+                                            $progress_circle_3 = "
+                                                <div class='xp-section'>
+                                                    <i class='fa fa-user' aria-hidden='true' style='font-size:80px;'></i>
+                                                    <div class='xp-bar-container'>
+                                                        <div class='xp-label'><p>Name: {$user_name}</p></div>
+                                                        <div class='xp-bar'>
+                                                            <div class='xp-fill' style='width: {$xp_percent}%;'></div>
+                                                        </div>
+                                                        <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
+                                                    </div>
+                                                    <div class='progress-circle progressbar3' data-percentage='$xp_percent'>
+                                                        <svg class='progress-ring' width='120' height='120'>
+                                                            <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                            <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
+                                                        </svg>
+                                                        <div class='progress-text'>Lvl $current_level<br>$current_xp / $xp_needed XP</div>
+                                                    </div>
+                                                </div>
+                                            ";
+                                            
+
+
+
+                        
                     }
                     ?>
                 </div>
@@ -171,15 +220,20 @@
             <div class="quizcurve"></div>
 
             <div class="quizright">
-                <?php 
-                    echo $progress_circle_1;
-                    echo $progress_circle_2;
-                ?>
+                <div class="progress-xp-box">
+                    <?php 
+                        echo $progress_circle_3;
+                    ?>
+                </div>
+                <div class="progress-duo-box">
+                    <?php 
+                        echo $progress_circle_1;
+                        echo $progress_circle_2;
+                    ?>
+                </div>
                 <button class="btfour"><a href="ranking.php">View Ranking</a></button>
             </div>
         </div>
-        
-
     </div>
 
 
@@ -299,7 +353,7 @@ $connect->close();
 
     // Start the animation
     updateProgress();
-});
+    });
 
 
 
