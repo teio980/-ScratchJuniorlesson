@@ -81,6 +81,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
             <div class="editFormContent">
                 <form id="editForm" method="post" action="update_users.php">
                     <input type="hidden" id="editUserId" name="UserID">
+                    <input type="hidden" id="editIdentity" name="Identity">
 
                 <div class="form-group">
                     <label for="U_Username">Username (6-12 Characters):</label>
@@ -90,20 +91,6 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
                 <div class="form-group">
                     <label for="U_Email">Email:</label>
                     <input type="email" id="U_Email" name="U_Email" placeholder="e.g.: abc123@gmail.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Identity</label>
-                    <div class="radio-group">
-                        <label>
-                            Student
-                            <input type="radio" name="identity" id="identity_S" value="student">
-                        </label>
-                        <label>
-                            Teacher
-                            <input type="radio" name="identity" id="identity_T" value="teacher">
-                        </label>
-                    </div>
                 </div>
 
                 <button type="submit" class="save_btn">Save Changes</button>

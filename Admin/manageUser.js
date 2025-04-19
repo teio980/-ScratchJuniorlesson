@@ -12,13 +12,7 @@ function showEditForm() {
     document.getElementById('editUserId').value = cells[1].textContent.trim(); 
     document.getElementById('U_Username').value = cells[2].textContent.trim();
     document.getElementById('U_Email').value = cells[3].textContent.trim();
-
-    const identityValue = cells[4].textContent.trim().toLowerCase();
-    if (identityValue === "student") {
-        document.getElementById('identity_S').checked = true;
-    } else if (identityValue === "teacher") {
-        document.getElementById('identity_T').checked = true;
-    }
+    document.getElementById('editIdentity').value = cells[4].textContent.trim().toLowerCase();
 
     document.getElementById('editFormModal').style.display = 'flex';
 }
