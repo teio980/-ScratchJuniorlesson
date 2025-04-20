@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userId = $_POST['UserID'];
     $username = $_POST["U_Username"];  
     $email = $_POST["U_Email"];
-    $identity = $_POST['identity'];;  
+    $identity = $_POST['Identity'];
 
     $checkUsernameSql = "SELECT S_Username FROM student WHERE S_Username = :username AND student_id != :userId
                         UNION ALL
@@ -45,84 +45,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     
-    $currentIdentitySql = "SELECT identity FROM (
-            SELECT student_id AS id, identity FROM student WHERE student_id = :userId
-            UNION ALL
-            SELECT teacher_id AS id, identity FROM teacher WHERE teacher_id = :userId
-            UNION ALL
-            SELECT admin_id AS id, identity FROM admin WHERE admin_id = :userId
-        ) AS combined LIMIT 1";
-
-    $stmt = $pdo->prepare($currentIdentitySql);
-    $stmt->bindParam(':userId', $userId);
-    $stmt->execute();
-    $currentIdentity = $stmt->fetchColumn();
-
-    if ($currentIdentity != $identity) {
-            $getPasswordSql = "";
-            switch ($currentIdentity) {
-                case 'student':
-                    $getPasswordSql = "SELECT S_Password FROM student WHERE student_id = ?";
-                    break;
-                case 'teacher':
-                    $getPasswordSql = "SELECT T_Password FROM teacher WHERE teacher_id = ?";
-                    break;
-                case 'admin':
-                    $getPasswordSql = "SELECT A_Password FROM admin WHERE admin_id = ?";
-                    break;
-            }
-            
-            $stmt = $pdo->prepare($getPasswordSql);
-            $stmt->execute([$userId]);
-            $password = $stmt->fetchColumn();
-
-            switch ($currentIdentity) {
-            case 'student':
-            $deleteSql = "DELETE FROM student WHERE student_id = ?";
+    
+    $getPasswordSql = null;
+    switch ($identity) {
+        case 'student':
+            $getPasswordSql = "SELECT S_Password FROM student WHERE student_id = ?";
             break;
-            case 'teacher':
-            $deleteSql = "DELETE FROM teacher WHERE teacher_id = ?";
+        case 'teacher':
+            $getPasswordSql = "SELECT T_Password FROM teacher WHERE teacher_id = ?";
             break;
-            case 'admin':
-            $deleteSql = "DELETE FROM admin WHERE admin_id = ?";
+        case 'admin':
+            $getPasswordSql = "SELECT A_Password FROM admin WHERE admin_id = ?";
             break;
-            }
-        $stmt = $pdo->prepare($deleteSql);
-        $stmt->execute([$userId]);
     }
+    
+    $stmt = $pdo->prepare($getPasswordSql);
+    $stmt->execute([$userId]);
+    $password = $stmt->fetchColumn();
+    
 
     switch ($identity) {
         case 'student':
-            $insertSql = "INSERT INTO student (student_id, S_Username, S_Mail, S_Password, identity) 
-                    VALUES (?, ?, ?, ?, ?) 
+            $insertSql = "INSERT INTO student (student_id, S_Username, S_Mail, S_Password) 
+                    VALUES (?, ?, ?, ?) 
                     ON DUPLICATE KEY UPDATE 
                     S_Username = VALUES(S_Username), 
                     S_Mail = VALUES(S_Mail), 
-                    S_Password = VALUES(S_Password),
-                    identity = VALUES(identity)";
+                    S_Password = VALUES(S_Password)";
             break;
         case 'teacher':
-            $insertSql = "INSERT INTO teacher (teacher_id, T_Username, T_Mail, T_Password, identity) 
-                    VALUES (?, ?, ?, ?, ?) 
+            $insertSql = "INSERT INTO teacher (teacher_id, T_Username, T_Mail, T_Password) 
+                    VALUES (?, ?, ?, ?) 
                     ON DUPLICATE KEY UPDATE 
                     T_Username = VALUES(T_Username), 
                     T_Mail = VALUES(T_Mail), 
-                    T_Password = VALUES(T_Password),
-                    identity = VALUES(identity)";
+                    T_Password = VALUES(T_Password)";
             break;
         case 'admin':
-            $insertSql = "INSERT INTO admin (admin_id, A_Username, A_Mail, A_Password, identity) 
-                    VALUES (?, ?, ?, ?, ?) 
+            $insertSql = "INSERT INTO admin (admin_id, A_Username, A_Mail, A_Password) 
+                    VALUES (?, ?, ?, ?) 
                     ON DUPLICATE KEY UPDATE 
                     A_Username = VALUES(A_Username), 
                     A_Mail = VALUES(A_Mail), 
-                    A_Password = VALUES(A_Password),
-                    identity = VALUES(identity)";
+                    A_Password = VALUES(A_Password)";
             break;
     }
     
     $stmt = $pdo->prepare($insertSql);
-    $stmt->execute([$userId, $username, $email, $password, $identity]);
+    $stmt->execute([$userId, $username, $email, $password]);
     echo "<script>
     alert('Change Successful!');
     window.location.href = 'manageUser.php';

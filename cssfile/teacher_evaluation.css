@@ -1,0 +1,56 @@
+.question {
+    margin-bottom: 30px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.radio-button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.radio-button {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+input[type="radio"]:checked + .radio-button {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.radio-button:hover {
+    background-color: #e0e0e0;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+textarea{
+    width: 672px;       
+    height: 110px;      
+    
+    max-width: 100%;   
+    min-width: 320px;
+    min-height: 80px;
+}

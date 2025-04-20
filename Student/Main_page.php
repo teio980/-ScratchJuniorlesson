@@ -11,6 +11,7 @@
 
     $sql_quiz = "SELECT DISTINCT difficult FROM questions ORDER BY difficult ASC";
     $result_quiz = mysqli_query($connect, $sql_quiz);
+
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +25,6 @@
     <title>Profile Page</title>
 </head>
 <body>
-    <a href="Personal_Profile.php">Personal_Profile</a>
 <div class="tabs wrapper">
     <div class="tab active" data-tab="recent">EXERCISE</div>
     <div class="tab" data-tab="quiz">QUIZ</div>
@@ -51,6 +51,65 @@
                 </tr>
 
                 <?php
+
+                    // Start by checking if the student is already enrolled
+                    $check_sql = "SELECT * FROM student_class WHERE student_id = ?";
+                    $stmt = $connect->prepare($check_sql);
+                    $stmt->bind_param("s", $user_id);
+                    $stmt->execute();
+                    $check_result = $stmt->get_result();
+
+                    if ($check_result->num_rows === 0) {
+                        // Not enrolled yet
+
+                        // Handle form submission to enroll
+                        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['class_id'])) {
+                            $selected_class = $_POST['class_id'];
+
+                            // Auto-generate student_class_id
+                            $sql_sc_count = "SELECT COUNT(*) FROM student_class";
+                            $stmt_sc = $connect->prepare($sql_sc_count);
+                            $stmt_sc->execute();
+                            $stmt_sc->bind_result($sc_count);
+                            $stmt_sc->fetch();
+                            $stmt_sc->close();
+
+                            // Generate the new student_class_id in the format SC000001, SC000002, etc.
+                            $new_student_class_id = 'SC' . str_pad($sc_count + 1, 6, '0', STR_PAD_LEFT);
+
+                            // Insert the new record into student_class table
+                            $insert_sql = "INSERT INTO student_class (student_class_id, student_id, class_id) VALUES (?, ?, ?)";
+                            $insert_stmt = $connect->prepare($insert_sql);
+                            $insert_stmt->bind_param("sss", $new_student_class_id, $user_id, $selected_class);
+
+                            if ($insert_stmt->execute()) {
+                                echo "<script>alert('You have successfully enrolled in a class.'); window.location.href = 'Main_page.php';</script>";
+                            } else {
+                                echo "<p>Error enrolling: " . $insert_stmt->error . "</p>";
+                            }
+                            $insert_stmt->close();
+                        }
+
+                        // Show class selection form if not already enrolled
+                        $class_query = "SELECT class_id FROM class";
+                        $class_result = mysqli_query($connect, $class_query);
+
+                        echo "<div>";
+                        echo "<h3>Select Your Class</h3>";
+                        echo "<form method='POST'>";
+                        echo "<select name='class_id' required>";
+                        while ($row = mysqli_fetch_assoc($class_result)) {
+                            echo "<option value='{$row['class_id']}'>{$row['class_id']}</option>";
+                        }
+                        echo "</select>";
+                        echo "<br><br><button type='submit'>Enroll</button>";
+                        echo "</form>";
+                        echo "</div>";
+                    }
+
+                    $stmt->close();
+
+    
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>
@@ -149,7 +208,7 @@
                                 </div>";
                         }
                         $overall_percent = $total_questions_all > 0 ? round(($total_correct_all / $total_questions_all) * 100, 2) : 0;
-                        $progress_circle_1 = "<div class='progresswrapper'>
+                        $progress_circle_1 = "<div class='progresswrapper progresswrapper1'>
                                                 <div class='progress-label'>Overall Percentage <br>for whole quiz: $overall_percent%</div>
                                                 <div class='progress-circle progressbar1' data-percentage='$overall_percent'>
                                                     <svg class='progress-ring' width='120' height='120'>
@@ -162,7 +221,7 @@
 
     
                         $quiz_percent = $total_quizzes > 0 ? round(($completed_quizzes / $total_quizzes) * 100, 2) : 0;
-                        $progress_circle_2 = "<div class='progresswrapper'>
+                        $progress_circle_2 = "<div class='progresswrapper progresswrapper2'>
                                                 <div class='progress-label'>Quizzes <br>Completed: $completed_quizzes out of $total_quizzes</div>
                                                 <div class='progress-circle progressbar2' data-percentage='$quiz_percent'>
                                                     <svg class='progress-ring' width='120' height='120'>
@@ -220,18 +279,18 @@
             <div class="quizcurve"></div>
 
             <div class="quizright">
-                <div class="progress-xp-box">
-                    <?php 
-                        echo $progress_circle_3;
-                    ?>
-                </div>
-                <div class="progress-duo-box">
-                    <?php 
-                        echo $progress_circle_1;
-                        echo $progress_circle_2;
-                    ?>
-                </div>
-                <button class="btfour"><a href="ranking.php">View Ranking</a></button>
+                    <div class="progress-xp-box">
+                        <?php 
+                            echo $progress_circle_3;
+                        ?>
+                    </div>
+                    <div class="progress-duo-box">
+                        <?php 
+                            echo $progress_circle_1;
+                            echo $progress_circle_2;
+                        ?>
+                    </div>
+                    <button class="btfour"><a href="ranking.php">View Ranking</a></button>
             </div>
         </div>
     </div>
