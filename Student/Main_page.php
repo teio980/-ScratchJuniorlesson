@@ -6,7 +6,7 @@
     $user_id = $_SESSION['user_id'];
     $user_name = $_SESSION['username'];
 
-    $sql = "SELECT lesson_id, title, description,expire_date FROM lessons ORDER BY lesson_id ASC";
+    $sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
     $result = mysqli_query($connect, $sql);
 
     $sql_quiz = "SELECT DISTINCT difficult FROM questions ORDER BY difficult ASC";
@@ -40,18 +40,7 @@
         </div>
 
     <div class="container tab-content active" id="recent">
-        <h2>Available Lessons</h2>
-            <table border="1">
-                <tr>
-                    <th>Lesson</th> 
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Expired date</th>
-                    <th>Action</th>
-                </tr>
-
                 <?php
-
                     // Start by checking if the student is already enrolled
                     $check_sql = "SELECT * FROM student_class WHERE student_id = ?";
                     $stmt = $connect->prepare($check_sql);
@@ -109,26 +98,65 @@
 
                     $stmt->close();
 
-    
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>
-                                <td>{$row['lesson_id']}</td>
-                                <td>{$row['title']}</td>
-                                <td>{$row['description']}</td>
-                                <td>{$row['expire_date']}</td>
-                                <td>
-                                    <form action='studentsubmit.php' method='GET'>
-                                        <input type='hidden' name='lesson_id' value='{$row['lesson_id']}'>
-                                        <button type='submit'>Submit</button>
-                                    </form>
-                                </td>
-                            </tr>";
+                    if (mysqli_num_rows($result) > 0) {
+                        $row = mysqli_fetch_assoc($result);
+                        echo "Class ID: " . $row['class_id'];
                     }
-                } else {
-                    echo "<tr><td colspan='5'>No lessons available</td></tr>";
-                }?>
-            </table>
+                        
+                ?>
+            <div class="exercisewrapper">
+
+                <?php
+                    if (mysqli_num_rows($result) > 0) {
+
+                        $class_id = $row['class_id'];
+
+                        // ✅ Keep your original query
+                        $sql_work = "SELECT student_work, expire_date FROM class_work WHERE class_id = '$class_id'";
+                        $result_work = mysqli_query($connect, $sql_work);
+
+                        $counter = 0; 
+
+                        if ($result_work && mysqli_num_rows($result_work) > 0) {
+                            while ($row = mysqli_fetch_assoc($result_work)) {
+                                $student_work = htmlspecialchars($row['student_work']);
+                                $expire_date = htmlspecialchars($row['expire_date']);
+
+                                // ✅ Now get the lesson title where lesson_file_name matches student_work
+                                $sql_lesson = "SELECT title FROM lessons WHERE lesson_file_name = '$student_work' LIMIT 1";
+                                $result_lesson = mysqli_query($connect, $sql_lesson);
+
+                                $lesson_title = $student_work; 
+
+                                if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
+                                    $lesson_row = mysqli_fetch_assoc($result_lesson);
+                                    $lesson_title = htmlspecialchars($lesson_row['title']);
+                                }
+
+                                $backgrounds = [
+                                    "linear-gradient(to bottom right, #ff5e62, #ff9966)",
+                                    "linear-gradient(to bottom right, #4a90e2, #5cd2e6)", 
+                                    "linear-gradient(to bottom right, #f8b500, #fceabb)",
+                                     
+                                ];
+                                $bg_style = $backgrounds[$counter % count($backgrounds)];
+                                $counter++;
+                        
+                                echo '
+                                <div class="card project-card" style="background: ' . $bg_style . '">
+                                    <div class="lang-tag">Scratch Junior</div>
+                                    <div class="circle"></div>
+                                    <div class="title">' . $lesson_title . '</div>
+                                    <div class="expireddate">' . $expire_date . '</div>
+                                    <button class="buttonsubmit"><a href="#">Submit</a></button>
+                                </div>';
+                            }
+                        }
+
+                    }
+                ?>
+                </div>
+            </div>
     </div>
 
     <div class="container tab-content" id="quiz">

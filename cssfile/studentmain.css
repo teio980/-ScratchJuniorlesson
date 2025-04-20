@@ -54,7 +54,7 @@ body::-webkit-scrollbar {
 
 .tab-content.active {
     display: block;
-}
+} 
 
 .tab-slide-in-left {
   animation: slideInFromLeft 0.2s forwards;
@@ -108,6 +108,108 @@ body::-webkit-scrollbar {
   to {
     transform: translateX(100%);
   }
+}
+
+/*Exercise submit*/
+.exercisewrapper{
+  display: flex;
+  margin: 30px;
+  flex-wrap: wrap;
+}
+
+.card {
+  margin: 10px 20px;
+  width: 200px;
+  height: 220px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(to bottom right, #4a90e2, #5cd2e6);
+  color: white;
+  font-weight: bold;
+}
+
+.project-card {
+  color: #000;
+  position: relative;
+}
+
+.project-card .lang-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #fcd34d;
+  color: black;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.project-card .circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-image: url('../img_logo/sj.png'); 
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-top: 30px;
+}
+
+
+.project-card .title {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.project-card .buttonsubmit {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  align-items: center;
+  background-color: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 10px 0;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.buttonsubmit a{
+  text-decoration: none;
+  color: var(--text-dark);
+}
+
+.buttonsubmit:hover,
+.buttonsubmit:focus {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.buttonsubmit:hover {
+  transform: translateY(-1px);
 }
 
 /*Quiz CSS*/
