@@ -70,21 +70,21 @@ include '../resheadAfterLogin.php';
 </html>
 
 <?php
-// Handle form submission
 if (isset($_POST['assign_submit'])) {
     $class_id = $_POST['class_id'];
     $lesson_id = $_POST['lesson_id'];
     $expire_date = $_POST['expire_date'];
+    $classwork_id = uniqid("cw_");
 
-    // 1. 查询 lesson_file_name
+    // ✅ 查询 lesson_file_name 作为学生作业的路径
     $query = "SELECT lesson_file_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($query);
-    $stmt->bind_param('i', $lesson_id);
+    $stmt->bind_param("s", $lesson_id);
     $stmt->execute();
-    $stmt->bind_result($student_work);
+    $stmt->bind_result($lesson_file_name);
 
     if ($stmt->fetch()) {
-        $stmt->close(); // 一定要关闭！
+        $stmt->close();
 
         // 2. 获取 class_work 数量，生成新的 availability_id
         $sql_T_checkQty = "SELECT COUNT(*) AS total FROM class_work";
@@ -94,9 +94,9 @@ if (isset($_POST['assign_submit'])) {
         $classwork_id = 'CW' . str_pad($classwork_Qty + 1, 6, '0', STR_PAD_LEFT);
 
         // 3. 插入新记录
-        $insert_query = "INSERT INTO class_work (availability_id, class_id, student_work, expire_date) VALUES (?, ?, ?, ?)";
+        $insert_query = "INSERT INTO class_work (availability_id, lesson_id, class_id, student_work, expire_date) VALUES (?, ?, ?, ?, ?)";
         $insert_stmt = $connect->prepare($insert_query);
-        $insert_stmt->bind_param("ssss", $classwork_id, $class_id, $student_work, $expire_date);
+        $insert_stmt->bind_param("sssss", $classwork_id, $lesson_id ,$class_id, $lesson_file_name, $expire_date);
 
         if ($insert_stmt->execute()) {
             echo "<script>alert('Lesson assigned successfully.'); window.location.href = 'Main_page.php';</script>";

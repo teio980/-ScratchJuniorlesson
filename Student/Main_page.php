@@ -112,7 +112,7 @@
                         $class_id = $row['class_id'];
 
                         // ✅ Keep your original query
-                        $sql_work = "SELECT student_work, expire_date FROM class_work WHERE class_id = '$class_id'";
+                        $sql_work = "SELECT availability_id, student_work, expire_date FROM class_work WHERE class_id = '$class_id'";
                         $result_work = mysqli_query($connect, $sql_work);
 
                         $counter = 0; 
@@ -148,14 +148,64 @@
                                     <div class="circle"></div>
                                     <div class="title">' . $lesson_title . '</div>
                                     <div class="expireddate">' . $expire_date . '</div>
-                                    <button class="buttonsubmit"><a href="#">Submit</a></button>
+                                    <button class="buttonsubmit">
+                                        <a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Submit</a>
+                                    </button>
                                 </div>';
+                                
                             }
                         }
 
                     }
                 ?>
                 </div>
+                <!-- 🔽 NEW BLOCK FOR UNAVAILABLE LESSONS -->
+<div class="exercisewrapper">
+    <?php
+        // Get all lessons
+        $sql_all_lessons = "SELECT lesson_id, title FROM lessons";
+        $result_all_lessons = mysqli_query($connect, $sql_all_lessons);
+
+        if ($result_all_lessons && mysqli_num_rows($result_all_lessons) > 0) {
+
+            // Build an array of lesson_ids already assigned in class_work for this class
+            $existing_lessons = [];
+            $sql_existing = "SELECT lesson_id FROM class_work WHERE class_id = '$class_id'";
+            $result_existing = mysqli_query($connect, $sql_existing);
+            if ($result_existing) {
+                while ($row = mysqli_fetch_assoc($result_existing)) {
+                    $existing_lessons[] = $row['lesson_id'];
+                }
+            }
+
+            $counter = 0;
+
+            while ($lesson = mysqli_fetch_assoc($result_all_lessons)) {
+                $lesson_id = $lesson['lesson_id'];
+                $lesson_title = htmlspecialchars($lesson['title']);
+
+                if (!in_array($lesson_id, $existing_lessons)) {
+                    $backgrounds = [
+                        "linear-gradient(to bottom right, #bdc3c7, #2c3e50)",
+                        "linear-gradient(to bottom right, #7f8c8d, #95a5a6)",
+                        "linear-gradient(to bottom right, #e0e0e0, #c0c0c0)",
+                    ];
+                    $bg_style = $backgrounds[$counter % count($backgrounds)];
+                    $counter++;
+
+                    echo '
+                    <div class="card project-card" style="background: ' . $bg_style . '">
+                        <div class="lang-tag">Unavailable</div>
+                        <div class="circle"></div>
+                        <div class="title">' . $lesson_title . '</div>
+                        <div class="expireddate">N/A</div>
+                        <button class="buttonsubmit" disabled><a>Unavailable</a></button>
+                    </div>';
+                }
+            }
+        }
+    ?>
+</div>
             </div>
     </div>
 

@@ -54,10 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['savebtn'])) {
         }
     }
 
+    $sql_T_checkQty = "SELECT COUNT(*) FROM lessons";
+    $result_T_checkQty = mysqli_query($connect, $sql_T_checkQty);
+    
+    if ($result_T_checkQty) {
+        $row = mysqli_fetch_row($result_T_checkQty);
+        $lesson_Qty = $row[0];
+        $lesson_id = 'LL' . str_pad($lesson_Qty + 1, 6, '0', STR_PAD_LEFT);
+    }
+
     $stmt = $connect->prepare("INSERT INTO lessons 
-        (title, description, lesson_file_name, file_path, thumbnail_name, thumbnail_path)
-        VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssss", $title, $description, $lesson_file_name, $lesson_file_path, $thumbnail_name, $thumbnail_path);
+        (lesson_id,title, description, lesson_file_name, file_path, thumbnail_name, thumbnail_path)
+        VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssss",$lesson_id, $title, $description, $lesson_file_name, $lesson_file_path, $thumbnail_name, $thumbnail_path);
 
     if ($stmt->execute()) {
         $_SESSION['message'] = "Lesson uploaded successfully!";
