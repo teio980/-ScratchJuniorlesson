@@ -64,7 +64,6 @@ include '../resheadAfterLogin.php';
         document.getElementById('thumbnailPreview').src = thumbnailPath;
     }
 
-    // 自动显示第一个缩略图
     window.onload = updateThumbnail;
     </script>
 </body>
@@ -77,7 +76,7 @@ if (isset($_POST['assign_submit'])) {
     $lesson_id = $_POST['lesson_id'];
     $expire_date = $_POST['expire_date'];
 
-    // Get the lesson_file_name (as student_work)
+    // 1. 查询 lesson_file_name
     $query = "SELECT lesson_file_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($query);
     $stmt->bind_param('i', $lesson_id);
@@ -85,12 +84,19 @@ if (isset($_POST['assign_submit'])) {
     $stmt->bind_result($student_work);
 
     if ($stmt->fetch()) {
-        $stmt->close();
+        $stmt->close(); // 一定要关闭！
 
-        // Insert into availability table
-        $insert_query = "INSERT INTO class_work (class_id, student_work, expire_date) VALUES (?, ?, ?)";
+        // 2. 获取 class_work 数量，生成新的 availability_id
+        $sql_T_checkQty = "SELECT COUNT(*) AS total FROM class_work";
+        $result = $connect->query($sql_T_checkQty);
+        $row = $result->fetch_assoc();
+        $classwork_Qty = $row['total'];
+        $classwork_id = 'CW' . str_pad($classwork_Qty + 1, 6, '0', STR_PAD_LEFT);
+
+        // 3. 插入新记录
+        $insert_query = "INSERT INTO class_work (availability_id, class_id, student_work, expire_date) VALUES (?, ?, ?, ?)";
         $insert_stmt = $connect->prepare($insert_query);
-        $insert_stmt->bind_param("sss", $class_id, $student_work, $expire_date);
+        $insert_stmt->bind_param("ssss", $classwork_id, $class_id, $student_work, $expire_date);
 
         if ($insert_stmt->execute()) {
             echo "<script>alert('Lesson assigned successfully.'); window.location.href = 'Main_page.php';</script>";
@@ -99,7 +105,9 @@ if (isset($_POST['assign_submit'])) {
         }
 
         $insert_stmt->close();
-    } 
+    } else {
+        echo "Lesson not found.";
+    }
 
     $connect->close();
 }
