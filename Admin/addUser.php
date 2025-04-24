@@ -49,7 +49,7 @@ include '../resheadAfterLogin.php';
                 <label for="identity">Identity:</label>
                 <div class="radio_option">
                     <label for="identity_S">Student</label>
-                    <input type="radio" name="identity" id="identity_S" value="student"> 
+                    <input type="radio" name="identity" id="identity_S" value="student" required> 
                 </div>
                 <div class="radio_option">
                     <label for="identity_T">Teacher</label>

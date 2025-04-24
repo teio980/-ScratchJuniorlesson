@@ -1,0 +1,46 @@
+@import url(global.css);
+
+#menu_icon {
+    font-size: 45px;
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
+}
+
+.menu_container {
+    display: flex;
+    position: relative;
+}
+
+.adminMenu {
+    position: absolute;
+    left: -15%; 
+    top: 100%; 
+    gap: 20px;
+    flex-direction: column;
+    background-color: var(--secondary-color);
+    width: 15%;
+    height: calc(100vh - 88px); 
+    overflow-y: auto;
+    transition: left 0.3s ease; 
+    display: flex; 
+    list-style-type: none; 
+    margin: 0;
+    padding: 20px 0;
+    z-index: 5;
+}
+
+.adminMenu.active {
+    left: 0; 
+}
+
+.adminMenu a {
+    font-size: 24px;
+    text-decoration: none;
+    color: white;
+    padding-left: 10px;
+}
+
+.adminMenu a:hover {
+    color: black;
+}

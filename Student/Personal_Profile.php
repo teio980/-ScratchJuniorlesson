@@ -15,31 +15,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../cssfile/reshead.css">
+    <link rel="stylesheet" href="../cssfile/personal_profile.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <title>Personal Profile</title>
 </head>
 <body>
-    <form action="../includes/change_Username.php" method="post">
+    <h1>Personal Profile</h1>
+    <form action="../includes/change_Username.php" method="post" class="changeUsernameEmail_box">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userID) ?>">
+        <div class="UsernameEmail_box">
         <label for="new_Username">Username:</label>
         <input type="text" name="new_Username" id="new_Username" value="<?php echo htmlspecialchars($user['Username']) ?>">
+        </div>
 
+        <div class="UsernameEmail_box">
         <label for="new_Mail">E-mail:</label>
         <input type="email" name="new_Mail" id="new_Mail" value="<?php echo htmlspecialchars($user['Mail']) ?>">
+        </div>
 
         <button type="submit" class="save_btn">Save Changes</button>
     </form>
-    <form action="../includes/change_Password.php" method="post">
+    <form action="../includes/change_Password.php" method="post" class="changePassword_box">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userID) ?>">
+
+        <div class="password_box">
         <label for="old_Password">Old Password:</label>
         <input type="password" name="old_Password" id="old_Password">
+        <span class="material-symbols-outlined" id="showOldPassword_icon" onclick="showPassword('old_Password','showOldPassword_icon') ">visibility_off</span>
+        </div>
 
+        <div class="password_box">
         <label for="new_Password">New Password:</label>
         <input type="password" name="new_Password" id="new_Password">
+        <span class="material-symbols-outlined" id="showNewPassword_icon" onclick="showPassword('new_Password','showNewPassword_icon') ">visibility_off</span>
+        </div>
 
+        <div class="password_box">
         <label for="new_Password">Confirmed New Password:</label>
         <input type="password" name="confirmed_new_Password" id="confirmed_new_Password">
+        <span class="material-symbols-outlined" id="showNewConfirmedPassword_icon" onclick="showPassword('confirmed_new_Password','showNewConfirmedPassword_icon') ">visibility_off</span>
+        </div>
 
         <button type="submit" class="save_btn">Save Changes</button>
     </form>
 </body>
+<script>
+    function showPassword(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    if (passwordInput && icon) {
+        if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.textContent = 'visibility';
+        } else {
+        passwordInput.type = 'password';
+        icon.textContent = 'visibility_off';
+        }
+    }
+    }
+    </script>
 </html>

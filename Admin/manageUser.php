@@ -68,6 +68,9 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
             <?php endforeach; ?>
             </tbody>
         </table> 
+        <a href="addUser.php" style="text-decoration: none;">
+        <button type="button"class="add_btn">Add</button>
+        </a>
         <button type="button" onclick="showEditForm()" class="edit_btn">Edit</button>
         <button type="submit" class="delete_btn" onclick="return confirmDelete()">Delete</button>
     </form>
