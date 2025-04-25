@@ -69,7 +69,6 @@ $difficulties = $connect->query("SELECT DISTINCT difficult FROM student_answers 
             </select>
           </form>
         </div>
-        <button class="returnbutton"><a href="Main_page.php">Return</a></button>
       </div>
 
       <!-- Table Container -->
@@ -103,6 +102,11 @@ $difficulties = $connect->query("SELECT DISTINCT difficult FROM student_answers 
       </div>
     </div>
   </div>
+
+
+  <a href="Main_page.php" class="floating-return-button">← Return</a>
+
+
 
   <script>
     // Wait for the table to load before processing it

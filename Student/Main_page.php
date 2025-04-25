@@ -39,175 +39,240 @@
             </div>
         </div>
 
-    <div class="container tab-content active" id="recent">
-                <?php
-                    // Start by checking if the student is already enrolled
-                    $check_sql = "SELECT * FROM student_class WHERE student_id = ?";
-                    $stmt = $connect->prepare($check_sql);
-                    $stmt->bind_param("s", $user_id);
-                    $stmt->execute();
-                    $check_result = $stmt->get_result();
-
-                    if ($check_result->num_rows === 0) {
-                        // Not enrolled yet
-
-                        // Handle form submission to enroll
-                        if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['class_id'])) {
-                            $selected_class = $_POST['class_id'];
-
-                            // Auto-generate student_class_id
-                            $sql_sc_count = "SELECT COUNT(*) FROM student_class";
-                            $stmt_sc = $connect->prepare($sql_sc_count);
-                            $stmt_sc->execute();
-                            $stmt_sc->bind_result($sc_count);
-                            $stmt_sc->fetch();
-                            $stmt_sc->close();
-
-                            // Generate the new student_class_id in the format SC000001, SC000002, etc.
-                            $new_student_class_id = 'SC' . str_pad($sc_count + 1, 6, '0', STR_PAD_LEFT);
-
-                            // Insert the new record into student_class table
-                            $insert_sql = "INSERT INTO student_class (student_class_id, student_id, class_id) VALUES (?, ?, ?)";
-                            $insert_stmt = $connect->prepare($insert_sql);
-                            $insert_stmt->bind_param("sss", $new_student_class_id, $user_id, $selected_class);
-
-                            if ($insert_stmt->execute()) {
-                                echo "<script>alert('You have successfully enrolled in a class.'); window.location.href = 'Main_page.php';</script>";
-                            } else {
-                                echo "<p>Error enrolling: " . $insert_stmt->error . "</p>";
-                            }
-                            $insert_stmt->close();
-                        }
-
-                        // Show class selection form if not already enrolled
-                        $class_query = "SELECT class_id FROM class";
-                        $class_result = mysqli_query($connect, $class_query);
-
-                        echo "<div>";
-                        echo "<h3>Select Your Class</h3>";
-                        echo "<form method='POST'>";
-                        echo "<select name='class_id' required>";
-                        while ($row = mysqli_fetch_assoc($class_result)) {
-                            echo "<option value='{$row['class_id']}'>{$row['class_id']}</option>";
-                        }
-                        echo "</select>";
-                        echo "<br><br><button type='submit'>Enroll</button>";
-                        echo "</form>";
-                        echo "</div>";
-                    }
-
-                    $stmt->close();
-
-                    if (mysqli_num_rows($result) > 0) {
-                        $row = mysqli_fetch_assoc($result);
-                        echo "Class ID: " . $row['class_id'];
-                    }
-                        
-                ?>
-            <div class="exercisewrapper">
+            <div class="container tab-content active" id="recent">
 
                 <?php
-                    if (mysqli_num_rows($result) > 0) {
+                // Check if student is enrolled
+                $check_sql = "SELECT * FROM student_class WHERE student_id = ?";
+                $stmt = $connect->prepare($check_sql);
+                $stmt->bind_param("s", $user_id);
+                $stmt->execute();
+                $check_result = $stmt->get_result();
 
-                        $class_id = $row['class_id'];
+                if ($check_result->num_rows === 0) {
+                    // Handle enrollment form submission
+                    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['class_id'])) {
+                        $selected_class = $_POST['class_id'];
 
-                        // ✅ Keep your original query
-                        $sql_work = "SELECT availability_id, student_work, expire_date FROM class_work WHERE class_id = '$class_id'";
-                        $result_work = mysqli_query($connect, $sql_work);
+                        $sql_sc_count = "SELECT COUNT(*) FROM student_class";
+                        $stmt_sc = $connect->prepare($sql_sc_count);
+                        $stmt_sc->execute();
+                        $stmt_sc->bind_result($sc_count);
+                        $stmt_sc->fetch();
+                        $stmt_sc->close();
 
-                        $counter = 0; 
+                        $new_student_class_id = 'SC' . str_pad($sc_count + 1, 6, '0', STR_PAD_LEFT);
 
-                        if ($result_work && mysqli_num_rows($result_work) > 0) {
-                            while ($row = mysqli_fetch_assoc($result_work)) {
-                                $student_work = htmlspecialchars($row['student_work']);
-                                $expire_date = htmlspecialchars($row['expire_date']);
+                        $insert_sql = "INSERT INTO student_class (student_class_id, student_id, class_id) VALUES (?, ?, ?)";
+                        $insert_stmt = $connect->prepare($insert_sql);
+                        $insert_stmt->bind_param("sss", $new_student_class_id, $user_id, $selected_class);
 
-                                // ✅ Now get the lesson title where lesson_file_name matches student_work
-                                $sql_lesson = "SELECT title FROM lessons WHERE lesson_file_name = '$student_work' LIMIT 1";
-                                $result_lesson = mysqli_query($connect, $sql_lesson);
-
-                                $lesson_title = $student_work; 
-
-                                if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
-                                    $lesson_row = mysqli_fetch_assoc($result_lesson);
-                                    $lesson_title = htmlspecialchars($lesson_row['title']);
-                                }
-
-                                $backgrounds = [
-                                    "linear-gradient(to bottom right, #ff5e62, #ff9966)",
-                                    "linear-gradient(to bottom right, #4a90e2, #5cd2e6)", 
-                                    "linear-gradient(to bottom right, #f8b500, #fceabb)",
-                                     
-                                ];
-                                $bg_style = $backgrounds[$counter % count($backgrounds)];
-                                $counter++;
-                        
-                                echo '
-                                <div class="card project-card" style="background: ' . $bg_style . '">
-                                    <div class="lang-tag">Scratch Junior</div>
-                                    <div class="circle"></div>
-                                    <div class="title">' . $lesson_title . '</div>
-                                    <div class="expireddate">' . $expire_date . '</div>
-                                    <button class="buttonsubmit">
-                                        <a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Submit</a>
-                                    </button>
-                                </div>';
-                                
-                            }
+                        if ($insert_stmt->execute()) {
+                            echo "<script>alert('You have successfully enrolled in a class.'); window.location.href = 'Main_page.php';</script>";
+                        } else {
+                            echo "<p>Error enrolling: " . $insert_stmt->error . "</p>";
                         }
-
+                        $insert_stmt->close();
                     }
+
+                    // Class selection form
+                    $class_query = "SELECT class_id FROM class";
+                    $class_result = mysqli_query($connect, $class_query);
+
+                    echo "<div class='classuidwrapper'>";
+                    echo "<h3>Select Your Class</h3>";
+                    echo "<form method='POST'>";
+                    echo "<select name='class_id' required>";
+                    while ($row = mysqli_fetch_assoc($class_result)) {
+                        echo "<option value='{$row['class_id']}'>{$row['class_id']}</option>";
+                    }
+                    echo "</select>";
+                    echo "<br><br><button type='submit'>Enroll</button>";
+                    echo "</form>";
+                    echo "</div>";
+                }
+
+                // Get class ID for enrolled student
+                $class_id = null;
+                $sql_class = "SELECT class_id FROM student_class WHERE student_id = ?";
+                $stmt = $connect->prepare($sql_class);
+                $stmt->bind_param("s", $user_id);
+                $stmt->execute();
+                $result_class = $stmt->get_result();
+                if ($result_class && $result_class->num_rows > 0) {
+                    $row_class = $result_class->fetch_assoc();
+                    $class_id = $row_class['class_id'];
+                }
+                $stmt->close();
+
+                if ($class_id !== null) {
+                    echo "
+                            <div class='classuidwrapper'>
+                                <div class='classuid'>Class ID: <strong>$class_id</strong></div>
+                            </div>
+                        ";
+
+                }
                 ?>
+
+                <!-- Section: Submitted -->
+                <div class="section-divider">
+                    <span class="section-title">Submitted</span>
                 </div>
-                <!-- 🔽 NEW BLOCK FOR UNAVAILABLE LESSONS -->
-<div class="exercisewrapper">
-    <?php
-        // Get all lessons
-        $sql_all_lessons = "SELECT lesson_id, title FROM lessons";
-        $result_all_lessons = mysqli_query($connect, $sql_all_lessons);
+                <div class="exercisewrapper">
+                <?php
+$sql_submitted = "
+    SELECT cw.availability_id, ss.filename AS student_work, cw.expire_date
+    FROM class_work cw
+    INNER JOIN student_submit ss 
+        ON cw.class_id = ss.class_id 
+        AND cw.lesson_id = ss.lesson_id
+    WHERE cw.class_id = '$class_id'
+      AND ss.student_id = '$user_id'
+";
+$result_submitted = mysqli_query($connect, $sql_submitted);
 
-        if ($result_all_lessons && mysqli_num_rows($result_all_lessons) > 0) {
+$counter = 0;
+if ($result_submitted && mysqli_num_rows($result_submitted) > 0) {
+    while ($row = mysqli_fetch_assoc($result_submitted)) {
+        $student_work = htmlspecialchars($row['student_work']);
+        $expire_date = htmlspecialchars($row['expire_date']);
 
-            // Build an array of lesson_ids already assigned in class_work for this class
-            $existing_lessons = [];
-            $sql_existing = "SELECT lesson_id FROM class_work WHERE class_id = '$class_id'";
-            $result_existing = mysqli_query($connect, $sql_existing);
-            if ($result_existing) {
-                while ($row = mysqli_fetch_assoc($result_existing)) {
-                    $existing_lessons[] = $row['lesson_id'];
-                }
-            }
+        $sql_lesson = "SELECT title FROM lessons WHERE lesson_file_name = '$student_work' LIMIT 1";
+        $result_lesson = mysqli_query($connect, $sql_lesson);
 
-            $counter = 0;
-
-            while ($lesson = mysqli_fetch_assoc($result_all_lessons)) {
-                $lesson_id = $lesson['lesson_id'];
-                $lesson_title = htmlspecialchars($lesson['title']);
-
-                if (!in_array($lesson_id, $existing_lessons)) {
-                    $backgrounds = [
-                        "linear-gradient(to bottom right, #bdc3c7, #2c3e50)",
-                        "linear-gradient(to bottom right, #7f8c8d, #95a5a6)",
-                        "linear-gradient(to bottom right, #e0e0e0, #c0c0c0)",
-                    ];
-                    $bg_style = $backgrounds[$counter % count($backgrounds)];
-                    $counter++;
-
-                    echo '
-                    <div class="card project-card" style="background: ' . $bg_style . '">
-                        <div class="lang-tag">Unavailable</div>
-                        <div class="circle"></div>
-                        <div class="title">' . $lesson_title . '</div>
-                        <div class="expireddate">N/A</div>
-                        <button class="buttonsubmit" disabled><a>Unavailable</a></button>
-                    </div>';
-                }
-            }
+        $lesson_title = $student_work;
+        if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
+            $lesson_row = mysqli_fetch_assoc($result_lesson);
+            $lesson_title = htmlspecialchars($lesson_row['title']);
         }
-    ?>
-</div>
+
+        $backgrounds = [
+            "linear-gradient(to bottom right, #6dd5ed, #2193b0)",
+            "linear-gradient(to bottom right, #ff758c, #ff7eb3)",
+            "linear-gradient(to bottom right, #43cea2, #185a9d)",
+        ];
+        $bg_style = $backgrounds[$counter % count($backgrounds)];
+        $counter++;
+
+        echo '
+        <div class="card project-card" style="background: ' . $bg_style . '">
+            <div class="lang-tag">Submitted</div>
+            <div class="circle"></div>
+            <div class="title">' . $lesson_title . '</div>
+            <div class="expireddate">' . $expire_date . '</div>
+            <button class="buttonsubmit">
+                <a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Edit Submission</a>
+            </button>
+        </div>';
+    }
+}
+?>
+                </div>
+
+            <!-- Section: Not Yet Submitted -->
+            <div class="section-divider">
+                <span class="section-title">Not Yet Submitted</span>
             </div>
-    </div>
+            <div class="exercisewrapper">
+                <?php
+                $sql_work = "SELECT availability_id, student_work, expire_date, lesson_id FROM class_work WHERE class_id = '$class_id'";
+                $result_work = mysqli_query($connect, $sql_work);
+
+                $counter = 0;
+                if ($result_work && mysqli_num_rows($result_work) > 0) {
+                    while ($row = mysqli_fetch_assoc($result_work)) {
+                        $lesson_id = $row['lesson_id'];
+                        $student_work = htmlspecialchars($row['student_work']);
+                        $expire_date = htmlspecialchars($row['expire_date']);
+
+                        $check_submission = "SELECT * FROM student_submit WHERE student_id = '$user_id' AND lesson_id = '$lesson_id' AND class_id = '$class_id'";
+                        $result_submission = mysqli_query($connect, $check_submission);
+
+                        if (mysqli_num_rows($result_submission) > 0) continue;
+
+                        $sql_lesson = "SELECT title FROM lessons WHERE lesson_file_name = '$student_work' LIMIT 1";
+                        $result_lesson = mysqli_query($connect, $sql_lesson);
+
+                        $lesson_title = $student_work;
+                        if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
+                            $lesson_row = mysqli_fetch_assoc($result_lesson);
+                            $lesson_title = htmlspecialchars($lesson_row['title']);
+                        }
+
+                        $backgrounds = [
+                            "linear-gradient(to bottom right, #ff5e62, #ff9966)",
+                            "linear-gradient(to bottom right, #4a90e2, #5cd2e6)", 
+                            "linear-gradient(to bottom right, #f8b500, #fceabb)",
+                        ];
+                        $bg_style = $backgrounds[$counter % count($backgrounds)];
+                        $counter++;
+
+                        echo '
+                        <div class="card project-card" style="background: ' . $bg_style . '">
+                            <div class="lang-tag">Scratch Junior</div>
+                            <div class="circle"></div>
+                            <div class="title">' . $lesson_title . '</div>
+                            <div class="expireddate">' . $expire_date . '</div>
+                            <button class="buttonsubmit">
+                                <a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Submit</a>
+                            </button>
+                        </div>';
+                    }
+                }
+                ?>
+            </div>
+
+            <!-- Section: Unavailable -->
+            <div class="section-divider">
+                <span class="section-title">Unavailable</span>
+            </div>
+            <div class="exercisewrapper">
+                <?php
+                $sql_all_lessons = "SELECT lesson_id, title FROM lessons";
+                $result_all_lessons = mysqli_query($connect, $sql_all_lessons);
+
+                if ($result_all_lessons && mysqli_num_rows($result_all_lessons) > 0) {
+                    $existing_lessons = [];
+                    $sql_existing = "SELECT lesson_id FROM class_work WHERE class_id = '$class_id'";
+                    $result_existing = mysqli_query($connect, $sql_existing);
+                    if ($result_existing) {
+                        while ($row = mysqli_fetch_assoc($result_existing)) {
+                            $existing_lessons[] = $row['lesson_id'];
+                        }
+                    }
+
+                    $counter = 0;
+
+                    while ($lesson = mysqli_fetch_assoc($result_all_lessons)) {
+                        $lesson_id = $lesson['lesson_id'];
+                        $lesson_title = htmlspecialchars($lesson['title']);
+
+                        if (!in_array($lesson_id, $existing_lessons)) {
+                            $backgrounds = [
+                                "linear-gradient(to bottom right, #bdc3c7, #2c3e50)",
+                                "linear-gradient(to bottom right, #7f8c8d, #95a5a6)",
+                                "linear-gradient(to bottom right, #e0e0e0, #c0c0c0)",
+                            ];
+                            $bg_style = $backgrounds[$counter % count($backgrounds)];
+                            $counter++;
+
+                            echo '
+                            <div class="card project-card" style="background: ' . $bg_style . '">
+                                <div class="lang-tag">Unavailable</div>
+                                <div class="circle"></div>
+                                <div class="title">' . $lesson_title . '</div>
+                                <div class="expireddate">N/A</div>
+                                <button class="buttonsubmit" disabled><a>Unavailable</a></button>
+                            </div>';
+                        }
+                    }
+                }
+                ?>
+            </div>
+
+</div>
+
 
     <div class="container tab-content" id="quiz">
         <div class="quizbox">
