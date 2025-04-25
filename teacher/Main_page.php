@@ -2,7 +2,6 @@
 session_start();
 include '../phpfile/connect.php';
 include '../resheadAfterLogin.php';
-
 ?>
 
 <!DOCTYPE html>
@@ -24,14 +23,13 @@ include '../resheadAfterLogin.php';
     </div>
 
 <?php
-
 if (isset($_POST['update'])) {
-    $lesson_id = intval($_POST['lesson_id']);
+    $lesson_id = $_POST['lesson_id'];
     $title = $_POST['title'];
     $description = $_POST['description'];
 
     $stmt = $connect->prepare("SELECT lesson_file_name, thumbnail_name FROM lessons WHERE lesson_id = ?");
-    $stmt->bind_param("i", $lesson_id);
+    $stmt->bind_param("s", $lesson_id);
     $stmt->execute();
     $stmt->bind_result($old_file, $old_thumb);
     $stmt->fetch();
@@ -59,7 +57,7 @@ if (isset($_POST['update'])) {
     }
 
     $stmt = $connect->prepare("UPDATE lessons SET title = ?, description = ?, lesson_file_name = ?, thumbnail_name = ? WHERE lesson_id = ?");
-    $stmt->bind_param("ssssi", $title, $description, $lesson_file_name, $thumbnail_name, $lesson_id);
+    $stmt->bind_param("sssss", $title, $description, $lesson_file_name, $thumbnail_name, $lesson_id); // ✅ 使用 "s"
     $stmt->execute();
     $stmt->close();
 
@@ -68,14 +66,14 @@ if (isset($_POST['update'])) {
 }
 
 if (isset($_GET['edit_id'])) {
-    $edit_id = intval($_GET['edit_id']);
+    $edit_id = $_GET['edit_id']; 
 }
 
 if (isset($_GET['id'])) {
-    $lesson_id = intval($_GET['id']);
+    $lesson_id = $_GET['id']; 
 
     $stmt = $connect->prepare("SELECT lesson_file_name, thumbnail_name FROM lessons WHERE lesson_id = ?");
-    $stmt->bind_param("i", $lesson_id);
+    $stmt->bind_param("s", $lesson_id); 
     $stmt->execute();
     $stmt->bind_result($fileName, $thumbnail);
     if ($stmt->fetch()) {
@@ -87,7 +85,7 @@ if (isset($_GET['id'])) {
     $stmt->close();
 
     $stmt = $connect->prepare("DELETE FROM lessons WHERE lesson_id = ?");
-    $stmt->bind_param("i", $lesson_id);
+    $stmt->bind_param("s", $lesson_id); 
     $stmt->execute();
     $stmt->close();
 
@@ -144,8 +142,5 @@ while ($row = $result->fetch_assoc()) {
 echo "</table>";
 ?>
 
-
-
 </body>
 </html>
-
