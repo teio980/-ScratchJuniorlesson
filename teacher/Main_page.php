@@ -13,7 +13,7 @@ include '../resheadAfterLogin.php';
     <title>Teacher</title>
 </head>
 <body>
-    <h1>Teacher page</h1>
+    <h1>Welcome, Teacher</h1>
 
     <div class="teacher-options">
         <button onclick="location.href='upload_lesson.php'">Upload New Lesson</button>
@@ -21,6 +21,8 @@ include '../resheadAfterLogin.php';
         <button onclick="location.href='quizupload.php'">Upload Quiz Questions</button>
         <button onclick="location.href='availablework.php'">Work for student</button>
     </div>
+
+    <h2 class="section-title">📘 Uploaded Lessons</h2>
 
 <?php
 if (isset($_POST['update'])) {
@@ -57,7 +59,7 @@ if (isset($_POST['update'])) {
     }
 
     $stmt = $connect->prepare("UPDATE lessons SET title = ?, description = ?, lesson_file_name = ?, thumbnail_name = ? WHERE lesson_id = ?");
-    $stmt->bind_param("sssss", $title, $description, $lesson_file_name, $thumbnail_name, $lesson_id); // ✅ 使用 "s"
+    $stmt->bind_param("sssss", $title, $description, $lesson_file_name, $thumbnail_name, $lesson_id); 
     $stmt->execute();
     $stmt->close();
 
@@ -142,5 +144,6 @@ while ($row = $result->fetch_assoc()) {
 echo "</table>";
 ?>
 
+    <script src="teacher_main.js"></script>
 </body>
 </html>
