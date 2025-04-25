@@ -7,7 +7,13 @@
     <title>Evaluation Page</title>
 </head>
 <body>
-    <form action="upload_teacher_evaluation.php" method="post">
+  <div id="unavailable_message">
+    <h2>WARNING !!!</h2>
+    <p>
+      This Page is not available now.
+    </p>
+  </div>
+    <form action="upload_teacher_evaluation.php" method="post" id="teacher_evaluation_form">
         <div class="question">
           <label>1. The teacher explains the subject clearly and effectively.</label><br>
             <div class="radio-button-group">
@@ -110,10 +116,30 @@
     
         <div class="question">
           <label>6. Please share any additional comments or suggestions for the teacher (if any):</label><br>
-          <textarea name="comments"></textarea>
+          <textarea name="q6"></textarea>
         </div>
 
         <button type="submit">submit</button>
       </form>
     </body>
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('teacher_evaluation_form').style.display = 'none';
+      document.getElementById('unavailable_message').style.display = 'none';
+      
+      fetch('check_status.php')
+          .then(response => response.json())
+          .then(data => {
+              if (data.status === 1) {
+                  document.getElementById('teacher_evaluation_form').style.display = 'block';
+              } else {
+                  document.getElementById('unavailable_message').style.display = 'flex';
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              document.getElementById('unavailable_message').style.display = 'flex';
+          });
+  });
+  </script>
 </html>

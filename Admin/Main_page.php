@@ -19,7 +19,7 @@ include '../resheadAfterLogin.php';
     <ul class="adminMenu">
     <li><a href="manageUser.php">Manage User</a></li>
     <li><a href="manageClass.php">Manage Class</a></li>
-    <li><a href="evaluationreport.php">Evaluation Report</a></li>
+    <li><a href="manageEvaluationreport.php">Evaluation Report</a></li>
     </ul>
     <span class="material-symbols-outlined" id="menu_icon">menu</span>
     </div>

@@ -6,14 +6,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $new_Confirmed_Password = $_POST["confirmed_new_Password"];
     $student_id = $_POST["student_id"];
 
-    if($new_Password != $new_Confirmed_Password){
-        echo "<script>
-            alert('New Password is not matched with the Confirmed Password\nPlease Try Again!');
-            window.location.href = '../Student/Personal_Profile.php';
-            </script>";
-            exit();
-    }
-
     if (strlen($new_Password) <= 8 || strlen($new_Password) >= 12) {
         echo "<script>
         alert('Password length must be between 8-12 characters');

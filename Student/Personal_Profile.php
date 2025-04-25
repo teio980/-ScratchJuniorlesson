@@ -25,13 +25,13 @@
     <form action="../includes/change_Username.php" method="post" class="changeUsernameEmail_box">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userID) ?>">
         <div class="UsernameEmail_box">
-        <label for="new_Username">Username:</label>
-        <input type="text" name="new_Username" id="new_Username" value="<?php echo htmlspecialchars($user['Username']) ?>">
+        <label for="new_Username">Username(6-12 Characters):</label>
+        <input type="text" name="new_Username" id="new_Username"  minlength="6" maxlength="12" required value="<?php echo htmlspecialchars($user['Username']) ?>">
         </div>
 
         <div class="UsernameEmail_box">
         <label for="new_Mail">E-mail:</label>
-        <input type="email" name="new_Mail" id="new_Mail" value="<?php echo htmlspecialchars($user['Mail']) ?>">
+        <input type="email" name="new_Mail" id="new_Mail" required  value="<?php echo htmlspecialchars($user['Mail']) ?>">
         </div>
 
         <button type="submit" class="save_btn">Save Changes</button>
@@ -41,19 +41,19 @@
 
         <div class="password_box">
         <label for="old_Password">Old Password:</label>
-        <input type="password" name="old_Password" id="old_Password">
+        <input type="password" name="old_Password" id="old_Password" required>
         <span class="material-symbols-outlined" id="showOldPassword_icon" onclick="showPassword('old_Password','showOldPassword_icon') ">visibility_off</span>
         </div>
 
         <div class="password_box">
         <label for="new_Password">New Password:</label>
-        <input type="password" name="new_Password" id="new_Password">
+        <input type="password" name="new_Password" id="new_Password" required>
         <span class="material-symbols-outlined" id="showNewPassword_icon" onclick="showPassword('new_Password','showNewPassword_icon') ">visibility_off</span>
         </div>
 
         <div class="password_box">
         <label for="new_Password">Confirmed New Password:</label>
-        <input type="password" name="confirmed_new_Password" id="confirmed_new_Password">
+        <input type="password" name="confirmed_new_Password" id="confirmed_new_Password" required>
         <span class="material-symbols-outlined" id="showNewConfirmedPassword_icon" onclick="showPassword('confirmed_new_Password','showNewConfirmedPassword_icon') ">visibility_off</span>
         </div>
 
@@ -75,5 +75,18 @@
         }
     }
     }
+
+    document.querySelector('form.changePassword_box').addEventListener('submit', function(e) {
+    const newPass = document.getElementById('new_Password').value;
+    const confirmPass = document.getElementById('confirmed_new_Password').value;
+    
+    if (newPass !== confirmPass) {
+        e.preventDefault(); 
+        alert('New Password does not match Confirmed Password!');
+        return false;
+    }
+    
+    return true;
+    });
     </script>
 </html>
