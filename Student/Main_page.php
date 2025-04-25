@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    require_once '../includes/check_session_student.php';
     include '../phpfile/connect.php'; 
     include '../resheadAfterLogin.php';
 

@@ -87,7 +87,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
                     <th>Teach By</th>
                     <th>Description</th>
                     <th>Max Capacity</th>
-                    <th>current Capacity</th>
+                    <th>Current Capacity</th>
                 </tr>
             </thead>
             <tbody>
