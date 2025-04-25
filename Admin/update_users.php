@@ -1,5 +1,4 @@
 <?php
-session_start();
 include '../includes/connect_DB.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -66,38 +65,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     switch ($identity) {
         case 'student':
-            $insertSql = "INSERT INTO student (student_id, S_Username, S_Mail, S_Password) 
-                    VALUES (?, ?, ?, ?) 
-                    ON DUPLICATE KEY UPDATE 
-                    S_Username = VALUES(S_Username), 
-                    S_Mail = VALUES(S_Mail), 
-                    S_Password = VALUES(S_Password)";
+            $updateSql = "UPDATE student SET S_Username = ?, S_Mail = ?, S_Password =? WHERE student_id = ?";
             break;
         case 'teacher':
-            $insertSql = "INSERT INTO teacher (teacher_id, T_Username, T_Mail, T_Password) 
-                    VALUES (?, ?, ?, ?) 
-                    ON DUPLICATE KEY UPDATE 
-                    T_Username = VALUES(T_Username), 
-                    T_Mail = VALUES(T_Mail), 
-                    T_Password = VALUES(T_Password)";
+            $updateSql = "UPDATE teacher SET T_Username = ?, T_Mail = ?, T_Password =? WHERE teacher_id = ?";
             break;
         case 'admin':
-            $insertSql = "INSERT INTO admin (admin_id, A_Username, A_Mail, A_Password) 
-                    VALUES (?, ?, ?, ?) 
-                    ON DUPLICATE KEY UPDATE 
-                    A_Username = VALUES(A_Username), 
-                    A_Mail = VALUES(A_Mail), 
-                    A_Password = VALUES(A_Password)";
+            $updateSql = "UPDATE admin SET A_Username = ?, A_Mail = ?, A_Password =? WHERE admin_id = ?";
             break;
     }
     
-    $stmt = $pdo->prepare($insertSql);
-    $stmt->execute([$userId, $username, $email, $password]);
-    echo "<script>
-    alert('Change Successful!');
-    window.location.href = 'manageUser.php';
-    </script>";
+    $stmt = $pdo->prepare($updateSql);
+    $stmt->execute([$username, $email, $password, $userId]);
+
+    if ($stmt->rowCount() > 0) {
+        echo "<script>
+        alert('Change Successful!');
+        window.location.href = 'manageUser.php';
+        </script>";
+    }else{
+        echo "<script>
+        alert('Change Failed!');
+        window.location.href = 'manageUser.php';
+        </script>";
+    }
     exit();
-        
 }
 ?>

@@ -1,0 +1,77 @@
+@import url('global.css');
+
+html{
+    height: 100%;
+    margin: 0px;
+}
+
+body{
+    height: 100%;
+    margin: 0px;
+}
+
+h1{
+    margin: 2% 1% 0 1%;
+}
+
+.changePassword_box, .changeUsernameEmail_box{
+    display: flex;
+    border: 5px solid;
+    border-color: var(--secondary-color);
+    gap: 20px;
+    flex-direction: column;
+    margin: 2% 1%;
+    padding: 1% 2%;
+}
+
+.password_box,.UsernameEmail_box{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+    width: 100%;
+}
+
+.password_box input{
+    position: relative;
+    width: 100%;
+}
+
+.password_box span {
+    position: absolute;
+    right: 10px;
+    top: 73%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #333; 
+    font-size: 20px; 
+}
+
+.save_btn {
+  background-color: var(--secondary-color);
+  border: 1px solid transparent;
+  border-radius: 3px;
+  box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.15385;
+  margin: 0;
+  outline: none;
+  padding: 8px .8em;
+  position: relative;
+  text-align: center;
+}
+
+.save_btn:hover,
+.save_btn:focus {
+  background-color: var(--primary-color);
+}
+
+.save_btn:focus {
+  box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}

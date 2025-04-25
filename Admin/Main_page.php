@@ -9,12 +9,27 @@ include '../resheadAfterLogin.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../cssfile/reshead.css">
+    <link rel="stylesheet" href="../cssfile/adminMenu.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <title>Admin</title>
 </head>
 <body>
     <h1>Admin page</h1>
-    <a href="addUser.php">Register User Account</a>
-    <a href="manageUser.php">Manage User</a>
-    <a href="evaluationreport.php">Evaluation Report</a>
+    <div class="menu_container">
+    <ul class="adminMenu">
+    <li><a href="manageUser.php">Manage User</a></li>
+    <li><a href="manageClass.php">Manage Class</a></li>
+    <li><a href="evaluationreport.php">Evaluation Report</a></li>
+    </ul>
+    <span class="material-symbols-outlined" id="menu_icon">menu</span>
+    </div>
 </body>
+<script>
+    
+document.getElementById('menu_icon').addEventListener('click', function() {
+    const menu = document.querySelector('.adminMenu');
+    menu.classList.toggle('active');
+});
+
+</script>
 </html>
