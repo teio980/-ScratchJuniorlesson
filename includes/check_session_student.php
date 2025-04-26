@@ -12,7 +12,7 @@ if (!isset($_SESSION['identity'])) {
 if ($_SESSION['identity'] != 'student') {
     echo"<script>
     alert('You have no access to this page.');
-    window.location.href = '../bkindex.php';
+    window.location.href = '../login.php';
     </script>";
     exit();
 }

@@ -9,7 +9,7 @@ include '../resheadAfterLogin.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../cssfile/reshead.css">
+    <link rel="stylesheet" href="../cssfile/headeraf.css">
     <title>Teacher</title>
 </head>
 <body>
@@ -75,8 +75,10 @@ if (isset($_GET['id'])) {
     $lesson_id = $_GET['id']; 
 
     $stmt = $connect->prepare("SELECT lesson_file_name, thumbnail_name FROM lessons WHERE lesson_id = ?");
+
     $stmt->bind_param("s", $lesson_id); 
     $stmt->execute();
+
     $stmt->bind_result($fileName, $thumbnail);
     if ($stmt->fetch()) {
         $file_path = "../phpfile/uploads_teacher/" . $fileName;
