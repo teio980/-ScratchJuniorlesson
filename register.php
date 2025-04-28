@@ -14,7 +14,7 @@ include 'reshead.php';
 <body>
     <div class="main">
         <div class="form" >
-            <form class="Register_form" id="Register_form" action="includes/registerFunction.php" method="POST">
+            <form class="Register_form" id="Register_form" action="includes/registerFunction.php" method="POST" enctype="multipart/form-data">
                 
                 <label for="U_Username">Username (6-12 Characters):</label>
                 <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">
@@ -23,6 +23,9 @@ include 'reshead.php';
                 <label for="U_Email">Email:</label>
                 <input type="email" id="U_Email" name="U_Email" placeholder="e.g.: abc123@gmail.com" required>
                 <p id="errMessage_Email" class="errMessage">Email is required</p>
+
+                <label for="U_Avatar">Avatar</label>
+                <input type="file" name="U_Avatar" id="U_Avatar" accept="image/png, image/jpeg, image/jpg">
 
                 <label for="U_Password">Password:</label>
                 <div class="password-box">
