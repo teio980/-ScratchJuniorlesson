@@ -7,7 +7,7 @@ $difficulty = $_GET['difficult'];
 $sql = "SELECT * FROM questions WHERE difficult = $difficulty";
 $result = mysqli_query($connect, $sql);
 
-include '../resheadAfterLogin.php';
+include 'resheadstudent.php';
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +16,7 @@ include '../resheadAfterLogin.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Level <?php echo $difficulty; ?></title>
-  <link rel="stylesheet" href="../cssfile/headeraf.css">
+  <link rel="stylesheet" href="../cssfile/studentheader.css">
   <link rel="stylesheet" href="../cssfile/quizpaper.css"> 
 </head>
 <body>

@@ -1,18 +1,17 @@
 @import url('global.css');
 
 body{
-    background-image: url(../img_logo/???);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     font-family: 'Times New Roman', Times, serif;
 }
 
-nav{
+#topp{
     background-color: var(--secondary-color);
 }
 
-nav ul{
+#topp ul{
     width: 100%;
     list-style: none;
     display: flex;
@@ -20,11 +19,11 @@ nav ul{
     align-items: center;
 }
 
-nav li{
+#topp li{
     height: 65px;
 }
 
-nav a{
+#topp a{
     font-size: 20px;
     height: 100%;
     padding: 0 40px;
@@ -34,18 +33,18 @@ nav a{
     align-items: center;
 }
 
-nav .spe{
+#topp .spe{
     margin-right: 20px;
 }
 
-nav .spe:hover{
+#topp .spe:hover{
     color: var(--first-color);
     transition: 0.15s ease-in-out;
     transform: scale(1.15);
 }
 
 
-nav li:first-child{
+#topp li:first-child{
     margin-right: auto;
 }
 
