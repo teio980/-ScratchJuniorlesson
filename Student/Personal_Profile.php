@@ -8,6 +8,23 @@
     $stmt->bindValue(':ID', $userID );
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    $Avatar_directory = "Avatar/";
+    $files = scandir($Avatar_directory);
+    $fileFound = false;
+    foreach ($files as $file) {
+        if ($file != "." && $file != "..") { 
+            $avatar = pathinfo($file, PATHINFO_FILENAME);
+            
+            if ($avatar == $userID) {
+                $fullPath = $Avatar_directory . DIRECTORY_SEPARATOR . $file; 
+                $fileFound = true;
+                break; 
+            }else{
+                $fullPath = 'Avatar/avatar_default.png';
+            }
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -22,6 +39,9 @@
 </head>
 <body>
     <h1>Personal Profile</h1>
+    <form action="">
+        <img src="<?php echo $fullPath; ?>" alt="Avatar">
+    </form>
     <form action="../includes/change_Username.php" method="post" class="changeUsernameEmail_box">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($userID) ?>">
         <div class="UsernameEmail_box">
