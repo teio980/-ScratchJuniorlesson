@@ -3,24 +3,16 @@ session_start();
 include '../phpfile/connect.php';
 
 $user_id = $_SESSION['user_id'];
-$availability_id = $_GET['availability_id'] ?? null;
+$availability_id = $_GET['availability_id'];
 
-if (!$availability_id) {
-    die("Invalid availability ID.");
-}
-
-// Get class work details
 $query = "SELECT class_id, lesson_id, expire_date FROM class_work WHERE availability_id = '$availability_id'";
 $result = mysqli_query($connect, $query);
-if (!$result || mysqli_num_rows($result) == 0) {
-    die("Class work not found.");
-}
+
 $row = mysqli_fetch_assoc($result);
 $class_id = $row['class_id'];
 $lesson_id = $row['lesson_id'];
 $expire_date = $row['expire_date'];
 
-// Get lesson details
 $query2 = "SELECT title, description, thumbnail_name, thumbnail_path, lesson_file_name, file_path 
            FROM lessons WHERE lesson_id = '$lesson_id'";
 $result2 = mysqli_query($connect, $query2);
@@ -33,14 +25,12 @@ $thumbnail_path = $lesson['thumbnail_path'];
 $lesson_file_name = $lesson['lesson_file_name'];
 $lesson_file_path = $lesson['file_path'];
 
-// Check if student has submitted
 $query3 = "SELECT * FROM student_submit WHERE student_id = '$user_id' AND class_id = '$class_id' AND lesson_id = '$lesson_id'";
 $result3 = mysqli_query($connect, $query3);
 $existing_submission = mysqli_fetch_assoc($result3);
 
 $uploadMessage = "";
 
-// Handle file upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $filename = basename($_FILES['file']['name']);
     $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
@@ -86,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
 }
 
-// Calculate time remaining
 $current_time = new DateTime();
 $expire_time = new DateTime($expire_date);
 $interval = $current_time->diff($expire_time);

@@ -1,10 +1,8 @@
 <?php
 include '../phpfile/connect.php';
 
-// Get the selected difficulty from the GET request, if any.
-$difficulty = $_GET['difficult'] ?? null;
+$difficulty = $_GET['difficult'];
 
-// Modify the SQL query to get the ranking data for the table below
 $sql = "SELECT student.S_Username, student_class.class_id, COUNT(*) AS correct_answers
         FROM student_answers
         JOIN student ON student_answers.student_id = student.student_id
@@ -14,10 +12,8 @@ $sql = "SELECT student.S_Username, student_class.class_id, COUNT(*) AS correct_a
         " GROUP BY student.S_Username, student_class.class_id
           ORDER BY correct_answers DESC";
 
-// Execute the query to get the ranking data.
 $result = $connect->query($sql);
 
-// Get the distinct difficulties available in the database.
 $difficulties = $connect->query("SELECT DISTINCT difficult FROM student_answers WHERE is_correct = 1");
 ?>
 
@@ -33,7 +29,6 @@ $difficulties = $connect->query("SELECT DISTINCT difficult FROM student_answers 
 <body>
 
   <div class="ranking-wrapper">
-    <!-- Medal Display (Initially empty) -->
     <div class="medals">
       <div class="medal silver">
         <div class="emoji">🥈</div>
@@ -49,12 +44,10 @@ $difficulties = $connect->query("SELECT DISTINCT difficult FROM student_answers 
       </div>
     </div>
 
-    <!-- Ranking Icon -->
     <div class="ranking-icon">
       <i class="fa-solid fa-ranking-star"></i>
     </div>
 
-    <!-- Leaderboard Section -->
     <div class="leaderboard-section">
       <div class="quiz-select">
         <div class="custom-select">
@@ -109,19 +102,16 @@ $difficulties = $connect->query("SELECT DISTINCT difficult FROM student_answers 
 
 
   <script>
-    // Wait for the table to load before processing it
     window.onload = function() {
-      // Select all table rows
       const rows = document.querySelectorAll('#ranking-table tbody tr');
 
-      // Create an array of the rows with the number of correct answers and sort them
       const sortedRows = Array.from(rows).sort((a, b) => {
         const correctAnswersA = parseInt(a.cells[3].textContent);
         const correctAnswersB = parseInt(b.cells[3].textContent);
-        return correctAnswersB - correctAnswersA; // Sort in descending order
+        return correctAnswersB - correctAnswersA; 
       });
 
-      // Update the medals section based on the sorted rows
+
       document.getElementById('gold-medal-name').textContent = sortedRows[0]?.cells[1].textContent || '--';  // First place: Gold
       document.getElementById('silver-medal-name').textContent = sortedRows[1]?.cells[1].textContent || '--'; // Second place: Silver
       document.getElementById('bronze-medal-name').textContent = sortedRows[2]?.cells[1].textContent || '--'; // Third place: Bronze
@@ -132,6 +122,5 @@ $difficulties = $connect->query("SELECT DISTINCT difficult FROM student_answers 
 </html>
 
 <?php
-// Close the database connection
 $connect->close();
 ?>
