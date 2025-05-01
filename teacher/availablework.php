@@ -66,6 +66,8 @@ include '../resheadAfterLogin.php';
 
     window.onload = updateThumbnail;
     </script>
+
+    <button onclick="location.href='Main_page.php'">Back to Dashboard</button>
 </body>
 </html>
 
@@ -76,7 +78,6 @@ if (isset($_POST['assign_submit'])) {
     $expire_date = $_POST['expire_date'];
     $classwork_id = uniqid("cw_");
 
-    // ✅ 查询 lesson_file_name 作为学生作业的路径
     $query = "SELECT lesson_file_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($query);
     $stmt->bind_param("s", $lesson_id);
@@ -86,14 +87,12 @@ if (isset($_POST['assign_submit'])) {
     if ($stmt->fetch()) {
         $stmt->close();
 
-        // 2. 获取 class_work 数量，生成新的 availability_id
         $sql_T_checkQty = "SELECT COUNT(*) AS total FROM class_work";
         $result = $connect->query($sql_T_checkQty);
         $row = $result->fetch_assoc();
         $classwork_Qty = $row['total'];
         $classwork_id = 'CW' . str_pad($classwork_Qty + 1, 6, '0', STR_PAD_LEFT);
 
-        // 3. 插入新记录
         $insert_query = "INSERT INTO class_work (availability_id, lesson_id, class_id, student_work, expire_date) VALUES (?, ?, ?, ?, ?)";
         $insert_stmt = $connect->prepare($insert_query);
         $insert_stmt->bind_param("sssss", $classwork_id, $lesson_id ,$class_id, $lesson_file_name, $expire_date);
