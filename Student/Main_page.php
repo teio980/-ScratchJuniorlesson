@@ -30,7 +30,7 @@
         <div class="tab" data-tab="text">TEST1</div>
         <div class="tab" data-tab="shares">TEST2</div>
     </div>
-
+    <div><a href="enroll_class.php">enroll_class</a></div>
     <div id="popup" class="popup">
         <div class="popup-content">
             <p>Achieve over 80% to advance to the next level.</p>
