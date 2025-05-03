@@ -1,0 +1,45 @@
+@import url('global.css');
+
+body{
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+.enroll_form{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+
+.enrollment_container{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 20px;
+    flex: 1 1 calc(25% - 20px); /* 25% width minus gap */
+    min-width: 250px; 
+    max-width: calc(25% - 20px); 
+    box-sizing: border-box;
+}
+
+.capacity_box{
+    display: flex;
+    gap : 15px;
+    width: 100%;
+}
+
+.enroll_btn{
+    background-color: rgb(55, 211, 71);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.enroll_btn:hover {
+    background-color: rgb(7, 178, 24);
+}

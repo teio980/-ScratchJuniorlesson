@@ -1,0 +1,122 @@
+/* Import global styles */
+@import url('global.css');
+
+/* General reset */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    min-height: 100vh;
+    color: var(--text-dark);
+    font-family: Arial, sans-serif;
+    background-color: var(--background);
+}
+
+/* Header */
+h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid var(--grey);
+}
+
+table th {
+    background-color: var(--secondary-color);
+    color: var(--white);
+}
+
+table td {
+    background-color: var(--third-color);
+}
+
+table tr:nth-child(even) {
+    background-color: #f4f4f4;
+}
+
+/* Button styling */
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Feedback Modal */
+#feedbackModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+#feedbackModal .modal-content {
+    background-color: var(--white);
+    margin: 10% auto;
+    padding: 20px;
+    width: 300px;
+    border-radius: 10px;
+}
+
+#feedbackModal h3 {
+    color: var(--primary-color);
+}
+
+#feedbackModal input, #feedbackModal textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--grey);
+    border-radius: 5px;
+}
+
+#feedbackModal button {
+    width: 100%;
+    background-color: var(--secondary-color);
+    color: var(--white);
+    border: none;
+    padding: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#feedbackModal button:hover {
+    background-color: var(--primary-color);
+}
+
+.download-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.download-link:hover {
+    color: var(--secondary-color);
+}
