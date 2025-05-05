@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../resheadAfterLogin.php';
+include 'header_Admin.php';
 include '../includes/connect_DB.php';
 
 $class = [];
@@ -57,7 +57,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../cssfile/reshead.css">
+    <link rel="stylesheet" href="../cssfile/headerAdmin.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link rel="stylesheet" href="../cssfile/manageClass.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />

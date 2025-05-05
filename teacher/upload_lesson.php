@@ -24,23 +24,11 @@ switch ($type) {
         break;
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $title = $_POST['title'];
-    $fullTitle = $typePrefix . $title;
-
-    $description = $_POST['description'];
-    $lesson_file = $_FILES['lesson_file']['name'];
-    $thumbnail = $_FILES['thumbnail']['name'];
-
-
-    $sql = "INSERT INTO lessons (title, description, lesson_file_name, thumbnail_name, create_time) 
-            VALUES (?, ?, ?, ?, NOW())";
-    $stmt = $connect->prepare($sql);
-    $stmt->bind_param("ssss", $fullTitle, $description, $lesson_file, $thumbnail);
-    $stmt->execute();
-
-    header("Location: lesson_management.php");
-    exit;
+$categoryOptions = [];
+$sql = "SELECT category_id, category_name FROM categories";
+$result = mysqli_query($connect, $sql);
+while ($row = mysqli_fetch_assoc($result)) {
+    $categoryOptions[] = $row;
 }
 ?>
 
@@ -61,6 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label for="title">Lesson Title:</label>
                 <input type="text" id="title" name="title" required>
+                <input type="hidden" name="type_prefix" value="<?php echo htmlspecialchars($typePrefix); ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="category">Lesson Category:</label>
+                <select id="category" name="category_id" required>
+                    <option value="">-- Select a Category --</option>
+                    <?php foreach ($categoryOptions as $category): ?>
+                        <option value="<?php echo $category['category_id']; ?>">
+                            <?php echo htmlspecialchars($category['category_name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             
             <div class="form-group">

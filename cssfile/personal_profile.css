@@ -14,7 +14,7 @@ h1{
     margin: 2% 1% 0 1%;
 }
 
-.changePassword_box, .changeUsernameEmail_box{
+.changePassword_box, .changeUsernameEmail_box, .changeClass_box{
     display: flex;
     border: 5px solid;
     border-color: var(--secondary-color);
@@ -24,7 +24,7 @@ h1{
     padding: 1% 2%;
 }
 
-.password_box,.UsernameEmail_box{
+.password_box,.UsernameEmail_box,.Class_box{
     display: flex;
     flex-direction: column;
     gap: 5px;

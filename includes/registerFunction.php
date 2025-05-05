@@ -1,7 +1,7 @@
 <?php
 include 'connect_DB.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['U_Avatar']) && $_FILES['U_Avatar']['error'] === UPLOAD_ERR_OK) {  
+if ($_SERVER["REQUEST_METHOD"] == "POST") {  
     $uploadDir = '../Student/Avatar/'; 
 
     if (!file_exists($uploadDir)) {
@@ -9,61 +9,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['U_Avatar']) && $_FILE
     }
 
     try {
-        $fileName = $_FILES['U_Avatar']['name'];
-        $fileTmpName = $_FILES['U_Avatar']['tmp_name'];
-        $fileSize = $_FILES['U_Avatar']['size'];
-        $fileType = $_FILES['U_Avatar']['type'];
-        $fileError = $_FILES['U_Avatar']['error'];
-        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-        $fileExt = strtolower($fileExtension);
-
         $username = $_POST["U_Username"];  
         $email = $_POST["U_Email"];
         $password = $_POST["U_Password"];
         $identity = "student";
-
-        $maxFileSize = 5 * 1024 * 1024;
-        if ($fileSize > $maxFileSize) {
-            echo "<script>
-                alert('File Choosen is too big. Please choose file smaller than 5MB.');
-                window.location.href = '../register.php';
-            </script>";
-            exit();
-        }
-
-        $max_width = 800;
-        $max_height = 600;
-        list($width, $height) = getimagesize($fileTmpName);
-
-        $needsResize = ($width > $max_width || $height > $max_height);
-
-        if ($needsResize) {
-            $ratio = min($max_width/$width, $max_height/$height);
-            $new_width = (int)($width * $ratio);
-            $new_height = (int)($height * $ratio);
-
-            switch ($fileExt) {
-                case 'jpg':
-                case 'jpeg':
-                    $image = imagecreatefromjpeg($fileTmpName);
-                    break;
-                case 'png':
-                    $image = imagecreatefrompng($fileTmpName);
-                    break;
-                default:
-                    die("Not Supported File Format");
-            }
-
-            $new_image = imagecreatetruecolor($new_width, $new_height);
-
-            if ($fileExt == 'png') {
-                imagealphablending($new_image, false);
-                imagesavealpha($new_image, true);
-            }
-
-            imagecopyresampled($new_image, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-            imagedestroy($image);
-        }
 
         $checkUsernameSql = "SELECT S_Username FROM student WHERE S_Username = :username
                             UNION ALL
@@ -106,25 +55,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['U_Avatar']) && $_FILE
         $stmt_S_checkQty->execute();
         $student_Qty = $stmt_S_checkQty->fetchColumn();
         $student_id = 'STU'.$currentYear.str_pad($student_Qty + 1, 6, '0', STR_PAD_LEFT);
+        if(isset($_FILES['U_Avatar']) && $_FILES['U_Avatar']['error'] === UPLOAD_ERR_OK){
+            $fileName = $_FILES['U_Avatar']['name'];
+            $fileTmpName = $_FILES['U_Avatar']['tmp_name'];
+            $fileSize = $_FILES['U_Avatar']['size'];
+            $fileType = $_FILES['U_Avatar']['type'];
+            $fileError = $_FILES['U_Avatar']['error'];
+            $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $fileExt = strtolower($fileExtension);
 
-        $newFileName = $student_id . '.' . $fileExt;
-        $destination = $uploadDir . $newFileName;
-
-        if ($needsResize) {
-            switch ($fileExt) {
-                case 'jpg':
-                case 'jpeg':
-                    imagejpeg($new_image, $destination, 90);
-                    break;
-                case 'png':
-                    imagepng($new_image, $destination, 9);
-                    break;
+            $maxFileSize = 5 * 1024 * 1024;
+            if ($fileSize > $maxFileSize) {
+                echo "<script>
+                    alert('File Choosen is too big. Please choose file smaller than 5MB.');
+                    window.location.href = '../register.php';
+                </script>";
+                exit();
             }
-            imagedestroy($new_image);
-        } else {
+            $newFileName = $student_id . '.' . $fileExt;
+            $destination = $uploadDir . $newFileName;
+
             move_uploaded_file($fileTmpName, $destination);
         }
-
+        
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $insertSql = "INSERT INTO student (student_id, S_Username, S_Password, S_Mail, identity) 
                       VALUES (:S_ID, :name, :password, :email, :identity)";

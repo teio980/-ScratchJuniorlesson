@@ -6,6 +6,7 @@ if(isset($_POST['enroll_btn'])){
     $student_id = $_POST['student_id'];
     $current = $_POST['Current'];
     $max = $_POST['Max'];
+    date_default_timezone_set('Asia/Shanghai');
     $current_DateTime = date('Y-m-d H:i:s');
 
     $sql_SC_checkQty = "SELECT COUNT(*) FROM student_class";
@@ -32,7 +33,7 @@ if(isset($_POST['enroll_btn'])){
     $insert_SC_Stmt->execute();
     echo "<script>
         alert('Enrolled Successful!');
-        window.location.href = '../Student/enroll_class.php';
+        window.location.href = '../Student/Main_page.php';
         </script>";
         exit();
 }

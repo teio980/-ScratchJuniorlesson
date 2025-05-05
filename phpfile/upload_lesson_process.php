@@ -13,9 +13,10 @@ define("BASE_UPLOAD_PATH", "/phpfile/uploads/");
 
 $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
 $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+$category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : null;
 
-if (empty($title)) {
-    $_SESSION['error'] = "Title is required!";
+if (empty($title) || empty($category_id)) {
+    $_SESSION['error'] = "Title and category are required!";
     header("Location: ../teacher/upload_lesson.php");
     exit();
 }
@@ -81,9 +82,9 @@ if ($result = mysqli_query($connect, $sql)) {
 }
 
 $sql_insert = "INSERT INTO lessons 
-    (lesson_id, title, description, lesson_file_name, file_path, thumbnail_name, thumbnail_path) 
+    (lesson_id, title, description, lesson_file_name, file_path, thumbnail_name, thumbnail_path, category_id) 
     VALUES 
-    ('$lesson_id', '$title', '$description', '$lesson_file_name', '$lesson_file_path', '$thumbnail_name', '$thumbnail_path')";
+    ('$lesson_id', '$title', '$description', '$lesson_file_name', '$lesson_file_path', '$thumbnail_name', '$thumbnail_path', '$category_id')";
 
 if (mysqli_query($connect, $sql_insert)) {
     $_SESSION['message'] = "Lesson uploaded successfully!";
