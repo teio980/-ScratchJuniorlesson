@@ -148,63 +148,23 @@
     <div class="mm">
         <?php include 'resheadstudent.php'; ?>
 
-        <!--Exercise Page-->
-        <div class="container tab-content active" id="recent">
-
+       <!-- Exercise Page -->
+        <div class="container tab-content active" id="exercise">
             <?php
-                $check_sql = "SELECT * FROM student_class WHERE student_id = '$user_id'";
-                $check_result = mysqli_query($connect, $check_sql);
+            $check_sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
+            $check_result = mysqli_query($connect, $check_sql);
 
-                if (mysqli_num_rows($check_result) === 0) {
-                    if (isset($_POST['class_id'])) {
-                        $selected_class = mysqli_real_escape_string($connect, $_POST['class_id']);
+            if ($check_result && mysqli_num_rows($check_result) > 0) {
+                $row = mysqli_fetch_assoc($check_result);
+                $class_id = $row['class_id'];
 
-                        $sql_sc_count = "SELECT COUNT(*) as count FROM student_class";
-                        $result_sc = mysqli_query($connect, $sql_sc_count);
-                        $row = mysqli_fetch_assoc($result_sc);
-                        $sc_count = $row['count'];
+                echo "
+                    <div class='classuidwrapper'>
+                        <div class='classuid'>Class ID: <strong>$class_id</strong></div>
+                    </div>
+                ";
 
-                        $new_student_class_id = 'SC' . str_pad($sc_count + 1, 6, '0', STR_PAD_LEFT);
-
-                        $insert_sql = "INSERT INTO student_class (student_class_id, student_id, class_id) 
-                                    VALUES ('$new_student_class_id', '$user_id', '$selected_class')";
-                        if (mysqli_query($connect, $insert_sql)) {
-                            echo "<script>alert('You have successfully enrolled in a class.'); window.location.href = 'Main_page.php';</script>";
-                        } else {
-                            echo "<p>Error enrolling: " . mysqli_error($connect) . "</p>";
-                        }
-                    }
-
-                    $class_query = "SELECT class_id FROM class";
-                    $class_result = mysqli_query($connect, $class_query);
-
-                    echo "<div class='classuidwrapper'>";
-                    echo "<h3>Select Your Class</h3>";
-                    echo "<form method='POST'>";
-                    echo "<select name='class_id' required>";
-                    while ($row = mysqli_fetch_assoc($class_result)) {
-                        echo "<option value='{$row['class_id']}'>{$row['class_id']}</option>";
-                    }
-                    echo "</select>";
-                    echo "<br><br><button type='submit'>Enroll</button>";
-                    echo "</form>";
-                    echo "</div>";
-                }
-
-                $sql_class = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
-                $result_class = mysqli_query($connect, $sql_class);
-                if ($result_class && mysqli_num_rows($result_class) > 0) {
-                    $row_class = mysqli_fetch_assoc($result_class);
-                    $class_id = $row_class['class_id'];
-
-                    echo "
-                        <div class='classuidwrapper'>
-                            <div class='classuid'>Class ID: <strong>$class_id</strong></div>
-                        </div>
-                    ";
-                }
-
-                // ====== Submitted Section ======
+                // ========== Submitted Section ==========
                 $sql_submitted = "
                     SELECT cw.availability_id, ss.filename AS student_work, cw.expire_date
                     FROM class_work cw
@@ -254,7 +214,7 @@
                     echo '</div>';
                 }
 
-                // ====== Not Yet Submitted Section ======
+                // ========== Not Yet Submitted ==========
                 $sql_work = "SELECT availability_id, student_work, expire_date, lesson_id FROM class_work WHERE class_id = '$class_id'";
                 $result_work = mysqli_query($connect, $sql_work);
 
@@ -305,7 +265,7 @@
                     echo '<div class="exercisewrapper">' . $pending_cards . '</div>';
                 }
 
-                // ====== Unavailable Section ======
+                // ========== Unavailable Section ==========
                 $sql_all_lessons = "SELECT lesson_id, title FROM lessons";
                 $result_all_lessons = mysqli_query($connect, $sql_all_lessons);
 
@@ -348,14 +308,20 @@
                     echo '<div class="section-divider"><span class="section-title">Unavailable</span></div>';
                     echo '<div class="exercisewrapper">' . $unavailable_cards . '</div>';
                 }
-            ?>
 
+            } else {
+                echo "
+                    <div class='classuidwrapper'>
+                        <div class='classuid'>You are not enrolled in any class yet. <strong>Please enroll a class.</strong></div>
+                    </div>
+                ";
+            }
+            ?>
         </div>
 
-        <!--Marked-->
-        <div class="container tab-content active" id="recent">
+        <!-- Marked Feedback Section -->
+        <div class="container tab-content" id="marked">
             <?php
-            // Fetch all feedback entries for this student
             $feedback_query = "
                 SELECT ssf.rating, ssf.comments, ssf.created_at, ss.filename 
                 FROM student_submit_feedback ssf
@@ -367,6 +333,7 @@
             $feedback_result = mysqli_query($connect, $feedback_query);
 
             if ($feedback_result && mysqli_num_rows($feedback_result) > 0) {
+                echo '<div class="section-divider"><span class="section-title">Marked Homework</span></div>';
                 while ($row = mysqli_fetch_assoc($feedback_result)) {
                     $filename = htmlspecialchars($row['filename']);
                     $file_path = "../Student/uploads/" . $filename;
@@ -386,8 +353,6 @@
                 echo "<p>No marked homework available yet.</p>";
             }
             ?>
-        </div>
-
         </div>
 
         <!--Quiz Page--> 
@@ -590,13 +555,15 @@
         </div>
 
         <!--Enroll Page-->
-                    <input type="hidden" name="class_id" value="<?php echo htmlspecialchars($class['class_id']) ?>">
+                    
         <div class="container tab-content" id="exroll">
-            <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
-                <?php foreach ($result as $class): ?>
+            <?php foreach ($result as $class): ?>
+                <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
+                
                     <input type="hidden" name="Max" value="<?php echo htmlspecialchars($class['Max']) ?>">
                     <input type="hidden" name="Current" value="<?php echo htmlspecialchars($class['Cur']) ?>">
                     <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($user_id)?>">
+                    <input type="hidden" name="class_id" value="<?php echo htmlspecialchars($class['class_id']) ?>">
 
                     <div class="enrollment_container">
                         <div><img src="path_to_class_image" alt="Class Image"></div>
@@ -615,9 +582,9 @@
                             </div>
                             <div ><button type="submit" class="enroll_btn" name ="enroll_btn">Enroll</button></div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
-            </form>
+                    </div> 
+                </form>
+            <?php endforeach; ?>
         </div>
     
 
