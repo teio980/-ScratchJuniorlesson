@@ -57,7 +57,7 @@ body{
   font-family: Poppins, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.5rem;
   box-sizing: border-box;
-  height: 100vh;
+  height: auto;
   width: 250px;
   padding: 5px 1em;
   background-color: var(--base-clr);

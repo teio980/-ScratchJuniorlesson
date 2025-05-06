@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../resheadAfterLogin.php';
+include 'header_Admin.php';
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +10,7 @@ include '../resheadAfterLogin.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../cssfile/add_teacher.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-    <link rel="stylesheet" href="../cssfile/reshead.css">
+    <link rel="stylesheet" href="../cssfile/headerAdmin.css">
     <title>Add Teacher</title>
 </head>
 <body>
