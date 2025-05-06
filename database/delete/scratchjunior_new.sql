@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2025-03-26 11:54:03
+-- 生成日期： 2025-05-05 09:05:56
 -- 服务器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -18,8 +18,98 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 数据库： `scratchjunior`
+-- 数据库： `lk`
 --
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `admin`
+--
+
+CREATE TABLE `admin` (
+  `admin_id` varchar(20) NOT NULL,
+  `A_Username` varchar(50) NOT NULL,
+  `A_Password` varchar(200) NOT NULL,
+  `A_Mail` varchar(100) NOT NULL,
+  `identity` enum('admin') NOT NULL DEFAULT 'admin',
+  `reset_token` varchar(64) DEFAULT NULL,
+  `reset_token_expires` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `admin`
+--
+
+INSERT INTO `admin` (`admin_id`, `A_Username`, `A_Password`, `A_Mail`, `identity`, `reset_token`, `reset_token_expires`) VALUES
+('T00000001', 'Admin', '$2y$10$S.521YlauzsQsmn2U94Q5.nfETe0dmvoJa6oUW1YgKga1MgY5aG0O', 'yongloon1234@gmail.com', 'admin', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `categories`
+--
+
+CREATE TABLE `categories` (
+  `category_id` int(11) NOT NULL,
+  `category_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `categories`
+--
+
+INSERT INTO `categories` (`category_id`, `category_name`) VALUES
+(1, 'Assignment'),
+(2, 'Project'),
+(3, 'Teacher Material'),
+(4, 'Exercise');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `class`
+--
+
+CREATE TABLE `class` (
+  `class_id` varchar(20) NOT NULL,
+  `class_code` varchar(7) NOT NULL CHECK (`class_code` regexp '^[A-Z]{3}[0-9]{4}$'),
+  `class_name` varchar(255) DEFAULT NULL,
+  `class_description` text NOT NULL,
+  `max_capacity` int(11) NOT NULL,
+  `current_capacity` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `class`
+--
+
+INSERT INTO `class` (`class_id`, `class_code`, `class_name`, `class_description`, `max_capacity`, `current_capacity`) VALUES
+('CLS000001', 'ABC1234', 'AAAA', 'GGG', 88, 0),
+('CLS000002', 'GGG1234', 'AAAA', 'aaa', 50, 0),
+('CLS000003', 'ABC8888', 'AAAA', 'sdvdvfvdxgbdvfb', 33, 0),
+('CLS000004', 'DDC8899', 'ABCDEFG', 'fvsfbdfsbvdskgiueshge', 80, 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `class_work`
+--
+
+CREATE TABLE `class_work` (
+  `availability_id` varchar(255) NOT NULL,
+  `lesson_id` varchar(255) NOT NULL,
+  `class_id` varchar(255) DEFAULT NULL,
+  `student_work` varchar(255) NOT NULL,
+  `expire_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `class_work`
+--
+
+INSERT INTO `class_work` (`availability_id`, `lesson_id`, `class_id`, `student_work`, `expire_date`) VALUES
+('CW000001', 'LL000002', 'wert3', 'Lab01.pdf', '2025-04-30 16:24:00');
 
 -- --------------------------------------------------------
 
@@ -29,12 +119,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `feedback` (
   `feedback_id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `teacher_id` int(11) NOT NULL,
+  `submit_id` varchar(20) NOT NULL,
+  `rating` int(11) NOT NULL CHECK (`rating` between 1 and 10),
   `comments` text DEFAULT NULL,
-  `rating` int(11) DEFAULT NULL CHECK (`rating` between 1 and 5),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `feedback`
+--
+
+INSERT INTO `feedback` (`feedback_id`, `submit_id`, `rating`, `comments`, `created_at`) VALUES
+(3, 'SS000001', 4, '22222', '2025-05-05 06:59:54');
 
 -- --------------------------------------------------------
 
@@ -43,76 +139,25 @@ CREATE TABLE `feedback` (
 --
 
 CREATE TABLE `lessons` (
-  `lesson_id` int(11) NOT NULL,
+  `lesson_id` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `expire_date` datetime DEFAULT NULL,
-  `create_time` timestamp NOT NULL DEFAULT current_timestamp()
+  `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `thumbnail_name` varchar(255) DEFAULT NULL,
+  `thumbnail_path` varchar(255) DEFAULT NULL,
+  `lesson_file_name` varchar(255) DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转存表中的数据 `lessons`
 --
 
-INSERT INTO `lessons` (`lesson_id`, `title`, `description`, `expire_date`, `create_time`) VALUES
-(1, 'adf', 'adf', '2025-03-17 15:30:00', '2025-03-15 08:07:16'),
-(2, 'ergebfefb', 'bfdndfndnn', '2025-03-20 08:00:00', '2025-03-18 12:00:14');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `lesson_files`
---
-
-CREATE TABLE `lesson_files` (
-  `file_id` int(11) NOT NULL,
-  `lesson_id` int(11) NOT NULL,
-  `filename` varchar(255) NOT NULL,
-  `filepath` varchar(255) NOT NULL,
-  `upload_time` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `massage`
---
-
-CREATE TABLE `massage` (
-  `massage_ID` int(11) NOT NULL,
-  `U_Mail` varchar(50) NOT NULL,
-  `massage_Subject` varchar(60) NOT NULL,
-  `massage_Content` varchar(550) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转存表中的数据 `massage`
---
-
-INSERT INTO `massage` (`massage_ID`, `U_Mail`, `massage_Subject`, `massage_Content`) VALUES
-(1, 'yongloon0927@gmail.com', 'Hello World', 'adssdasd'),
-(2, 'yongloon0927@gmail.com', 'Hello World', 'adssdaszdfsadd');
-
--- --------------------------------------------------------
-
---
--- 表的结构 `projects`
---
-
-CREATE TABLE `projects` (
-  `id` int(11) NOT NULL,
-  `lesson_id` int(11) NOT NULL,
-  `filename` varchar(255) NOT NULL,
-  `filepath` varchar(255) NOT NULL,
-  `upload_time` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- 转存表中的数据 `projects`
---
-
-INSERT INTO `projects` (`id`, `lesson_id`, `filename`, `filepath`, `upload_time`) VALUES
-(9, 3, 'Project1.sjr', '../phpfile/uploads/Project1.sjr', '2025-03-13 09:03:07');
+INSERT INTO `lessons` (`lesson_id`, `title`, `description`, `create_time`, `thumbnail_name`, `thumbnail_path`, `lesson_file_name`, `file_path`, `category_id`) VALUES
+('LL000001', 'rtyujhr', 'fgzgx', '2025-04-25 07:24:11', 'time table d4.jpg', '/phpfile/uploads/thumbnail/time table d4.jpg', '1000021589.pdf', '/phpfile/uploads/1000021589.pdf', NULL),
+('LL000002', 'aedgdeg', 'egadg', '2025-04-25 07:24:38', 'time table d4.jpg', '/phpfile/uploads/thumbnail/time table d4.jpg', 'Lab01.pdf', '/phpfile/uploads/Lab01.pdf', NULL),
+('LL000003', 'agfsdg', 'asfgsdfg', '2025-04-25 07:25:08', 'Screenshot (1).png', '/phpfile/uploads/thumbnail/Screenshot (1).png', '1000021589.pdf', '/phpfile/uploads/1000021589.pdf', NULL);
 
 -- --------------------------------------------------------
 
@@ -156,7 +201,34 @@ INSERT INTO `questions` (`id`, `question`, `difficult`, `option1`, `option2`, `o
 (18, 'What does the \"Speed\" block do?', 1, 'Changes the speed of a character\'s movement', 'Makes the character jump higher', 'Stops the project', 'Deletes the character', 1),
 (19, 'What does the \"Send Message\" block do?', 2, 'Sends a message to another character or scene', 'Moves the character to a random position', 'Stops the project', 'Speeds up the project', 1),
 (20, 'Which block waits for a message before starting an action?', 3, 'Move Right', 'Wait for Message', 'Jump', 'Stop', 2),
-(21, 'What does the \"Play Sound\" block do?', 3, 'Plays a sound or recorded voice', 'Stops the project', 'Makes the character move faster', 'Deletes the character', 1);
+(21, 'What does the \"Play Sound\" block do?', 3, 'Plays a sound or recorded voice', 'Stops the project', 'Makes the character move faster', 'Deletes the character', 1),
+(22, 'gnhmg,jkh.lj/', 24, 'fhjhk,t', 'rjjry', 'jhfkm', 'etjjetj', 4),
+(23, 'ryjrjryj', 18, 'krk,tr,', 'rym,ry', 'r,ht,m', 'rh,mtr,m', 1);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `student`
+--
+
+CREATE TABLE `student` (
+  `student_id` varchar(20) NOT NULL,
+  `S_Username` varchar(50) NOT NULL,
+  `S_Password` varchar(200) NOT NULL,
+  `S_Mail` varchar(100) NOT NULL,
+  `identity` enum('student') NOT NULL DEFAULT 'student',
+  `reset_token` varchar(64) DEFAULT NULL,
+  `reset_token_expires` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `student`
+--
+
+INSERT INTO `student` (`student_id`, `S_Username`, `S_Password`, `S_Mail`, `identity`, `reset_token`, `reset_token_expires`) VALUES
+('STU2025000001', 'Student_1', '', 'Student1@gmail.com', 'student', NULL, NULL),
+('STU2025000002', 'Kong9999', '$2y$10$g/St7xxOzsZn9ALWq4GQ9.ctBUCQA92nChiXKyPKBmCuSvrvUsZNy', 'kong9999@gmail.com', 'student', NULL, NULL),
+('STU2025000003', 'Kong2383', '$2y$10$vu4Kyb.gL92Vrci6o.ryGurqpe5nw4IqnGqNnFJE8XuJI6kAOZ28a', 'kongwenkhangg@gmail.com', 'student', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -165,107 +237,176 @@ INSERT INTO `questions` (`id`, `question`, `difficult`, `option1`, `option2`, `o
 --
 
 CREATE TABLE `student_answers` (
-  `student_answers_ID` int(11) NOT NULL,
-  `student_id` int(11) DEFAULT NULL,
+  `student_question_id` varchar(20) NOT NULL,
+  `student_id` varchar(20) DEFAULT NULL,
   `question_id` int(11) DEFAULT NULL,
   `student_answer` varchar(50) DEFAULT NULL,
-  `is_correct` tinyint(1) DEFAULT NULL
+  `is_correct` tinyint(1) DEFAULT NULL,
+  `difficult` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转存表中的数据 `student_answers`
 --
 
-INSERT INTO `student_answers` (`student_answers_ID`, `student_id`, `question_id`, `student_answer`, `is_correct`) VALUES
-(1, 1, 1, '2', 0),
-(2, 1, 7, '4', 0),
-(3, 1, 10, '2', 0),
-(4, 1, 18, '2', 0),
-(5, 2, 1, '3', 0),
-(6, 2, 7, '1', 0),
-(7, 2, 10, '1', 0),
-(8, 2, 18, '1', 0),
-(15, 2, 3, '2', 1),
-(16, 2, 4, '3', 1),
-(17, 2, 11, '1', 0),
-(18, 2, 13, '1', 0),
-(19, 2, 19, '1', 1),
-(20, 2, 6, '2', 0),
-(21, 2, 8, '1', 1),
-(22, 2, 12, '1', 0),
-(23, 2, 15, '1', 0),
-(24, 2, 20, '1', 0),
-(25, 2, 21, '1', 1),
-(26, 6, 1, '1', 0),
-(27, 6, 7, '2', 0),
-(28, 6, 10, '2', 0),
-(29, 6, 18, '1', 1);
+INSERT INTO `student_answers` (`student_question_id`, `student_id`, `question_id`, `student_answer`, `is_correct`, `difficult`) VALUES
+('SQ000001', 'STU2025000003', 1, '3', 1, 1),
+('SQ000002', 'STU2025000003', 7, '1', 1, 1),
+('SQ000003', 'STU2025000003', 10, '1', 1, 1),
+('SQ000004', 'STU2025000003', 18, '1', 1, 1),
+('SQ000005', 'STU2025000003', 3, '2', 1, 2),
+('SQ000006', 'STU2025000003', 4, '', 0, 2),
+('SQ000007', 'STU2025000003', 11, '1', 0, 2),
+('SQ000008', 'STU2025000003', 13, '1', 0, 2),
+('SQ000009', 'STU2025000003', 19, '3', 0, 2),
+('SQ000010', 'STU2025000002', 1, '3', 1, 1),
+('SQ000011', 'STU2025000002', 7, '1', 1, 1),
+('SQ000012', 'STU2025000002', 10, '1', 1, 1),
+('SQ000013', 'STU2025000002', 18, '1', 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `user`
+-- 表的结构 `student_class`
 --
 
-CREATE TABLE `user` (
-  `U_ID` int(11) NOT NULL,
-  `U_Username` varchar(50) NOT NULL,
-  `U_Password` varchar(200) NOT NULL,
-  `U_Mail` varchar(100) NOT NULL,
-  `reset_token` varchar(64) DEFAULT NULL,
-  `reset_token_expires` datetime DEFAULT NULL,
-  `identity` enum('admin','teacher','student') NOT NULL
+CREATE TABLE `student_class` (
+  `student_class_id` varchar(20) NOT NULL,
+  `student_id` varchar(20) NOT NULL,
+  `class_id` varchar(20) NOT NULL,
+  `enroll_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- 转存表中的数据 `user`
+-- 转存表中的数据 `student_class`
 --
 
-INSERT INTO `user` (`U_ID`, `U_Username`, `U_Password`, `U_Mail`, `reset_token`, `reset_token_expires`, `identity`) VALUES
-(1, 'Liaw666', '$2y$10$DVZFG8exTYR.xAj7/AXwpOAckaHYWnUxg8WIGeyFTxNPc79yLbl6u', 'yongloon0927@gmail.com', NULL, NULL, 'student'),
-(2, 'Liaw12345', '$2y$10$Bge4wWMtU9lKetUdzll2QeZ2Kb4.SrhhyWUaEXysiH5VQXX6Uu6Du', 'yongloon123@gmail.com', NULL, NULL, 'student'),
-(3, 'Liaw0000', '$2y$10$S.521YlauzsQsmn2U94Q5.nfETe0dmvoJa6oUW1YgKga1MgY5aG0O', 'yongloon1234@gmail.com', NULL, NULL, 'admin'),
-(4, 'Liaw8899', '$2y$10$w4xNlr6UheMqUtIE/ijyuefhJCHQ6hod04HZUxOesr3b8D22lJqoG', 'yongloon8899@gmail.com', NULL, NULL, 'student'),
-(5, 'Liaw123', '$2y$10$UmyiyjIkJ528yAF7OWc4.e5TchuE14s/rOwmIzv5L/2wyLx86WsHu', 'Liaw12345@gamil.com', NULL, NULL, 'teacher'),
-(6, 'Kumbs0524', '$2y$10$t.iwpI6bLEF6ZviH6sHD6.ORqXRqVn5bpSQq6oMI1.5VN6ha89mrG', 'kumbs0329@gmail.com', NULL, NULL, 'student'),
-(7, 'Ytboys', '$2y$10$RIagDD.5H3yqXgsCzNLK1OzezvTn/23AE8hCf0rOtHDp.fc/8d2A6', 'qwert2345@gmail.com', NULL, NULL, 'teacher');
+INSERT INTO `student_class` (`student_class_id`, `student_id`, `class_id`, `enroll_date`) VALUES
+('SC000001', 'STU2025000003', 'CLS000001', '2025-04-28 08:20:19');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `student_level`
+--
+
+CREATE TABLE `student_level` (
+  `id` int(11) NOT NULL,
+  `student_id` varchar(20) DEFAULT NULL,
+  `experience` int(11) DEFAULT 0,
+  `level` int(11) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `student_submit`
+--
+
+CREATE TABLE `student_submit` (
+  `submit_id` varchar(20) NOT NULL,
+  `student_id` varchar(255) NOT NULL,
+  `class_id` varchar(20) NOT NULL,
+  `lesson_id` varchar(255) NOT NULL,
+  `filename` varchar(255) NOT NULL,
+  `filepath` varchar(255) NOT NULL,
+  `upload_time` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `student_submit`
+--
+
+INSERT INTO `student_submit` (`submit_id`, `student_id`, `class_id`, `lesson_id`, `filename`, `filepath`, `upload_time`) VALUES
+('SS000001', 'STU2025000003', 'wert3', 'LL000002', 'Project1 - Copy (1).sjr', 'uploads/Project1 - Copy (1).sjr', '2025-04-25 08:33:18'),
+('SS000002', 'STU2025000002', 'wert3', 'LL000002', 'Project1 - Copy (2) (1).sjr', 'uploads/Project1 - Copy (2) (1).sjr', '2025-04-26 05:21:53');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `teacher`
+--
+
+CREATE TABLE `teacher` (
+  `teacher_id` varchar(20) NOT NULL,
+  `T_Username` varchar(50) NOT NULL,
+  `T_Password` varchar(200) NOT NULL,
+  `T_Mail` varchar(100) NOT NULL,
+  `identity` enum('teacher') NOT NULL DEFAULT 'teacher',
+  `reset_token` varchar(64) DEFAULT NULL,
+  `reset_token_expires` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `teacher`
+--
+
+INSERT INTO `teacher` (`teacher_id`, `T_Username`, `T_Password`, `T_Mail`, `identity`, `reset_token`, `reset_token_expires`) VALUES
+('STU2025000002', 'Test123', '$2y$10$FcqYSjS0U3EFCsyeTpJlGuTUWJuX5jyC8.DfBR2FNzrFOy/sHR7vK', 'yongloon0927@gmail.com', 'teacher', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `teacher_class`
+--
+
+CREATE TABLE `teacher_class` (
+  `teacher_class_id` varchar(20) NOT NULL,
+  `teacher_id` varchar(20) NOT NULL,
+  `class_id` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- 转存表中的数据 `teacher_class`
+--
+
+INSERT INTO `teacher_class` (`teacher_class_id`, `teacher_id`, `class_id`) VALUES
+('TC000004', 'STU2025000002', 'CLS000004');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `teacher_feedback`
+--
+
+CREATE TABLE `teacher_feedback` (
+  `teacher_feedback_id` varchar(20) NOT NULL,
+  `project_id` varchar(20) NOT NULL,
+  `teacher_id` varchar(20) NOT NULL,
+  `comments` text DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL CHECK (`rating` between 1 and 5),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转储表的索引
 --
 
 --
+-- 表的索引 `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`category_id`);
+
+--
+-- 表的索引 `class_work`
+--
+ALTER TABLE `class_work`
+  ADD PRIMARY KEY (`availability_id`);
+
+--
 -- 表的索引 `feedback`
 --
 ALTER TABLE `feedback`
   ADD PRIMARY KEY (`feedback_id`),
-  ADD KEY `project_id` (`project_id`),
-  ADD KEY `teacher_id` (`teacher_id`);
+  ADD KEY `submit_id` (`submit_id`);
 
 --
 -- 表的索引 `lessons`
 --
 ALTER TABLE `lessons`
-  ADD PRIMARY KEY (`lesson_id`);
-
---
--- 表的索引 `lesson_files`
---
-ALTER TABLE `lesson_files`
-  ADD PRIMARY KEY (`file_id`),
-  ADD KEY `lesson_id` (`lesson_id`);
-
---
--- 表的索引 `massage`
---
-ALTER TABLE `massage`
-  ADD PRIMARY KEY (`massage_ID`);
-
---
--- 表的索引 `projects`
---
-ALTER TABLE `projects`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`lesson_id`),
+  ADD KEY `fk_lesson_category` (`category_id`);
 
 --
 -- 表的索引 `questions`
@@ -274,71 +415,76 @@ ALTER TABLE `questions`
   ADD PRIMARY KEY (`id`);
 
 --
+-- 表的索引 `student`
+--
+ALTER TABLE `student`
+  ADD PRIMARY KEY (`student_id`),
+  ADD UNIQUE KEY `S_Username` (`S_Username`),
+  ADD UNIQUE KEY `S_Mail` (`S_Mail`);
+ALTER TABLE `student` ADD FULLTEXT KEY `student_id` (`student_id`);
+
+--
 -- 表的索引 `student_answers`
 --
 ALTER TABLE `student_answers`
-  ADD PRIMARY KEY (`student_answers_ID`),
-  ADD UNIQUE KEY `student_id` (`student_id`,`question_id`),
+  ADD PRIMARY KEY (`student_question_id`),
+  ADD KEY `student_id` (`student_id`),
   ADD KEY `question_id` (`question_id`);
 
 --
--- 表的索引 `user`
+-- 表的索引 `student_class`
 --
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`U_ID`),
-  ADD UNIQUE KEY `reset_token` (`reset_token`);
+ALTER TABLE `student_class`
+  ADD PRIMARY KEY (`student_class_id`);
+
+--
+-- 表的索引 `student_level`
+--
+ALTER TABLE `student_level`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `student_level_ibfk_1` (`student_id`);
+
+--
+-- 表的索引 `student_submit`
+--
+ALTER TABLE `student_submit`
+  ADD PRIMARY KEY (`submit_id`);
+
+--
+-- 表的索引 `teacher`
+--
+ALTER TABLE `teacher`
+  ADD PRIMARY KEY (`teacher_id`),
+  ADD UNIQUE KEY `T_Username` (`T_Username`),
+  ADD UNIQUE KEY `T_Mail` (`T_Mail`);
 
 --
 -- 在导出的表使用AUTO_INCREMENT
 --
 
 --
+-- 使用表AUTO_INCREMENT `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- 使用表AUTO_INCREMENT `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- 使用表AUTO_INCREMENT `lessons`
---
-ALTER TABLE `lessons`
-  MODIFY `lesson_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- 使用表AUTO_INCREMENT `lesson_files`
---
-ALTER TABLE `lesson_files`
-  MODIFY `file_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- 使用表AUTO_INCREMENT `massage`
---
-ALTER TABLE `massage`
-  MODIFY `massage_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- 使用表AUTO_INCREMENT `projects`
---
-ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- 使用表AUTO_INCREMENT `student_answers`
+-- 使用表AUTO_INCREMENT `student_level`
 --
-ALTER TABLE `student_answers`
-  MODIFY `student_answers_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
-
---
--- 使用表AUTO_INCREMENT `user`
---
-ALTER TABLE `user`
-  MODIFY `U_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+ALTER TABLE `student_level`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- 限制导出的表
@@ -348,21 +494,26 @@ ALTER TABLE `user`
 -- 限制表 `feedback`
 --
 ALTER TABLE `feedback`
-  ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `feedback_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `user` (`U_ID`) ON DELETE CASCADE;
+  ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`submit_id`) REFERENCES `student_submit` (`submit_id`);
 
 --
--- 限制表 `lesson_files`
+-- 限制表 `lessons`
 --
-ALTER TABLE `lesson_files`
-  ADD CONSTRAINT `lesson_files_ibfk_1` FOREIGN KEY (`lesson_id`) REFERENCES `lessons` (`lesson_id`) ON DELETE CASCADE;
+ALTER TABLE `lessons`
+  ADD CONSTRAINT `fk_lesson_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`);
 
 --
 -- 限制表 `student_answers`
 --
 ALTER TABLE `student_answers`
-  ADD CONSTRAINT `student_answers_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `user` (`U_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_answers_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `student_answers_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE;
+
+--
+-- 限制表 `student_level`
+--
+ALTER TABLE `student_level`
+  ADD CONSTRAINT `student_level_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
