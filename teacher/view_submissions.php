@@ -1,7 +1,7 @@
 <?php
 session_start();
 include '../phpfile/connect.php';
-include '../resheadAfterLogin.php';
+
 
 if (isset($_POST['submit_feedback'])) {
     $submit_id = $_POST['submit_id'];
