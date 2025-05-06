@@ -61,6 +61,16 @@
             $class['teachers'] = $teachers;
             $result[] = $class;
         }
+
+        $getOldClassSql = "SELECT c.class_id,c.class_code,class_name
+                           FROM student_class sc
+                           JOIN class c ON sc.class_id = c.class_id
+                           WHERE sc.student_id = :S_ID";
+        $getOldClassStmt = $pdo->prepare($getOldClassSql);
+        $getOldClassStmt->bindParam(':S_ID',$user_id);
+        $getOldClassStmt->execute();
+        $oldClass = $getOldClassStmt->fetchAll(PDO::FETCH_ASSOC);
+
     ?>
 
     <!DOCTYPE html>
@@ -572,17 +582,18 @@
             <?php endforeach; ?>
         </form>
         </div>
+        
 
+        <!--Change Class Page-->
         <div class="container tab-content" id="recent">
             <form action="../includes/process_change_Class.php" method="post" class="changeClass_box">
+                <input type="hidden" name="S_ID" value="<?php echo htmlspecialchars($user_id); ?>">
                 <div class="Class_box">
-                    <label for="old_class">Change to class:</label>
+                    <label for="old_class">Change from class:</label>
                     <select name="old_class" id="old_class">
-                    <option value="">-- Select a Class --</option>
-                    <?php foreach ($classes as $class): ?>
-                        <option value="<?php echo htmlspecialchars($class['class_code']); ?>">
-                            <?php echo htmlspecialchars($class['class_code']); ?>
-                            <?php echo htmlspecialchars($class['class_name']); ?>
+                    <?php foreach ($oldClass as $class): ?>
+                        <option value="">
+                        <?php echo htmlspecialchars($class['class_code'] . ' ' . $class['class_name']); ?>
                         </option>
                     <?php endforeach; ?>
                     </select>
@@ -593,11 +604,14 @@
                     <label for="class_option">Change to class:</label>
                     <select name="class_option" id="class_option">
                     <option value="">-- Select a Class --</option>
+                    <?php
+                    $oldClassCodes = array_column($oldClass, 'class_code');
+                    ?>
                     <?php foreach ($classes as $class): ?>
-                        <option value="<?php echo htmlspecialchars($class['class_code']); ?>">
-                            <?php echo htmlspecialchars($class['class_code']); ?>
-                            <?php echo htmlspecialchars($class['class_name']); ?>
-                        </option>
+                        <?php if (in_array($class['class_code'], $oldClassCodes)) continue; ?>
+                            <option value="<?php echo htmlspecialchars($class['class_code']); ?>">
+                                    <?php echo htmlspecialchars($class['class_code'] . ' ' . $class['class_name']); ?>
+                            </option>
                     <?php endforeach; ?>
                     </select>
                 </div>
