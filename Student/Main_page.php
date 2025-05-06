@@ -554,8 +554,8 @@
 
         <!--Enroll Page-->
         <div class="container tab-content" id="recent">
+        <?php foreach ($result as $class): ?>
         <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
-            <?php foreach ($result as $class): ?>
                 <input type="hidden" name="class_id" value="<?php echo htmlspecialchars($class['class_id']) ?>">
                 <input type="hidden" name="Max" value="<?php echo htmlspecialchars($class['Max']) ?>">
                 <input type="hidden" name="Current" value="<?php echo htmlspecialchars($class['Cur']) ?>">
@@ -579,8 +579,8 @@
                         <div ><button type="submit" class="enroll_btn" name ="enroll_btn">Enroll</button></div>
                     </div>
                 </div>
-            <?php endforeach; ?>
         </form>
+        <?php endforeach; ?>
         </div>
         
 
@@ -592,7 +592,7 @@
                     <label for="old_class">Change from class:</label>
                     <select name="old_class" id="old_class">
                     <?php foreach ($oldClass as $class): ?>
-                        <option value="">
+                        <option value="<?php echo htmlspecialchars($class['class_code']); ?>">
                         <?php echo htmlspecialchars($class['class_code'] . ' ' . $class['class_name']); ?>
                         </option>
                     <?php endforeach; ?>
