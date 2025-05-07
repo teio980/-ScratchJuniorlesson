@@ -28,7 +28,6 @@ if ($Classid && mysqli_num_rows($Classid) > 0) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,6 +42,7 @@ if ($Classid && mysqli_num_rows($Classid) > 0) {
     </script>
 </head>
 <body>
+    <!--i love kum -->
     <h2>View Class</h2>
 
     <table border="1">

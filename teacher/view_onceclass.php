@@ -5,7 +5,6 @@ include '../resheadAfterLogin.php';
 
 $class_id = $_GET['class_id'];
 
-// SQL: get total attempts and correct count per student per difficulty
 $query = "
     SELECT 
         s.student_id, 
@@ -54,3 +53,4 @@ if (mysqli_num_rows($result) > 0) {
     echo "No quiz results found for this class.";
 }
 ?>
+<!--i love kum -->
