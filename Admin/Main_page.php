@@ -19,6 +19,7 @@ include 'header_Admin.php'
     <ul class="adminMenu">
     <li><a href="manageUser.php">Manage User</a></li>
     <li><a href="manageClass.php">Manage Class</a></li>
+    <li><a href="viewClassPerformance.php">View Class Performance</a></li>
     <li><a href="manageEvaluationreport.php">Evaluation Report</a></li>
     </ul>
     <span class="material-symbols-outlined" id="menu_icon">menu</span>
