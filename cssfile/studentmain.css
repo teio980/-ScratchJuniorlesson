@@ -159,58 +159,10 @@ main{
     display: block;
 } 
 
-.tab-slide-in-left {
-  animation: slideInFromLeft 0.2s forwards;
-}
-
-.tab-slide-in-right {
-  animation: slideInFromRight 0.2s forwards;
-}
-
-.tab-slide-out-left {
-  animation: slideOutToLeft 0.2s forwards;
-  z-index: 1;
-}
-
-.tab-slide-out-right {
-  animation: slideOutToRight 0.2s forwards;
-  z-index: 1;
-}
-
-@keyframes slideInFromLeft {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInFromRight {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideOutToLeft {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes slideOutToRight {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(100%);
-  }
+.flr{
+  display: flex;
+  flex-direction: row;
+  margin: 0 30px;
 }
 
 .classuidwrapper{
@@ -307,6 +259,36 @@ main{
 .project-card .title {
   margin-top: 20px;
   font-weight: bold;
+}
+
+.project-card .tittle {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.project-card .tittle a {
+  color: var(--secondary-color);
+  text-decoration: none;
+}
+
+.project-card .rating {
+  margin: 12px 0;
+}
+
+.project-card .stars {
+  color: gold;
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+.project-card .comments,
+.project-card .marked-time {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.project-card .marked-time{
+  font-size: 12px;
 }
 
 .project-card .buttonsubmit {

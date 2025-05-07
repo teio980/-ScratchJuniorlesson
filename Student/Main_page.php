@@ -97,33 +97,33 @@
         </li>
         <li class="active">
             <a href="#" class="sidebar-link">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M96 0C43 0 0 43 0 96L0 416c0 53 43 96 96 96l288 0 32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64c17.7 0 32-14.3 32-32l0-320c0-17.7-14.3-32-32-32L384 0 96 0zm0 384l256 0 0 64L96 448c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16zm16 48l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
             <span>Exercise</span>
             </a>
         </li>
         <li>
             <a href="#" class="sidebar-link">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg>
-            <span>Marked Submission</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24px" height="24px"><path d="M481 31C445.1-4.8 386.9-4.8 351 31l-15 15L322.9 33C294.8 4.9 249.2 4.9 221.1 33L135 119c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0L255 66.9c9.4-9.4 24.6-9.4 33.9 0L302.1 80 186.3 195.7 316.3 325.7 481 161c35.9-35.9 35.9-94.1 0-129.9zM293.7 348.3L163.7 218.3 99.5 282.5c-48 48-80.8 109.2-94.1 175.8l-5 25c-1.6 7.9 .9 16 6.6 21.7s13.8 8.1 21.7 6.6l25-5"/></svg>
+            <span>Marked Exercise</span>
             </a>
         </li>
         <li>
             <a href="#" class="sidebar-link">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg>
+            <svg viewBox="0 0 800 800" width="24" height="24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><g><path d="M676.637,183.386c0.002-0.002,0.004-0.004,0.005-0.005L522.549,29.287c-3.619-3.62-8.62-5.86-14.145-5.86H137.5 c-11.046,0-20,8.954-20,20v713.146c0,11.046,8.954,20,20,20h525c11.046,0,20-8.954,20-20V197.522 C682.5,192.407,680.426,187.203,676.637,183.386z M642.5,736.573h-485V63.427h342.62l114.096,114.095l-85.812,0v-41.788 c0-11.046-8.954-20-20-20s-20,8.954-20,20v61.788c0,11.046,8.954,20,20,20c0,0,92.404,0,134.096,0V736.573z"></path><path d="M295.217,224.417l-39.854,39.855l-5.697-5.697c-7.811-7.811-20.473-7.811-28.283,0c-7.811,7.81-7.811,20.473,0,28.284 l19.84,19.84c3.75,3.751,8.838,5.858,14.142,5.858c5.305,0,10.392-2.107,14.143-5.858l53.996-53.999 c7.81-7.811,7.81-20.474-0.001-28.284C315.69,216.606,303.027,216.606,295.217,224.417z"></path><path d="M557.831,312.557h6.646c11.046,0,20-8.954,20-20s-8.954-20-20-20h-6.646c-11.046,0-20,8.954-20,20 S546.785,312.557,557.831,312.557z"></path><path d="M367.389,272.557c-11.046,0-20,8.954-20,20s8.954,20,20,20h129.609c11.046,0,20-8.954,20-20s-8.954-20-20-20H367.389z"></path><path d="M557.831,435.552h6.646c11.046,0,20-8.954,20-20s-8.954-20-20-20h-6.646c-11.046,0-20,8.954-20,20 S546.785,435.552,557.831,435.552z"></path><path d="M496.998,395.552H367.389c-11.046,0-20,8.954-20,20s8.954,20,20,20h129.609c11.046,0,20-8.954,20-20 S508.044,395.552,496.998,395.552z"></path><path d="M557.831,558.547h6.646c11.046,0,20-8.954,20-20s-8.954-20-20-20h-6.646c-11.046,0-20,8.954-20,20 S546.785,558.547,557.831,558.547z"></path><path d="M496.998,518.547H367.389c-11.046,0-20,8.954-20,20s8.954,20,20,20h129.609c11.046,0,20-8.954,20-20 S508.044,518.547,496.998,518.547z"></path><path d="M557.831,681.542h6.646c11.046,0,20-8.954,20-20s-8.954-20-20-20h-6.646c-11.046,0-20,8.954-20,20 S546.785,681.542,557.831,681.542z"></path><path d="M496.998,641.542H367.389c-11.046,0-20,8.954-20,20s8.954,20,20,20h129.609c11.046,0,20-8.954,20-20 S508.044,641.542,496.998,641.542z"></path><path d="M255.363,435.552c5.304,0,10.392-2.107,14.142-5.858l53.996-53.996c7.811-7.811,7.811-20.475,0-28.285 s-20.473-7.811-28.283,0l-39.854,39.855l-5.697-5.698c-7.81-7.81-20.474-7.812-28.284-0.001s-7.811,20.474-0.001,28.284 l19.84,19.841C244.972,433.444,250.059,435.552,255.363,435.552z"></path><path d="M234.239,511.547l-12.856,12.857c-7.81,7.811-7.81,20.474,0.001,28.284c3.905,3.905,9.023,5.857,14.142,5.857 s10.237-1.952,14.143-5.858l12.855-12.855l12.856,12.855c3.904,3.906,9.023,5.858,14.142,5.858s10.237-1.952,14.142-5.858 c7.811-7.811,7.811-20.473,0-28.283l-12.855-12.857l12.856-12.857c7.81-7.811,7.81-20.474-0.001-28.284 c-7.811-7.81-20.474-7.81-28.284,0.001l-12.856,12.856l-12.857-12.856c-7.811-7.811-20.473-7.811-28.283,0s-7.811,20.474,0,28.283 L234.239,511.547z"></path><path d="M295.217,593.4l-39.854,39.855l-5.697-5.697c-7.811-7.811-20.473-7.811-28.283,0c-7.811,7.81-7.811,20.473,0,28.283 l19.84,19.84c3.75,3.752,8.838,5.858,14.142,5.858c5.305,0,10.392-2.107,14.143-5.858l53.996-53.998 c7.81-7.811,7.81-20.474-0.001-28.284C315.69,585.59,303.027,585.59,295.217,593.4z"></pa</g></g></svg>
             <span>Quiz</span>
             </a>
         </li>
         
         <li>
             <a href="#" class="sidebar-link">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>    
             <span>Profile</span>
             </a>
         </li>
 
         <li>
             <a href="#" class="sidebar-link">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="24px" width="24px" fill="#e8eaed"><path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160L0 416c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-96c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 96c0 17.7-14.3 32-32 32L96 448c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l96 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 64z"/></svg>
+            <svg height="24px" width="24px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#ffffff" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><style type="text/css">.st0{fill:#ffffff;}</style><g><path class="st0" d="M81.44,116.972c23.206,0,42.007-18.817,42.007-42.008c0-23.215-18.801-42.016-42.007-42.016 c-23.216,0-42.016,18.801-42.016,42.016C39.424,98.155,58.224,116.972,81.44,116.972z"></path><path class="st0" d="M224.166,245.037c0-0.856-0.142-1.673-0.251-2.498l62.748-45.541c3.942-2.867,4.83-8.411,1.963-12.362 c-1.664-2.285-4.342-3.652-7.17-3.652c-1.877,0-3.667,0.589-5.191,1.689l-62.874,45.636c-2.341-1.068-4.909-1.704-7.65-1.704 h-34.178l-8.294-47.222c-4.555-23.811-14.112-42.51-34.468-42.51h-86.3C22.146,136.873,0,159.019,0,179.383v141.203 c0,10.178,8.246,18.432,18.424,18.432c5.011,0,0,0,12.864,0l7.005,120.424c0,10.83,8.788,19.61,19.618,19.61 c8.12,0,28.398,0,39.228,0c10.83,0,19.61-8.78,19.61-19.61l9.204-238.53h0.463l5.27,23.269c1.744,11.097,11.293,19.28,22.524,19.28 h51.534C215.92,263.461,224.166,255.215,224.166,245.037z M68.026,218.861v-67.123h24.126v67.123l-12.817,15.118L68.026,218.861z"></path><polygon class="st0" points="190.326,47.47 190.326,200.869 214.452,200.869 214.452,71.595 487.874,71.595 487.874,302.131 214.452,302.131 214.452,273.113 190.326,273.113 190.326,326.256 512,326.256 512,47.47 "></polygon><path class="st0" d="M311.81,388.597c0-18.801-15.235-34.029-34.028-34.029c-18.801,0-34.036,15.228-34.036,34.029 c0,18.785,15.235,34.028,34.036,34.028C296.574,422.625,311.81,407.381,311.81,388.597z"></path><path class="st0" d="M277.781,440.853c-24.259,0-44.866,15.919-52.782,38.199h105.565 C322.648,456.771,302.04,440.853,277.781,440.853z"></path><path class="st0" d="M458.573,388.597c0-18.801-15.235-34.029-34.028-34.029c-18.801,0-34.036,15.228-34.036,34.029 c0,18.785,15.235,34.028,34.036,34.028C443.338,422.625,458.573,407.381,458.573,388.597z"></path><path class="st0" d="M424.545,440.853c-24.259,0-44.866,15.919-52.783,38.199h105.565 C469.411,456.771,448.804,440.853,424.545,440.853z"></path></g></g></svg>
             <span>Enroll</span>
             </a>
         </li>
@@ -154,7 +154,7 @@
             $check_sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
             $check_result = mysqli_query($connect, $check_sql);
 
-            if ($check_result && mysqli_num_rows($check_result) > 0) {
+            if (mysqli_num_rows($check_result) > 0) {
                 $row = mysqli_fetch_assoc($check_result);
                 $class_id = $row['class_id'];
 
@@ -176,43 +176,49 @@
                 ";
                 $result_submitted = mysqli_query($connect, $sql_submitted);
 
-                if ($result_submitted && mysqli_num_rows($result_submitted) > 0) {
+                if (mysqli_num_rows($result_submitted) > 0) {
                     echo '<div class="section-divider"><span class="section-title">Submitted</span></div>';
                     echo '<div class="exercisewrapper">';
+
+                    $current_date = date('Y-m-d');
                     $counter = 0;
-                    while ($row = mysqli_fetch_assoc($result_submitted)) {
-                        $student_work = htmlspecialchars($row['student_work']);
-                        $expire_date = htmlspecialchars($row['expire_date']);
 
-                        $sql_lesson = "SELECT title FROM lessons WHERE lesson_file_name = '$student_work' LIMIT 1";
-                        $result_lesson = mysqli_query($connect, $sql_lesson);
-                        $lesson_title = $student_work;
-                        if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
-                            $lesson_row = mysqli_fetch_assoc($result_lesson);
-                            $lesson_title = htmlspecialchars($lesson_row['title']);
-                        }
+                   while ($row = mysqli_fetch_assoc($result_submitted)) {
+                    $student_work = htmlspecialchars($row['student_work']);
+                    $expire_date = htmlspecialchars($row['expire_date']);
 
-                        $backgrounds = [
-                            "linear-gradient(to bottom right, #6dd5ed, #2193b0)",
-                            "linear-gradient(to bottom right, #ff758c, #ff7eb3)",
-                            "linear-gradient(to bottom right, #43cea2, #185a9d)",
-                        ];
-                        $bg_style = $backgrounds[$counter % count($backgrounds)];
-                        $counter++;
-
-                        echo '
-                        <div class="card project-card" style="background: ' . $bg_style . '">
-                            <div class="lang-tag">Submitted</div>
-                            <div class="circle"></div>
-                            <div class="title">' . $lesson_title . '</div>
-                            <div class="expireddate">' . $expire_date . '</div>
-                            <button class="buttonsubmit">
-                                <a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Edit Submission</a>
-                            </button>
-                        </div>';
+                    $sql_lesson = "SELECT title FROM lessons WHERE lesson_file_name = '$student_work' LIMIT 1";
+                    $result_lesson = mysqli_query($connect, $sql_lesson);
+                    $lesson_title = $student_work;
+                    if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
+                        $lesson_row = mysqli_fetch_assoc($result_lesson);
+                        $lesson_title = htmlspecialchars($lesson_row['title']);
                     }
-                    echo '</div>';
-                }
+
+                    $backgrounds = [
+                        "linear-gradient(to bottom right, #6dd5ed, #2193b0)",
+                        "linear-gradient(to bottom right, #ff758c, #ff7eb3)",
+                        "linear-gradient(to bottom right, #43cea2, #185a9d)",
+                    ];
+                    $bg_style = $backgrounds[$counter % count($backgrounds)];
+                    $counter++;
+
+                    $is_expired = strtotime($expire_date) < strtotime($current_date);
+                    $button_html = $is_expired
+                        ? '<button class="buttonsubmit disabled" disabled>Deadline Passed</button>'
+                        : '<button class="buttonsubmit"><a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Edit Submission</a></button>';
+
+                    echo '
+                    <div class="card project-card" style="background: ' . $bg_style . '">
+                        <div class="lang-tag">Submitted</div>
+                        <div class="circle"></div>
+                        <div class="title">' . $lesson_title . '</div>
+                        <div class="expireddate">Due: ' . $expire_date . '</div>
+                        ' . $button_html . '
+                    </div>';
+                } 
+                echo '</div>';
+            }
 
                 // ========== Not Yet Submitted ==========
                 $sql_work = "SELECT availability_id, student_work, expire_date, lesson_id FROM class_work WHERE class_id = '$class_id'";
@@ -220,6 +226,8 @@
 
                 $pending_cards = '';
                 $counter = 0;
+                $current_date = date('Y-m-d'); 
+
                 if ($result_work && mysqli_num_rows($result_work) > 0) {
                     while ($row = mysqli_fetch_assoc($result_work)) {
                         $lesson_id = $row['lesson_id'];
@@ -247,15 +255,18 @@
                         $bg_style = $backgrounds[$counter % count($backgrounds)];
                         $counter++;
 
+                        $is_expired = strtotime($expire_date) < strtotime($current_date);
+                        $button_html = $is_expired
+                            ? '<button class="buttonsubmit disabled" disabled>Deadline Passed</button>'
+                            : '<button class="buttonsubmit"><a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Submit</a></button>';
+
                         $pending_cards .= '
                         <div class="card project-card" style="background: ' . $bg_style . '">
                             <div class="lang-tag">Scratch Junior</div>
                             <div class="circle"></div>
                             <div class="title">' . $lesson_title . '</div>
                             <div class="expireddate">' . $expire_date . '</div>
-                            <button class="buttonsubmit">
-                                <a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Submit</a>
-                            </button>
+                            ' . $button_html . '
                         </div>';
                     }
                 }
@@ -321,38 +332,39 @@
 
         <!-- Marked Feedback Section -->
         <div class="container tab-content" id="marked">
-            <?php
-            $feedback_query = "
-                SELECT ssf.rating, ssf.comments, ssf.created_at, ss.filename 
-                FROM student_submit_feedback ssf
-                INNER JOIN student_submit ss ON ssf.submit_id = ss.submit_id
-                WHERE ss.student_id = '$user_id'
-                ORDER BY ssf.created_at DESC
-            ";
+            <div class="flr">
+                <?php
+                $feedback_query = "
+                    SELECT ssf.rating, ssf.comments, ssf.created_at, ss.filename 
+                    FROM student_submit_feedback ssf
+                    INNER JOIN student_submit ss ON ssf.submit_id = ss.submit_id
+                    WHERE ss.student_id = '$user_id'
+                    ORDER BY ssf.created_at DESC
+                ";
 
-            $feedback_result = mysqli_query($connect, $feedback_query);
+                $feedback_result = mysqli_query($connect, $feedback_query);
 
-            if ($feedback_result && mysqli_num_rows($feedback_result) > 0) {
-                echo '<div class="section-divider"><span class="section-title">Marked Homework</span></div>';
-                while ($row = mysqli_fetch_assoc($feedback_result)) {
-                    $filename = htmlspecialchars($row['filename']);
-                    $file_path = "../Student/uploads/" . $filename;
-                    $rating = htmlspecialchars($row['rating']);
-                    $comments = htmlspecialchars($row['comments']);
-                    $marked_time = htmlspecialchars($row['created_at']);
+                if ($feedback_result && mysqli_num_rows($feedback_result) > 0) {
+                    while ($row = mysqli_fetch_assoc($feedback_result)) {
+                        $filename = htmlspecialchars($row['filename']);
+                        $file_path = "../Student/uploads/" . $filename;
+                        $rating = htmlspecialchars($row['rating']);
+                        $comments = htmlspecialchars($row['comments']);
+                        $marked_time = htmlspecialchars($row['created_at']);
 
-                    echo '
-                    <div class="card project-card">
-                        <div class="title">Submitted File: <a href="' . $file_path . '" target="_blank">' . $filename . '</a></div>
-                        <div class="rating">Rating: <strong>' . $rating . '</strong></div>
-                        <div class="comments">Comments: ' . $comments . '</div>
-                        <div class="marked-time">Marked on: ' . $marked_time . '</div>
-                    </div>';
+                        echo '
+                        <div class="card project-card">
+                            <div class="tittle">Submitted File: <br><a href="' . $file_path . '" target="_blank">' . $filename . '</a></div>
+                            <div class="rating" data-rating="' . $rating . '">Rating: <strong></strong><span class="stars"></span></div>                        
+                            <div class="comments">Comments: ' . $comments . '</div>
+                            <div class="marked-time">Marked on: ' . $marked_time . '</div>
+                        </div>';
+                    }
+                } else {
+                    echo "<p>No marked homework available yet.</p>";
                 }
-            } else {
-                echo "<p>No marked homework available yet.</p>";
-            }
-            ?>
+                ?>
+            </div>
         </div>
 
         <!--Quiz Page--> 
@@ -786,6 +798,26 @@ Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
     ul.previousElementSibling.classList.remove('rotate')
 })
 }
+
+//rating star
+document.querySelectorAll('.rating').forEach(el => {
+    const rating = parseFloat(el.dataset.rating);
+    const starCount = rating / 2;
+    let starsHTML = '';
+
+    for (let i = 1; i <= 5; i++) {
+        if (i <= Math.floor(starCount)) {
+            starsHTML += '<i class="fas fa-star"></i>'; // full star
+        } else if (i - 0.5 <= starCount) {
+            starsHTML += '<i class="fas fa-star-half-alt"></i>'; // half star
+        } else {
+            starsHTML += '<i class="far fa-star"></i>'; // empty star
+        }
+    }
+
+    el.querySelector('.stars').innerHTML = starsHTML;
+});
+
 
 </script>
 
