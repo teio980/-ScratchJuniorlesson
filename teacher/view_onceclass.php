@@ -3,54 +3,97 @@ session_start();
 include '../phpfile/connect.php';
 include '../resheadAfterLogin.php';
 
-$class_id = $_GET['class_id'];
+// 获取传递过来的 class_code
+$class_code = $_GET['class_id'] ?? '';
 
-$query = "
-    SELECT 
-        s.student_id, 
-        s.S_username, 
-        sa.difficult, 
-        COUNT(*) AS total_attempts,
-        SUM(sa.is_correct = 1) AS correct_count
-    FROM student_class sc
-    JOIN student s ON sc.student_id = s.student_id
-    JOIN student_answers sa ON s.student_id = sa.student_id
-    WHERE sc.class_id = '$class_id'
-    GROUP BY s.student_id, sa.difficult
-    ORDER BY s.student_id, sa.difficult
+// 根据 class_code 获取 class_id
+$class_query = "
+    SELECT class_id
+    FROM class
+    WHERE class_code = '$class_code'
 ";
+$class_result = mysqli_query($connect, $class_query);
+$class_row = mysqli_fetch_assoc($class_result);
 
-$result = mysqli_query($connect, $query);
+if ($class_row) {
+    $class_id = $class_row['class_id'];
 
-if (mysqli_num_rows($result) > 0) {
-    echo "<table border='1'>
-            <tr>
-                <th>Student Username</th>
-                <th>Student ID</th>
-                <th>Quiz</th>
-                <th>Correct Answers</th>
-                <th>Total Question</th>
-                <th>Percentage</th>
-            </tr>";
+    // 查询该班级的所有学生
+    $query = "
+        SELECT s.student_id, s.S_username
+        FROM student_class sc
+        JOIN student s ON sc.student_id = s.student_id
+        WHERE sc.class_id = '$class_id'
+    ";
+    $result = mysqli_query($connect, $query);
 
-    while ($row = mysqli_fetch_assoc($result)) {
-        $correct = (int)$row['correct_count'];
-        $total = (int)$row['total_attempts'];
-        $percent = $total > 0 ? round(($correct / $total) * 100, 2) : 0;
+    if (mysqli_num_rows($result) > 0) {
+        echo "<table border='1'>
+                <tr>
+                    <th>Student Username</th>
+                    <th>Student ID</th>
+                    <th>Quiz Score (Reference Only)</th>
+                    <th>Lesson Score</th>
+                    <th>Pass</th>
+                </tr>";
 
-        echo "<tr>
-                <td>" . htmlspecialchars($row['S_username']) . "</td>
-                <td>" . htmlspecialchars($row['student_id']) . "</td>
-                <td>" . htmlspecialchars($row['difficult']) . "</td>
-                <td>$correct</td>
-                <td>$total</td>
-                <td>$percent%</td>
-              </tr>";
+        while ($row = mysqli_fetch_assoc($result)) {
+            $student_id = $row['student_id'];
+            $username = $row['S_username'];
+
+            // 获取该学生的所有评分平均值作为 Lesson Score（上限100）
+            $lesson_query = "
+                SELECT AVG(rating) AS avg_rating
+                FROM ratings
+                WHERE student_id = '$student_id'
+            ";
+            $lesson_result = mysqli_query($connect, $lesson_query);
+            $lesson_score = null;
+
+            if ($lesson_row = mysqli_fetch_assoc($lesson_result)) {
+                $avg_rating = (float)$lesson_row['avg_rating'];
+                if ($avg_rating > 0) {
+                    $lesson_score = min(round($avg_rating, 2), 100);
+                }
+            }
+
+            // 获取该学生的 Quiz 分数（仅用于显示，不参与计算）
+            $quiz_query = "
+                SELECT SUM(sa.is_correct) AS correct_count, COUNT(*) AS total_count
+                FROM student_answers sa
+                JOIN student_class sc ON sa.student_id = sc.student_id
+                WHERE sa.student_id = '$student_id' AND sc.class_id = '$class_id'
+            ";
+            $quiz_result = mysqli_query($connect, $quiz_query);
+            $quiz_score = null;
+
+            if ($quiz_row = mysqli_fetch_assoc($quiz_result)) {
+                $correct = (int)$quiz_row['correct_count'];
+                $total = (int)$quiz_row['total_count'];
+                if ($total > 0) {
+                    $quiz_score = round(($correct / $total) * 100, 2);
+                }
+            }
+
+            $passed = $lesson_score !== null && $lesson_score >= 40 ? '✔' : '✘';
+
+            $quiz_display = $quiz_score !== null ? $quiz_score . "%" : "N/A";
+            $lesson_display = $lesson_score !== null ? $lesson_score : "N/A";
+
+            echo "<tr>
+                    <td>" . htmlspecialchars($username) . "</td>
+                    <td>" . htmlspecialchars($student_id) . "</td>
+                    <td>$quiz_display</td>
+                    <td>$lesson_display</td>
+                    <td>$passed</td>
+                  </tr>";
+        }
+
+        echo "</table>";
+    } else {
+        echo "No students found for this class.";
     }
-
-    echo "</table>";
 } else {
-    echo "No quiz results found for this class.";
+    echo "Class not found.";
 }
 ?>
-<!--i love kum -->
