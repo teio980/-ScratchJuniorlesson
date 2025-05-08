@@ -59,8 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $fileName = $_FILES['U_Avatar']['name'];
             $fileTmpName = $_FILES['U_Avatar']['tmp_name'];
             $fileSize = $_FILES['U_Avatar']['size'];
-            $fileType = $_FILES['U_Avatar']['type'];
-            $fileError = $_FILES['U_Avatar']['error'];
             $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
             $fileExt = strtolower($fileExtension);
 

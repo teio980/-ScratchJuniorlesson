@@ -37,7 +37,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
 <body>
     <div class="search-container">
         <form action="" method="post">
-            <input type="text" name="query" id="searchInput" placeholder="Search..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
+            <input type="text" name="query" id="searchInput" placeholder="Search Username..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
             <button type="submit" class="search-button" name="search">
                 <span class="material-symbols-outlined">search</span>
             </button>

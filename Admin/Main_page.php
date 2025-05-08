@@ -1,6 +1,12 @@
 <?php
 require_once '../includes/check_session_admin.php';
-include 'header_Admin.php'
+include '../includes/connect_DB.php';
+include 'header_Admin.php';
+
+$getMassageUnreadSql = "SELECT student_id FROM student_change_class WHERE status = 'pending';";
+$getMassageUnreadStmt = $pdo->prepare($getMassageUnreadSql);
+$getMassageUnreadStmt->execute();
+$unreadMessage = $getMassageUnreadStmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -14,23 +20,20 @@ include 'header_Admin.php'
     <title>Admin</title>
 </head>
 <body>
-    <h1>Admin page</h1>
     <div class="menu_container">
-    <ul class="adminMenu">
-    <li><a href="manageUser.php">Manage User</a></li>
-    <li><a href="manageClass.php">Manage Class</a></li>
-    <li><a href="viewClassPerformance.php">View Class Performance</a></li>
-    <li><a href="manageEvaluationreport.php">Evaluation Report</a></li>
-    </ul>
-    <span class="material-symbols-outlined" id="menu_icon">menu</span>
+        <ul class="adminMenu">
+        <li><a href="manageUser.php">Manage User</a></li>
+        <li><a href="manageClass.php">Manage Class</a></li>
+        <li><a href="viewClassPerformance.php">View Class</a></li>
+        <li><a href="manageChangeClass.php">Change Class Requests</a></li>
+        <li><a href="manageEvaluationreport.php">Evaluation Report</a></li>
+        </ul>
     </div>
+    <?php foreach ($unreadMessage as $message): ?>
+    <div class="notification_container">
+        <h2>Change Class Request</h2>
+        <div>You have received a change class request send from <?php echo htmlspecialchars($message['student_id'])?>.</div>
+    </div>
+    <?php endforeach; ?>
 </body>
-<script>
-    
-document.getElementById('menu_icon').addEventListener('click', function() {
-    const menu = document.querySelector('.adminMenu');
-    menu.classList.toggle('active');
-});
-
-</script>
 </html>

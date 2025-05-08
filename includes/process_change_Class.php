@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'connect_DB.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -24,18 +25,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $update_stmt = $pdo->prepare($update_sql);
         $update_stmt->execute([$last_id, $last_id]);
 
-        echo "<script>
-            alert('Request Successful to Send.\nWaiting For Admin Process.');
-            window.location.href = '../Student/Main_page.php';
-            </script>";
+        $_SESSION['message'] = 'Request Successful to Send. Waiting For Admin Process.';
+        $_SESSION['message_type'] = 'success';
+        header("Location: ../Student/Main_page.php");
         exit();
     }
     else{
-        echo "<script>
-            alert('Request Failed to Send.\nPlease Try Again Later.');
-            window.location.href = '../Student/Main_page.php';
-            </script>";
-            exit();
+        $_SESSION['message'] = 'Request Failed to Send. Please Try Again Later.';
+        $_SESSION['message_type'] = 'error';
+        header("Location: ../Student/Main_page.php");
+        exit();
     }
 }
 

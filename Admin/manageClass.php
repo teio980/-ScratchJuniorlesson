@@ -15,7 +15,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
     $result = [];
 
     foreach ($classes as $class) {
-        $teacher_sql = "SELECT t.teacher_id, t.teacher_name
+        $teacher_sql = "SELECT t.teacher_id, t.T_Username
                         FROM teacher_class tc
                         JOIN teacher t ON tc.teacher_id = t.teacher_id
                         WHERE tc.class_id = :class_id";
@@ -68,7 +68,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
 <body>
     <div class="search-container">
         <form action="" method="post">
-            <input type="text" name="query" id="searchInput" placeholder="Search..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
+            <input type="text" name="query" id="searchInput" placeholder="Search Class Name..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
             <button type="submit" class="search-button" name="search">
                 <span class="material-symbols-outlined">search</span>
             </button>

@@ -71,6 +71,15 @@
     $getOldClassStmt->execute();
     $oldClass = $getOldClassStmt->fetchAll(PDO::FETCH_ASSOC);
 
+    if (isset($_SESSION['message'])) {
+        $message = $_SESSION['message'];
+        echo "<script>
+        alert('$message');
+        </script>";
+        
+        unset($_SESSION['message']);
+        unset($_SESSION['message_type']);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -78,7 +87,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../cssfile/studentheader.css">
+    <link rel="stylesheet" href="../cssfile/studentheader.css">
     <link rel="stylesheet" href="../cssfile/studentmain.css">
     <link rel="stylesheet" href="../cssfile/personal_profile.css">
     <link rel="stylesheet" href="../cssfile/enrollClass.css">
@@ -524,8 +533,11 @@
         <!--Profile Page-->
         <div class="container tab-content" id="profile">
             <h1>Personal Profile</h1>
-            <form action="">
-                <img src="<?php echo $fullPath; ?>" alt="Avatar" style =" width :24px; width :24px;">
+            <form action="../includes/change_Avatar.php" class="avatar_container" method="post" enctype="multipart/form-data">
+            <input type="file" name="change_Avatar" id="change_Avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="this.form.submit()">
+            <label for="change_Avatar" style="cursor: pointer;">
+                <img src="<?php echo $fullPath; ?>" alt="Avatar" class="avatar">
+            </label>
             </form>
             <form action="../includes/change_Username.php" method="post" class="changeUsernameEmail_box">
                 <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($user_id) ?>">
@@ -569,6 +581,7 @@
         <!--Enroll Page-->
                     
         <div class="container tab-content" id="exroll">
+            <div class="enroll_box">
             <?php foreach ($result as $class): ?>
                 <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
                 
@@ -597,6 +610,7 @@
                     </div> 
                 </form>
             <?php endforeach; ?>
+            </div>
         </div>
     
 
@@ -618,7 +632,7 @@
 
                 <div class="Class_box">
                     <label for="class_option">Change to class:</label>
-                    <select name="class_option" id="class_option">
+                    <select name="class_option" id="class_option" required>
                     <option value="">-- Select a Class --</option>
                     <?php
                     $oldClassCodes = array_column($oldClass, 'class_code');
@@ -688,6 +702,10 @@ if (newPass !== confirmPass) {
 
 return true;
 });
+
+function changeAvatar(){
+    const Avatar = document.getElementById("change_Avatar")
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     const sidebarLinks = document.querySelectorAll('.sidebar-link'); // Sidebar links
