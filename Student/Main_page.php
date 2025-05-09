@@ -107,6 +107,12 @@
         <li class="active">
             <a href="#" class="sidebar-link">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M96 0C43 0 0 43 0 96L0 416c0 53 43 96 96 96l288 0 32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64c17.7 0 32-14.3 32-32l0-320c0-17.7-14.3-32-32-32L384 0 96 0zm0 384l256 0 0 64L96 448c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16zm16 48l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
+            <span>Notes</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="sidebar-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M96 0C43 0 0 43 0 96L0 416c0 53 43 96 96 96l288 0 32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64c17.7 0 32-14.3 32-32l0-320c0-17.7-14.3-32-32-32L384 0 96 0zm0 384l256 0 0 64L96 448c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16zm16 48l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
             <span>Exercise</span>
             </a>
         </li>
@@ -122,7 +128,6 @@
             <span>Quiz</span>
             </a>
         </li>
-        
         <li>
             <a href="#" class="sidebar-link">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>    
@@ -156,6 +161,11 @@
     <main>
     <div class="mm">
         <?php include 'resheadstudent.php'; ?>
+
+       <!-- Teaching Notes Page -->
+       <div class="container tab-content active" id="exercise">
+            
+       </div>
 
        <!-- Exercise Page -->
         <div class="container tab-content active" id="exercise">
@@ -578,8 +588,7 @@
             </form>
         </div>
 
-        <!--Enroll Page-->
-                    
+        <!--Enroll Page-->                
         <div class="container tab-content" id="exroll">
             <div class="enroll_box">
             <?php foreach ($result as $class): ?>
@@ -612,7 +621,6 @@
             <?php endforeach; ?>
             </div>
         </div>
-    
 
         <!--Change Class Page-->
         <div class="container tab-content" id="recent">
@@ -665,176 +673,172 @@ $connect->close();
 ?>
 
 <script>
-//Enroll Page JS
-const hasClass = <?php echo $hasClass ? 'true' : 'false'; ?>;
+    //Enroll Page JS
+    const hasClass = <?php echo $hasClass ? 'true' : 'false'; ?>;
 
-if (hasClass) {
-    document.querySelectorAll('.enroll_btn').forEach(button => {
-        button.style.display = 'none';
-    });
-}
-
-//Profile Page JS
-function showPassword(inputId, iconId) {
-const passwordInput = document.getElementById(inputId);
-const icon = document.getElementById(iconId);
-
-if (passwordInput && icon) {
-    if (passwordInput.type === 'password') {
-    passwordInput.type = 'text';
-    icon.textContent = 'visibility';
-    } else {
-    passwordInput.type = 'password';
-    icon.textContent = 'visibility_off';
+    if (hasClass) {
+        document.querySelectorAll('.enroll_btn').forEach(button => {
+            button.style.display = 'none';
+        });
     }
-}
-}
 
-document.querySelector('form.changePassword_box').addEventListener('submit', function(e) {
-const newPass = document.getElementById('new_Password').value;
-const confirmPass = document.getElementById('confirmed_new_Password').value;
+    //Profile Page JS
+    function showPassword(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
 
-if (newPass !== confirmPass) {
-    e.preventDefault(); 
-    alert('New Password does not match Confirmed Password!');
-    return false;
-}
-
-return true;
-});
-
-function changeAvatar(){
-    const Avatar = document.getElementById("change_Avatar")
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    const sidebarLinks = document.querySelectorAll('.sidebar-link'); // Sidebar links
-    const sidebarItems = document.querySelectorAll('#sidebar ul li'); // Sidebar <li> items (all of them)
-    const tabContents = document.querySelectorAll('.tab-content'); // Tab containers
-
-    // Ensure the first sidebar link and tab content are active by default
-    sidebarLinks[0].classList.add('active'); // Adding active to the first sidebar link
-    sidebarItems[1].classList.add('active'); // Adding active to the second li (starting from the sidebar links)
-    tabContents[0].classList.add('active'); // Make sure the first tab content is shown
-
-    sidebarLinks.forEach((link, index) => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent default link behavior
-
-            // Remove 'active' class from all sidebar links and <li> items
-            sidebarLinks.forEach(link => link.classList.remove('active'));
-            sidebarItems.forEach(item => item.classList.remove('active'));
-
-            // Add 'active' class to the clicked sidebar link and its parent <li>
-            link.classList.add('active');
-            sidebarItems[index + 1].classList.add('active'); // Add 'active' to the corresponding <li> (skip the first item)
-
-            // Remove 'active' from all tab containers
-            tabContents.forEach(content => content.classList.remove('active'));
-
-            // Add 'active' class to the corresponding tab content (index matches sidebar)
-            if (tabContents[index]) {
-                tabContents[index].classList.add('active');
-            }
-        });
-    });
-});
-
-
-    /*pop out window */
-    document.querySelectorAll('.popup-trigger').forEach(button => {
-        button.addEventListener('click', () => {
-            alert("Achieve over 80% to advance to the next level.");
-        });
-    });
-
-    /*circle color */
-
-    document.querySelectorAll('.progress-circle').forEach(circle => {
-    const percent = parseFloat(circle.getAttribute('data-percentage'));
-    const radius = 54;  // match the circle's radius
-    const circumference = 2 * Math.PI * radius;
-    const progress = circle.querySelector('.progress-ring__circle');
-    const text = circle.querySelector('.progress-text');
-
-    // Set initial stroke dasharray and dashoffset for the progress circle
-    progress.style.strokeDasharray = `${circumference}`;
-    progress.style.strokeDashoffset = circumference;
-
-    let currentPercent = 0;
-    const stepTime = 10; // Update every 10ms for smooth animation
-    const increment = percent / 100; // Small increment for each step
-
-    const updateProgress = () => {
-        if (currentPercent <= percent) {
-            // Calculate strokeDashoffset based on current percentage
-            const offset = circumference - (currentPercent / 100) * circumference;
-            progress.style.strokeDashoffset = offset;
-            text.textContent = `${Math.round(currentPercent)}%`;  // Update number inside circle
-
-            currentPercent += increment;  // Increase the percentage
-            requestAnimationFrame(updateProgress);  // Request next frame
+    if (passwordInput && icon) {
+        if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.textContent = 'visibility';
         } else {
-            // Once animation is complete, ensure the final value is set
-            text.textContent = `${percent}%`;
+        passwordInput.type = 'password';
+        icon.textContent = 'visibility_off';
         }
-    };
+    }
+    }
 
-    // Start the animation
-    updateProgress();
+    document.querySelector('form.changePassword_box').addEventListener('submit', function(e) {
+    const newPass = document.getElementById('new_Password').value;
+    const confirmPass = document.getElementById('confirmed_new_Password').value;
+
+    if (newPass !== confirmPass) {
+        e.preventDefault(); 
+        alert('New Password does not match Confirmed Password!');
+        return false;
+    }
+
+    return true;
     });
 
-//sidebar
-const toggleButton = document.getElementById('toggle-btn')
-const sidebar = document.getElementById('sidebar')
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebarLinks = document.querySelectorAll('.sidebar-link'); // Sidebar links
+        const sidebarItems = document.querySelectorAll('#sidebar ul li'); // Sidebar <li> items (all of them)
+        const tabContents = document.querySelectorAll('.tab-content'); // Tab containers
 
-function toggleSidebar(){
-sidebar.classList.toggle('close')
-toggleButton.classList.toggle('rotate')
+        // Ensure the first sidebar link and tab content are active by default
+        sidebarLinks[0].classList.add('active'); // Adding active to the first sidebar link
+        sidebarItems[1].classList.add('active'); // Adding active to the second li (starting from the sidebar links)
+        tabContents[0].classList.add('active'); // Make sure the first tab content is shown
 
-closeAllSubMenus()
-}
+        sidebarLinks.forEach((link, index) => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default link behavior
 
-function toggleSubMenu(button){
+                // Remove 'active' class from all sidebar links and <li> items
+                sidebarLinks.forEach(link => link.classList.remove('active'));
+                sidebarItems.forEach(item => item.classList.remove('active'));
 
-if(!button.nextElementSibling.classList.contains('show')){
-    closeAllSubMenus()
-}
+                // Add 'active' class to the clicked sidebar link and its parent <li>
+                link.classList.add('active');
+                sidebarItems[index + 1].classList.add('active'); // Add 'active' to the corresponding <li> (skip the first item)
 
-button.nextElementSibling.classList.toggle('show')
-button.classList.toggle('rotate')
+                // Remove 'active' from all tab containers
+                tabContents.forEach(content => content.classList.remove('active'));
 
-if(sidebar.classList.contains('close')){
+                // Add 'active' class to the corresponding tab content (index matches sidebar)
+                if (tabContents[index]) {
+                    tabContents[index].classList.add('active');
+                }
+            });
+        });
+    });
+
+
+        /*pop out window */
+        document.querySelectorAll('.popup-trigger').forEach(button => {
+            button.addEventListener('click', () => {
+                alert("Achieve over 80% to advance to the next level.");
+            });
+        });
+
+        /*circle color */
+
+        document.querySelectorAll('.progress-circle').forEach(circle => {
+        const percent = parseFloat(circle.getAttribute('data-percentage'));
+        const radius = 54;  // match the circle's radius
+        const circumference = 2 * Math.PI * radius;
+        const progress = circle.querySelector('.progress-ring__circle');
+        const text = circle.querySelector('.progress-text');
+
+        // Set initial stroke dasharray and dashoffset for the progress circle
+        progress.style.strokeDasharray = `${circumference}`;
+        progress.style.strokeDashoffset = circumference;
+
+        let currentPercent = 0;
+        const stepTime = 10; // Update every 10ms for smooth animation
+        const increment = percent / 100; // Small increment for each step
+
+        const updateProgress = () => {
+            if (currentPercent <= percent) {
+                // Calculate strokeDashoffset based on current percentage
+                const offset = circumference - (currentPercent / 100) * circumference;
+                progress.style.strokeDashoffset = offset;
+                text.textContent = `${Math.round(currentPercent)}%`;  // Update number inside circle
+
+                currentPercent += increment;  // Increase the percentage
+                requestAnimationFrame(updateProgress);  // Request next frame
+            } else {
+                // Once animation is complete, ensure the final value is set
+                text.textContent = `${percent}%`;
+            }
+        };
+
+        // Start the animation
+        updateProgress();
+        });
+
+    //sidebar
+    const toggleButton = document.getElementById('toggle-btn')
+    const sidebar = document.getElementById('sidebar')
+
+    function toggleSidebar(){
     sidebar.classList.toggle('close')
     toggleButton.classList.toggle('rotate')
-}
-}
 
-function closeAllSubMenus(){
-Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
-    ul.classList.remove('show')
-    ul.previousElementSibling.classList.remove('rotate')
-})
-}
-
-//rating star
-document.querySelectorAll('.rating').forEach(el => {
-    const rating = parseFloat(el.dataset.rating);
-    const starCount = rating / 2;
-    let starsHTML = '';
-
-    for (let i = 1; i <= 5; i++) {
-        if (i <= Math.floor(starCount)) {
-            starsHTML += '<i class="fas fa-star"></i>'; // full star
-        } else if (i - 0.5 <= starCount) {
-            starsHTML += '<i class="fas fa-star-half-alt"></i>'; // half star
-        } else {
-            starsHTML += '<i class="far fa-star"></i>'; // empty star
-        }
+    closeAllSubMenus()
     }
 
-    el.querySelector('.stars').innerHTML = starsHTML;
-});
+    function toggleSubMenu(button){
+
+    if(!button.nextElementSibling.classList.contains('show')){
+        closeAllSubMenus()
+    }
+
+    button.nextElementSibling.classList.toggle('show')
+    button.classList.toggle('rotate')
+
+    if(sidebar.classList.contains('close')){
+        sidebar.classList.toggle('close')
+        toggleButton.classList.toggle('rotate')
+    }
+    }
+
+    function closeAllSubMenus(){
+    Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
+        ul.classList.remove('show')
+        ul.previousElementSibling.classList.remove('rotate')
+    })
+    }
+
+    //rating star
+    document.querySelectorAll('.rating').forEach(el => {
+        const rating = parseFloat(el.dataset.rating);
+        const starCount = rating / 2;
+        let starsHTML = '';
+
+        for (let i = 1; i <= 5; i++) {
+            if (i <= Math.floor(starCount)) {
+                starsHTML += '<i class="fas fa-star"></i>'; // full star
+            } else if (i - 0.5 <= starCount) {
+                starsHTML += '<i class="fas fa-star-half-alt"></i>'; // half star
+            } else {
+                starsHTML += '<i class="far fa-star"></i>'; // empty star
+            }
+        }
+
+        el.querySelector('.stars').innerHTML = starsHTML;
+    });
 
 
 </script>
