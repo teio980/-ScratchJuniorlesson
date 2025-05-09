@@ -151,23 +151,15 @@
 
         </ul>
     </nav>
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <p>Achieve over 80% to advance to the next level.</p>
-            <button onclick="closePopup()">OK</button>
-        </div>
-    </div>
-
     <main>
-    <div class="mm">
         <?php include 'resheadstudent.php'; ?>
+        <div class="mm">
+        <!-- Teaching Notes Page -->
+        <div class="container tab-content active" id="exercise">
+                
+        </div>
 
-       <!-- Teaching Notes Page -->
-       <div class="container tab-content active" id="exercise">
-            
-       </div>
-
-       <!-- Exercise Page -->
+        <!-- Exercise Page -->
         <div class="container tab-content active" id="exercise">
             <?php
             $check_sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
@@ -202,7 +194,7 @@
                     $current_date = date('Y-m-d');
                     $counter = 0;
 
-                   while ($row = mysqli_fetch_assoc($result_submitted)) {
+                while ($row = mysqli_fetch_assoc($result_submitted)) {
                     $student_work = htmlspecialchars($row['student_work']);
                     $expire_date = htmlspecialchars($row['expire_date']);
 
@@ -388,156 +380,190 @@
 
         <!--Quiz Page--> 
         <div class="container tab-content" id="quiz">
-            <div class="quizbox">
-                <div class="quizleft">
-                    <div class="quiz-container">
-                        <?php
-                        if ($result_quiz->num_rows > 0) {
-                            $previous = true;
-
-                            $total_correct_all = 0;
-                            $total_questions_all = 0;
-
-                            $total_quizzes = 0;
-                            $completed_quizzes = 0;
-
-                            while ($row = $result_quiz->fetch_assoc()) {
-                                $difficulty = $row['difficult'];
-                                $total_quizzes++;
-
-                                $sql_correct = "SELECT COUNT(*) as correct FROM student_answers 
-                                                JOIN questions ON student_answers.question_id = questions.id
-                                                WHERE student_answers.student_id = '$user_id'
-                                                AND questions.difficult = '$difficulty' 
-                                                AND student_answers.is_correct = 1";
-                                $result_correct = mysqli_query($connect, $sql_correct);
-
-                                $total_correct = 0;
-                                if ($result_correct->num_rows > 0) {
-                                    $row_correct = $result_correct->fetch_assoc();
-                                    $total_correct = $row_correct['correct'];
-                                }
-
-                                $sql_total = "SELECT COUNT(*) as total FROM questions WHERE difficult = '$difficulty'";
-                                $result_total = mysqli_query($connect, $sql_total);
-                                $total_questions = 0;
-                                if ($result_total->num_rows > 0) {
-                                    $row_total = $result_total->fetch_assoc();
-                                    $total_questions = $row_total['total'];
-                                }
-
-                                $total_correct_all += $total_correct;
-                                $total_questions_all += $total_questions;
-
-                                $percen = $total_questions > 0 ? round(($total_correct / $total_questions) * 100, 2) : 0;
-
-                                if ($percen >= 80) {
-                                    $completed_quizzes++;
-                                }
-                                
-                                $score_display = "$total_correct / $total_questions";
-                                $active_class = $previous ? "quiz-card active" : "quiz-card";
-
-                                if ($previous) {
-                                    if ($percen >= 80) {
-                                        $icon = "<i class='fa fa-check' style='color:green; margin-right: 8px;'></i>";
-                                        $button = "<button disabled class='btthree'>Completed</button>";
-                                        $previous = true;
-                                    } else {
-                                        $icon = "<i class='fa fa-check' style='color:green; margin-right: 8px;'></i>";
-                                        $button = "<button class='btone'><a href='Questionpaper.php?difficult=$difficulty'>Start Quiz</a></button>";
-                                        $previous = false;
-                                    }
-                                } else {
-                                    $icon = "<i class='fa fa-lock' style='color:gray; margin-right: 8px;'></i>";
-                                    $button = "<button class='bttwo popup-trigger'>Unavailable</button>";
-                                }
-
-                                echo "<div class='$active_class'>
-                                        <i class='fa fa-book' aria-hidden='true'></i>
-                                        <div class='text'>
-                                            <h3>$icon Quiz $difficulty</h3>
-                                            <p>$score_display • $percen%</p>
-                                        </div>
-                                        
-                                        $button
-                                    </div>";
-                            }
-                            $overall_percent = $total_questions_all > 0 ? round(($total_correct_all / $total_questions_all) * 100, 2) : 0;
-                            $progress_circle_1 = "<div class='progresswrapper progresswrapper1'>
-                                                    <div class='progress-label'>Overall Percentage <br>for whole quiz: $overall_percent%</div>
-                                                    <div class='progress-circle progressbar1' data-percentage='$overall_percent'>
-                                                        <svg class='progress-ring' width='120' height='120'>
-                                                            <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                            <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                        </svg>
-                                                        <div class='progress-text'>$overall_percent%</div>
-                                                    </div>
-                                                </div>";
-
-
-                            $quiz_percent = $total_quizzes > 0 ? round(($completed_quizzes / $total_quizzes) * 100, 2) : 0;
-                            $progress_circle_2 = "<div class='progresswrapper progresswrapper2'>
-                                                    <div class='progress-label'>Quizzes <br>Completed: $completed_quizzes out of $total_quizzes</div>
-                                                    <div class='progress-circle progressbar2' data-percentage='$quiz_percent'>
-                                                        <svg class='progress-ring' width='120' height='120'>
-                                                            <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                            <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                        </svg>
-                                                        <div class='progress-text'>$completed_quizzes / $total_quizzes</div>
-                                                    </div>
-                                                </div>";
-                                                
-
-                                                $xp_sql = "SELECT experience, level FROM student_level WHERE student_id = '$user_id'";
-                                                $xp_result = mysqli_query($connect, $xp_sql);
-                                                
-                                                $current_xp = 0;
-                                                $current_level = 1;
-                                                
-                                                if ($xp_result && mysqli_num_rows($xp_result) > 0) {
-                                                    $xp_row = mysqli_fetch_assoc($xp_result);
-                                                    $current_xp = (int)$xp_row['experience'];
-                                                    $current_level = (int)$xp_row['level'];
-                                                }
-                                                
-                                                $xp_needed = 100 + ($current_level - 1) * 50;
-                                                $xp_percent = $xp_needed > 0 ? round(($current_xp / $xp_needed) * 100, 2) : 0;
-                                                
-                                                $progress_circle_3 = "
-                                                    <div class='xp-section'>
-                                                        <img src='$fullPath' alt='Avatar' class='Avatar'>
-                                                        <div class='xp-bar-container'>
-                                                            <div class='xp-label'><p>Name: {$user_name}</p></div>
-                                                            <div class='xp-bar'>
-                                                                <div class='xp-fill' style='width: {$xp_percent}%;'></div>
-                                                            </div>
-                                                            <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
-                                                        </div>
-                                                    </div>
-                                                ";   
-                        }
-                        ?>
-                    </div>
-                </div>
-
-                <div class="quizcurve"></div>
-
-                <div class="quizright">
-                        <div class="progress-xp-box">
-                            <?php 
-                                echo $progress_circle_3;
-                            ?>
-                        </div>
-                        <div class="progress-duo-box">
-                            <?php 
-                                echo $progress_circle_1;
-                                echo $progress_circle_2;
-                            ?>
-                        </div>
-                        <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
+            <div id="popup" class="popup">
+                <div class="popup-content">
+                    <p>Achieve over 80% to advance to the next level.</p>
+                    <button onclick="closePopup()">OK</button>
                 </div>
             </div>
+            <?php
+                // Initialize required variables
+                $progress_circle_1 = "";
+                $progress_circle_2 = "";
+                $progress_circle_3 = "";
+                $quiz_cards_html = "";
+
+                // XP & level (progress_circle_3)
+                $xp_sql = "SELECT experience, level FROM student_level WHERE student_id = '$user_id'";
+                $xp_result = mysqli_query($connect, $xp_sql);
+                $current_xp = 0;
+                $current_level = 1;
+
+                if ($xp_result && mysqli_num_rows($xp_result) > 0) {
+                    $xp_row = mysqli_fetch_assoc($xp_result);
+                    $current_xp = (int)$xp_row['experience'];
+                    $current_level = (int)$xp_row['level'];
+                }
+
+                $xp_needed = 100 + ($current_level - 1) * 50;
+                $xp_percent = $xp_needed > 0 ? round(($current_xp / $xp_needed) * 100, 2) : 0;
+
+                $progress_circle_3 = "
+                    <div class='xp-section'>
+                        <img src='$fullPath' alt='Avatar' class='Avatar'>
+                        <div class='xp-bar-container'>
+                            <div class='xp-label'><p>Name: {$user_name}</p></div>
+                            <div class='xp-bar'>
+                                <div class='xp-fill' style='width: {$xp_percent}%;'></div>
+                            </div>
+                            <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
+                        </div>
+                    </div>
+                ";
+
+                // Quiz data & progress (progress_circle_1, progress_circle_2, and quiz cards)
+                $total_correct_all = 0;
+                $total_questions_all = 0;
+                $total_quizzes = 0;
+                $completed_quizzes = 0;
+                $previous = true;
+
+                if ($result_quiz->num_rows > 0) {
+                    while ($row = $result_quiz->fetch_assoc()) {
+                        $difficulty = $row['difficult'];
+                        $total_quizzes++;
+
+                        // Correct answers
+                        $sql_correct = "SELECT COUNT(*) as correct FROM student_answers 
+                                        JOIN questions ON student_answers.question_id = questions.id
+                                        WHERE student_answers.student_id = '$user_id'
+                                        AND questions.difficult = '$difficulty' 
+                                        AND student_answers.is_correct = 1";
+                        $result_correct = mysqli_query($connect, $sql_correct);
+                        $total_correct = 0;
+                        if ($result_correct->num_rows > 0) {
+                            $row_correct = $result_correct->fetch_assoc();
+                            $total_correct = $row_correct['correct'];
+                        }
+
+                        // Total questions
+                        $sql_total = "SELECT COUNT(*) as total FROM questions WHERE difficult = '$difficulty'";
+                        $result_total = mysqli_query($connect, $sql_total);
+                        $total_questions = 0;
+                        if ($result_total->num_rows > 0) {
+                            $row_total = $result_total->fetch_assoc();
+                            $total_questions = $row_total['total'];
+                        }
+
+                        $total_correct_all += $total_correct;
+                        $total_questions_all += $total_questions;
+
+                        $percen = $total_questions > 0 ? round(($total_correct / $total_questions) * 100, 2) : 0;
+
+                        if ($percen >= 80) {
+                            $completed_quizzes++;
+                        }
+
+                        $score_display = "$total_correct / $total_questions";
+                        $active_class = $previous ? "quiz-card active" : "quiz-card";
+
+                        if ($previous) {
+                            if ($percen >= 80) {
+                                $icon = "<i class='fa fa-check' style='color:green; margin-right: 8px;'></i>";
+                                $button = "<button disabled class='btthree'>Completed</button>";
+                                $previous = true;
+                            } else {
+                                $icon = "<i class='fa fa-check' style='color:green; margin-right: 8px;'></i>";
+                                $button = "<button class='btone'><a href='Questionpaper.php?difficult=$difficulty'>Start Quiz</a></button>";
+                                $previous = false;
+                            }
+                        } else {
+                            $icon = "<i class='fa fa-lock' style='color:gray; margin-right: 8px;'></i>";
+                            $button = "<button class='bttwo popup-trigger'>Start Quiz</button>";
+                        }
+
+                        $status_text = 'Incomplete';
+                        $status_class = 'status-unavailable';
+                        
+                        if ($previous) {
+                            if ($percen >= 80) {
+                                $status_text = 'Completed';
+                                $status_class = 'status-completed';
+                            } else {
+                                $status_text = 'Available';
+                                $status_class = 'status-available';
+                            }
+                        }
+
+                        $icons = ['📕', '📘', '📗', '📙', '📒', '📔', '📚', '📓'];
+                        $icon = $icons[array_rand($icons)];
+                        
+                        $quiz_cards_html .= "
+                            <div class='quiz-item'>
+                                <div class='quiz-icon'>$icon</div>
+                                <div class='quiz-details'>
+                                    <h4 class='quiz-title'>Quiz $difficulty</h4>
+                                    <p class='quiz-status $status_class'>$status_text</p>
+                                    <p class='quiz-score'>Score: $score_display</p>
+                                    <p class='quiz-percent'>$percen%</p>
+                                </div>
+                                <div class='quiz-action'>$button</div>
+                            </div>
+                            <hr class='quiz-item-underline'>
+                        ";
+                        
+                    }
+
+                    // Build progress_circle_1 (Overall %)
+                    $overall_percent = $total_questions_all > 0 ? round(($total_correct_all / $total_questions_all) * 100, 2) : 0;
+                    $progress_circle_1 = "
+                        <div class='progresswrapper progresswrapper1'>
+                            <div class='progress-label'>Overall Percentage <br>for whole quiz: $overall_percent%</div>
+                            <div class='progress-circle progressbar1' data-percentage='$overall_percent'>
+                                <svg class='progress-ring' width='120' height='120'>
+                                    <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='6' fill='transparent' r='40' cx='45' cy='45'/>
+                                    <circle class='progress-ring__circle' stroke-width='6' fill='transparent' r='40' cx='45' cy='45'/>
+                                </svg>
+                                <div class='progress-text'>$overall_percent%</div>
+                            </div>
+                        </div>
+                    ";
+
+                    // Build progress_circle_2 (Completed quizzes)
+                    $quiz_percent = $total_quizzes > 0 ? round(($completed_quizzes / $total_quizzes) * 100, 2) : 0;
+                    $progress_circle_2 = "
+                        <div class='progresswrapper progresswrapper2'>
+                            <div class='progress-label'>Quizzes <br>Completed: $completed_quizzes out of $total_quizzes</div>
+                            <div class='progress-circle progressbar2' data-percentage='$quiz_percent'>
+                                <svg class='progress-ring' width='120' height='120'>
+                                    <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='6' fill='transparent' r='40' cx='45' cy='45'/>
+                                    <circle class='progress-ring__circle' stroke-width='6' fill='transparent' r='40' cx='45' cy='45'/>
+                                </svg>
+                                <div class='progress-text'>$completed_quizzes / $total_quizzes</div>
+                            </div>
+                        </div>
+                    ";
+                }
+            ?>
+            <div class="quizbox">
+                <div class="quizright">
+                    <div class="progress-xp-box">
+                        <?php echo $progress_circle_3; ?>
+                    </div>
+                    <div class="progress-duo-box">
+                        <?php echo $progress_circle_1; ?>
+                        <?php echo $progress_circle_2; ?>
+                    </div>
+                </div>
+                <div class="quizleft">
+                    <div class="quiz-container">
+                        <h1>Quiz</h1>
+                        <?php echo $quiz_cards_html; ?>
+                    </div>
+                        <div class="chatbox">adff</div>
+                </div>        
+            </div>
+            <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
         </div>
         
         <!--Profile Page-->
