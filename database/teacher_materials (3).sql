@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2025-05-07 09:28:51
+-- 生成日期： 2025-05-10 04:30:53
 -- 服务器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -28,19 +28,21 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `teacher_materials` (
-  `material_id` varchar(255) NOT NULL,
+  `material_id` varchar(255) NOT NULL DEFAULT uuid(),
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `file_name` varchar(255) DEFAULT NULL,
-  `create_time` timestamp NOT NULL DEFAULT current_timestamp()
+  `create_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `class_id` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- 转存表中的数据 `teacher_materials`
 --
 
-INSERT INTO `teacher_materials` (`material_id`, `title`, `description`, `file_name`, `create_time`) VALUES
-('material_681b0b77e240d', '1111', '1111', 'Lab 7 Question.pdf', '2025-05-07 07:27:51');
+INSERT INTO `teacher_materials` (`material_id`, `title`, `description`, `file_name`, `create_time`, `class_id`) VALUES
+('M000001', 'AAAAA11', '11111111111', 'Tutorial_02.docx', '2025-05-09 07:08:02', 'CLS000004'),
+('M000002', 'AAAAA', 'sssdddd', 'Tutorial_02.docx', '2025-05-09 07:38:46', 'CLS000004');
 
 --
 -- 转储表的索引
