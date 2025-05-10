@@ -776,7 +776,7 @@
         </div>
 
         <!--Enroll Page-->                
-        <div class="container tab-content active" id="exroll">
+        <div class="container tab-content" id="exroll">
             <div class="enroll_box">
             <?php foreach ($class_result as $class): ?>
                 <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
