@@ -156,11 +156,76 @@
         <div class="mm">
         <!-- Teaching Notes Page -->
         <div class="container tab-content active" id="exercise">
-                
+            <div class="wrappernotes">
+
+                <div class="header-row">
+                <div class="header-row-top">
+                    <h2>Notes</h2>
+                    <div class="action-buttons">
+                    <button class="export-btn" id="sort-btn" onclick="toggleSort()">⬆ Sort</button>
+                    <button class="filter-btn" onclick="downloadSelected()">Download</button>
+                    </div>
+                </div>
+                </div>
+
+                <div class="table-box">
+                <table>
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select-all"/></th>
+                        <th>Notes</th>
+                        <th>Status</th>
+                        <th>File Name</th>
+                        <th>Description</th>
+                        <th>Uploads Date</th>
+                        <th>Download</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        $sort_order = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
+                        $toggle_order = $sort_order === 'ASC' ? 'desc' : 'asc';
+
+                        $result = mysqli_query($connect, "SELECT class_id FROM student_class WHERE student_id = '$user_id'");
+                        if ($row = mysqli_fetch_assoc($result)) {
+                            $class_id = $row['class_id'];
+                            $query = "SELECT title, description, file_name, create_time 
+                                    FROM teacher_materials 
+                                    WHERE class_id = '$class_id' 
+                                    ORDER BY create_time $sort_order";
+                            $materials_result = mysqli_query($connect, $query);
+                            if (mysqli_num_rows($materials_result) > 0) {
+                                while ($material = mysqli_fetch_assoc($materials_result)) {
+                                    $file_path = "../phpfile/uploads_teacher/" . htmlspecialchars($material['file_name']);
+                                    $upload_date = date("M d, h:i A", strtotime($material['create_time']));
+                                    echo "<tr>";
+                                    echo "<td><input type='checkbox' /></td>";
+                                    echo "<td>" . htmlspecialchars($material['title']) . "</td>";
+                                    echo "<td class='status'>Available</td>";
+                                    echo "<td>" . htmlspecialchars($material['file_name']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($material['description']) . "</td>";
+                                    echo "<td>$upload_date</td>";
+                                    echo "<td><a class='download-btn' href='$file_path' download>Download</a></td>";
+                                    echo "<td class='ellipsis'>⋮</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='7'>No materials found for your class.</td></tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='7'>Student not enrolled in any class.</td></tr>";
+                        }
+                    ?>
+
+                    </tbody>
+                </table>
+                </div>
+            </div>
         </div>
 
         <!-- Exercise Page -->
-        <div class="container tab-content active" id="exercise">
+        <div class="container tab-content" id="exercise">
             <?php
             $check_sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
             $check_result = mysqli_query($connect, $check_sql);
@@ -711,7 +776,7 @@
         </div>
 
         <!--Enroll Page-->                
-        <div class="container tab-content active" id="exroll">
+        <div class="container tab-content" id="exroll">
             <div class="enroll_box">
             <?php foreach ($result as $class): ?>
                 <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
@@ -795,6 +860,50 @@ $connect->close();
 ?>
 
 <script>
+    //donwload macterial
+    document.getElementById('select-all').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    function downloadSelected() {
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        if (checkbox && checkbox.checked) {
+        const downloadLink = row.querySelector('.download-btn');
+        if (downloadLink) {
+            const url = downloadLink.getAttribute('href');
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        }
+    });
+    }
+    //notes sort
+    function toggleSort() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sort') === 'desc' ? 'desc' : 'asc';
+    const nextSort = currentSort === 'asc' ? 'desc' : 'asc';
+    window.location.href = window.location.pathname + '?sort=' + nextSort;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+    const sortBtn = document.getElementById('sort-btn');
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sort');
+
+    if (currentSort === 'desc') {
+        sortBtn.innerHTML = '⬇ Sort';
+    } else {
+        sortBtn.innerHTML = '⬆ Sort';
+    }
+    });
+    
     //Enroll Page JS
     const hasClass = <?php echo $hasClass ? 'true' : 'false'; ?>;
 
@@ -964,57 +1073,48 @@ $connect->close();
 
     //emoji popup
 
-const emojiIcon = document.getElementById('emoji-icon');
-const emojiPicker = document.getElementById('emoji-picker'); // Keep only one declaration
-const messageInput = document.querySelector('input[name="message"]');
-const emojiButtons = document.querySelectorAll('.emoji-btn');
+    const emojiIcon = document.getElementById('emoji-icon');
+    const emojiPicker = document.getElementById('emoji-picker'); // Keep only one declaration
+    const messageInput = document.querySelector('input[name="message"]');
+    const emojiButtons = document.querySelectorAll('.emoji-btn');
 
-// Handle scroll direction when mouse wheel is used inside the emoji picker
-emojiPicker.addEventListener('wheel', (event) => {
-    event.preventDefault(); // Prevent the default scroll behavior (vertical scrolling)
+    // Handle scroll direction when mouse wheel is used inside the emoji picker
+    emojiPicker.addEventListener('wheel', (event) => {
+        event.preventDefault(); // Prevent the default scroll behavior (vertical scrolling)
 
-    // If scrolling up (wheel delta < 0), scroll left
-    if (event.deltaY < 0) {
-        emojiPicker.scrollBy({ left: -100, behavior: 'smooth' });
-    }
-    // If scrolling down (wheel delta > 0), scroll right
-    else {
-        emojiPicker.scrollBy({ left: 100, behavior: 'smooth' });
-    }
-});
-
-// Toggle the emoji picker when emoji icon is clicked
-emojiIcon.addEventListener('click', () => {
-    const isPickerVisible = emojiPicker.style.display === 'block';
-    emojiPicker.style.display = isPickerVisible ? 'none' : 'block';
-});
-
-// Insert emoji into message input when clicked
-emojiButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const emoji = button.textContent.replace(/\s+/g, '');  // Clean up any extra spaces
-
-        messageInput.value = messageInput.value.trim() + emoji;  // Add emoji to input
-
-        emojiPicker.style.display = 'none'; // Close picker after selection
+        // If scrolling up (wheel delta < 0), scroll left
+        if (event.deltaY < 0) {
+            emojiPicker.scrollBy({ left: -100, behavior: 'smooth' });
+        }
+        // If scrolling down (wheel delta > 0), scroll right
+        else {
+            emojiPicker.scrollBy({ left: 100, behavior: 'smooth' });
+        }
     });
-});
 
-// Close the emoji picker if the user clicks outside of it
-document.addEventListener('click', (event) => {
-    if (!emojiIcon.contains(event.target) && !emojiPicker.contains(event.target)) {
-        emojiPicker.style.display = 'none';  // Hide picker if click is outside
-    }
-});
+    // Toggle the emoji picker when emoji icon is clicked
+    emojiIcon.addEventListener('click', () => {
+        const isPickerVisible = emojiPicker.style.display === 'block';
+        emojiPicker.style.display = isPickerVisible ? 'none' : 'block';
+    });
 
+    // Insert emoji into message input when clicked
+    emojiButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const emoji = button.textContent.replace(/\s+/g, '');  // Clean up any extra spaces
 
+            messageInput.value = messageInput.value.trim() + emoji;  // Add emoji to input
 
+            emojiPicker.style.display = 'none'; // Close picker after selection
+        });
+    });
 
-
-
-
-
-
+    // Close the emoji picker if the user clicks outside of it
+    document.addEventListener('click', (event) => {
+        if (!emojiIcon.contains(event.target) && !emojiPicker.contains(event.target)) {
+            emojiPicker.style.display = 'none';  // Hide picker if click is outside
+        }
+    });
 
 </script>
 
