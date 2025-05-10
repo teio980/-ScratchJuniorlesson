@@ -44,29 +44,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
 
         
 
-        if($updateCurCapacityStmt->execute([':C_ID'=>$new_class_id])){
-            $updateClassStmt->execute([
-                        ':new_C_ID' => $new_class_id,
-                        ':S_ID' => $studentId,
-                        ':Old_C_ID' => $old_class_id
-                    ]);
+            if($updateCurCapacityStmt->execute([':C_ID'=>$new_class_id])){
+                $updateClassStmt->execute([
+                            ':new_C_ID' => $new_class_id,
+                            ':S_ID' => $studentId,
+                            ':Old_C_ID' => $old_class_id
+                        ]);
 
-            $updateChangeClassStmt->execute([
-                        ':status' => $action,
-                        ':id' => $changeId
-                    ]);
-        }
+                $updateChangeClassStmt->execute([
+                            ':status' => $action,
+                            ':id' => $changeId
+                        ]);
+            }
 
-        }else if ($action == 'rejected') {
-            if($status == 'approved'){
-                $rejectionErrors[] = $studentId;
-                continue;
-            }else{
+        }else if ($action == 'rejected' && $status == 'approved') {
+            $rejectionErrors[] = $studentId;
+            continue;
+
+        }else if($action == 'rejected' && $status != 'approved'){
+
             $updateChangeClassStmt->execute([
                 ':status' => $action,
                 ':id' => $changeId
             ]);
-            }
+
         } else {
             $success = 0;
             break;
@@ -88,20 +89,14 @@ $getChangeClassStmt = $pdo->prepare($getChangeClassSql);
 $getChangeClassStmt->execute();
 $ChangeClassData = $getChangeClassStmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (isset($_SESSION['message'])) {
-    $message = $_SESSION['message'];
-    echo "<script>
-    alert('$message');
-    </script>";
-    
-    unset($_SESSION['message']);
-    unset($_SESSION['message_type']);
-}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php if (isset($_SESSION['message'])): ?>
+    <meta http-equiv="refresh" content="3;url=manageChangeClass.php">
+    <?php endif; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../cssfile/headerAdmin.css">
@@ -143,6 +138,12 @@ if (isset($_SESSION['message'])) {
     <button type="submit" name="approved_btn" value="approved" onclick="return confirmAction('approve')">Approve</button>
     <button type="submit" name="rejected_btn" value="rejected" onclick="return confirmAction('reject')">Reject</button>
     </form>
+    <?php if (isset($_SESSION['message'])): ?>
+        <script>
+            alert(<?php echo json_encode($_SESSION['message']); ?>);
+        </script>
+        <?php unset($_SESSION['message']); ?>
+    <?php endif; ?>
 </body>
 <script>
 function confirmAction(action) {

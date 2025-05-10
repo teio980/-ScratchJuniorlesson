@@ -71,6 +71,16 @@ function showNotifications(){
     const notificationContent = document.getElementById('notification_container');
     if (notificationContent.style.display === "none") {
         notificationContent.style.display = "flex";
+        fetch('../includes/updateReadStatus.php', {
+        method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Notifications marked as read');
+        })
+        .catch(error => {
+            console.error('Error marking notifications as read:', error);
+        });
     } else {
         notificationContent.style.display = "none";
     }
