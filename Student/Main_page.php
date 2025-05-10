@@ -408,18 +408,24 @@
                 $xp_needed = 100 + ($current_level - 1) * 50;
                 $xp_percent = $xp_needed > 0 ? round(($current_xp / $xp_needed) * 100, 2) : 0;
 
-                $progress_circle_3 = "
-                    <div class='xp-section'>
-                        <img src='$fullPath' alt='Avatar' class='Avatar'>
-                        <div class='xp-bar-container'>
-                            <div class='xp-label'><p>Name: {$user_name}</p></div>
-                            <div class='xp-bar'>
-                                <div class='xp-fill' style='width: {$xp_percent}%;'></div>
-                            </div>
-                            <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
-                        </div>
-                    </div>
-                ";
+$next_level = $current_level + 1;
+$emojiLevels = getEmojiLevels();
+$nextEmojis = isset($emojiLevels[$next_level]) ? implode(' ', $emojiLevels[$next_level]) : '';
+
+$progress_circle_3 = "
+    <div class='xp-section'>
+        <img src='$fullPath' alt='Avatar' class='Avatar'>
+        <div class='xp-bar-container'>
+            <div class='xp-label'><p>Name: {$user_name}</p></div>
+            <div class='xp-bar'>
+                <div class='xp-fill' style='width: {$xp_percent}%;'></div>
+            </div>
+            <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
+            <div class='xp-label'>Level up to unlock: $nextEmojis more... </div>
+        </div>
+    </div>
+";
+
 
                 // Quiz data & progress (progress_circle_1, progress_circle_2, and quiz cards)
                 $total_correct_all = 0;
@@ -545,22 +551,112 @@
                     ";
                 }
             ?>
+            <?php
+                $result = $connect->query("SELECT level FROM student_level WHERE student_id = '$user_id'");
+                $row = $result->fetch_assoc();
+                $user_level = $row ? $row['level'] : 1;
+
+                function getEmojiLevels() {
+                    return [
+                        1 => [
+                            '😊', '😂', '😃', '😉', '😅', '🙂', '😁', '😄', '😆', '🙃',
+                            '😇', '😋', '😜', '😝', '🤪', '😛', '🤗', '🤭', '🫢', '😺',
+                            '😸', '😹', '😽', '🙀', '😻', '😼', '😎', '🫠', '😬', '😌',
+                            '😴', '🥱', '🤤', '😪', '🤓', '🫶', '👐', '👏', '✌️', '👍'
+                        ],
+                        2 => ['😎', '😍', '😘', '😋', '😺', '😻'],
+                        3 => ['🤯', '😈', '😤', '🥵', '🧐', '😳'],
+                        4 => ['🚀', '🎉', '💥', '⚡', '🎈', '🌟'],
+                        5 => ['🔥', '👑', '🥇', '🏆', '🦄', '💎', '🧠'],
+                        6 => ['💡', '📚', '🧪', '🧬', '🛠️', '🔍'],
+                        7 => ['🎮', '🕹️', '🧩', '🏹', '⚔️', '🛡️'],
+                        8 => ['🌈', '🌌', '🪐', '🌍', '🛰️', '☄️'],
+                        9 => ['🎭', '🎨', '🎵', '🎤', '📸', '🎬'],
+                        10 => ['🫅', '💼', '🌟', '🥂', '🏛️', '💰', '🕊️']
+                    ];
+                }
+
+
+                function getUnlockedEmojis($level) {
+                    $emojiLevels = getEmojiLevels();
+                    $unlockedEmojis = [];
+                    foreach ($emojiLevels as $lvl => $emojis) {
+                        if ($level >= $lvl) {
+                            $unlockedEmojis = array_merge($unlockedEmojis, $emojis);
+                        }
+                    }
+                    return $unlockedEmojis;
+                }
+
+                $emojiLevels = getEmojiLevels();
+                $unlockedEmojis = getUnlockedEmojis($user_level);
+
+                $allEmojis = [];
+                foreach ($emojiLevels as $level => $emojis) {
+                    foreach ($emojis as $emoji) {
+                        $allEmojis[$emoji] = $level;
+                    }
+                }
+            ?>
             <div class="quizbox">
                 <div class="quizright">
                     <div class="progress-xp-box">
                         <?php echo $progress_circle_3; ?>
                     </div>
-                    <div class="progress-duo-box">
-                        <?php echo $progress_circle_1; ?>
-                        <?php echo $progress_circle_2; ?>
-                    </div>
-                </div>
-                <div class="quizleft">
                     <div class="quiz-container">
                         <h1>Quiz</h1>
                         <?php echo $quiz_cards_html; ?>
                     </div>
-                        <div class="chatbox">adff</div>
+                </div>
+                <div class="quizleft">
+                    <div class="progress-duo-box">
+                        <?php echo $progress_circle_1; ?>
+                        <?php echo $progress_circle_2; ?>
+                    </div>
+                    <div class="chatbox">
+                        <form class="chat-input" method="POST" action="../phpfile/livechat.php">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
+
+                        <div class="input-with-emoji">
+                            <input type="text" name="message" placeholder="Type your message..." required />
+                            <button type="button" id="emoji-icon" class="emoji-icon"><i class="fas fa-smile"></i></button>
+                        </div>
+
+                        <div class="emoji-wrapper">
+                            <div id="emoji-picker" class="emoji-picker" style="display: none;">
+                            <?php foreach ($allEmojis as $emoji => $requiredLevel): ?>
+                                <?php $isUnlocked = in_array($emoji, $unlockedEmojis); ?>
+                                <button 
+                                type="button"
+                                class="emoji-btn<?php echo $isUnlocked ? '' : ' locked'; ?>"
+                                title="<?php echo $isUnlocked ? '' : 'Unlock at level ' . $requiredLevel; ?>"
+                                <?php echo $isUnlocked ? '' : 'disabled'; ?>>
+                                <?php echo $emoji; ?>
+                                </button>
+                            <?php endforeach; ?>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="sendbtn">Send</button>
+                        </form>
+
+                        <div class="chat-messages">
+                            <?php
+                            $sql = "SELECT student_livechat.*, student.S_Username FROM student_livechat
+                                    JOIN student ON student_livechat.student_id = student.student_id
+                                    ORDER BY student_livechat.createtime DESC";
+                            $result = mysqli_query($connect, $sql);
+                            
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                $chat_class = ($row['student_id'] == $user_id) ? 'user' : 'other';
+                                echo "<div class='chat-message $chat_class'>";
+                                echo "<strong>" . htmlspecialchars($row['S_Username']) . ":</strong> ";
+                                echo htmlspecialchars($row['chat']);
+                                echo "</div>";
+                            }
+                            ?>
+                        </div>
+                    </div>
                 </div>        
             </div>
             <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
@@ -865,6 +961,59 @@ $connect->close();
 
         el.querySelector('.stars').innerHTML = starsHTML;
     });
+
+    //emoji popup
+
+const emojiIcon = document.getElementById('emoji-icon');
+const emojiPicker = document.getElementById('emoji-picker'); // Keep only one declaration
+const messageInput = document.querySelector('input[name="message"]');
+const emojiButtons = document.querySelectorAll('.emoji-btn');
+
+// Handle scroll direction when mouse wheel is used inside the emoji picker
+emojiPicker.addEventListener('wheel', (event) => {
+    event.preventDefault(); // Prevent the default scroll behavior (vertical scrolling)
+
+    // If scrolling up (wheel delta < 0), scroll left
+    if (event.deltaY < 0) {
+        emojiPicker.scrollBy({ left: -100, behavior: 'smooth' });
+    }
+    // If scrolling down (wheel delta > 0), scroll right
+    else {
+        emojiPicker.scrollBy({ left: 100, behavior: 'smooth' });
+    }
+});
+
+// Toggle the emoji picker when emoji icon is clicked
+emojiIcon.addEventListener('click', () => {
+    const isPickerVisible = emojiPicker.style.display === 'block';
+    emojiPicker.style.display = isPickerVisible ? 'none' : 'block';
+});
+
+// Insert emoji into message input when clicked
+emojiButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const emoji = button.textContent.replace(/\s+/g, '');  // Clean up any extra spaces
+
+        messageInput.value = messageInput.value.trim() + emoji;  // Add emoji to input
+
+        emojiPicker.style.display = 'none'; // Close picker after selection
+    });
+});
+
+// Close the emoji picker if the user clicks outside of it
+document.addEventListener('click', (event) => {
+    if (!emojiIcon.contains(event.target) && !emojiPicker.contains(event.target)) {
+        emojiPicker.style.display = 'none';  // Hide picker if click is outside
+    }
+});
+
+
+
+
+
+
+
+
 
 
 </script>
