@@ -408,23 +408,23 @@
                 $xp_needed = 100 + ($current_level - 1) * 50;
                 $xp_percent = $xp_needed > 0 ? round(($current_xp / $xp_needed) * 100, 2) : 0;
 
-$next_level = $current_level + 1;
-$emojiLevels = getEmojiLevels();
-$nextEmojis = isset($emojiLevels[$next_level]) ? implode(' ', $emojiLevels[$next_level]) : '';
+                $next_level = $current_level + 1;
+                $emojiLevels = getEmojiLevels();
+                $nextEmojis = isset($emojiLevels[$next_level]) ? implode(' ', $emojiLevels[$next_level]) : '';
 
-$progress_circle_3 = "
-    <div class='xp-section'>
-        <img src='$fullPath' alt='Avatar' class='Avatar'>
-        <div class='xp-bar-container'>
-            <div class='xp-label'><p>Name: {$user_name}</p></div>
-            <div class='xp-bar'>
-                <div class='xp-fill' style='width: {$xp_percent}%;'></div>
-            </div>
-            <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
-            <div class='xp-label'>Level up to unlock: $nextEmojis more... </div>
-        </div>
-    </div>
-";
+                $progress_circle_3 = "
+                    <div class='xp-section'>
+                        <img src='$fullPath' alt='Avatar' class='Avatar'>
+                        <div class='xp-bar-container'>
+                            <div class='xp-label'><p>Name: {$user_name}</p></div>
+                            <div class='xp-bar'>
+                                <div class='xp-fill' style='width: {$xp_percent}%;'></div>
+                            </div>
+                            <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
+                            <div class='xp-label'>Level up to unlock: $nextEmojis more... </div>
+                        </div>
+                    </div>
+                ";
 
 
                 // Quiz data & progress (progress_circle_1, progress_circle_2, and quiz cards)
@@ -711,7 +711,7 @@ $progress_circle_3 = "
         </div>
 
         <!--Enroll Page-->                
-        <div class="container tab-content" id="exroll">
+        <div class="container tab-content active" id="exroll">
             <div class="enroll_box">
             <?php foreach ($result as $class): ?>
                 <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
