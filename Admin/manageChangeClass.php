@@ -2,6 +2,9 @@
 session_start();
 include 'header_Admin.php';
 include '../includes/connect_DB.php';
+
+$rejectionErrors = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) {
     $success = 1;
     $selectedIds = $_POST['selected_classes'];
