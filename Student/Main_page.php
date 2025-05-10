@@ -46,7 +46,7 @@
     $selectClassStmt->execute();
     $classes = $selectClassStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $result = [];
+    $class_result = [];
     foreach ($classes as $class) {
         $teacher_sql = "SELECT t.T_Username
                         FROM teacher_class tc
@@ -59,7 +59,7 @@
         $teachers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         $class['teachers'] = $teachers;
-        $result[] = $class;
+        $class_result[] = $class;
     }
 
     $getOldClassSql = "SELECT c.class_id,c.class_code,class_name
@@ -776,9 +776,9 @@
         </div>
 
         <!--Enroll Page-->                
-        <div class="container tab-content" id="exroll">
+        <div class="container tab-content active" id="exroll">
             <div class="enroll_box">
-            <?php foreach ($result as $class): ?>
+            <?php foreach ($class_result as $class): ?>
                 <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
                 
                     <input type="hidden" name="Max" value="<?php echo htmlspecialchars($class['Max']) ?>">
