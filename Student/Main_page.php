@@ -107,6 +107,12 @@
         <li class="active">
             <a href="#" class="sidebar-link">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M96 0C43 0 0 43 0 96L0 416c0 53 43 96 96 96l288 0 32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64c17.7 0 32-14.3 32-32l0-320c0-17.7-14.3-32-32-32L384 0 96 0zm0 384l256 0 0 64L96 448c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16zm16 48l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
+            <span>Notes</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="sidebar-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M96 0C43 0 0 43 0 96L0 416c0 53 43 96 96 96l288 0 32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64c17.7 0 32-14.3 32-32l0-320c0-17.7-14.3-32-32-32L384 0 96 0zm0 384l256 0 0 64L96 448c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16zm16 48l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
             <span>Exercise</span>
             </a>
         </li>
@@ -122,7 +128,6 @@
             <span>Quiz</span>
             </a>
         </li>
-        
         <li>
             <a href="#" class="sidebar-link">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>    
@@ -146,18 +151,15 @@
 
         </ul>
     </nav>
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <p>Achieve over 80% to advance to the next level.</p>
-            <button onclick="closePopup()">OK</button>
-        </div>
-    </div>
-
     <main>
-    <div class="mm">
         <?php include 'resheadstudent.php'; ?>
+        <div class="mm">
+        <!-- Teaching Notes Page -->
+        <div class="container tab-content active" id="exercise">
+                
+        </div>
 
-       <!-- Exercise Page -->
+        <!-- Exercise Page -->
         <div class="container tab-content active" id="exercise">
             <?php
             $check_sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
@@ -192,7 +194,7 @@
                     $current_date = date('Y-m-d');
                     $counter = 0;
 
-                   while ($row = mysqli_fetch_assoc($result_submitted)) {
+                while ($row = mysqli_fetch_assoc($result_submitted)) {
                     $student_work = htmlspecialchars($row['student_work']);
                     $expire_date = htmlspecialchars($row['expire_date']);
 
@@ -378,156 +380,190 @@
 
         <!--Quiz Page--> 
         <div class="container tab-content" id="quiz">
-            <div class="quizbox">
-                <div class="quizleft">
-                    <div class="quiz-container">
-                        <?php
-                        if ($result_quiz->num_rows > 0) {
-                            $previous = true;
-
-                            $total_correct_all = 0;
-                            $total_questions_all = 0;
-
-                            $total_quizzes = 0;
-                            $completed_quizzes = 0;
-
-                            while ($row = $result_quiz->fetch_assoc()) {
-                                $difficulty = $row['difficult'];
-                                $total_quizzes++;
-
-                                $sql_correct = "SELECT COUNT(*) as correct FROM student_answers 
-                                                JOIN questions ON student_answers.question_id = questions.id
-                                                WHERE student_answers.student_id = '$user_id'
-                                                AND questions.difficult = '$difficulty' 
-                                                AND student_answers.is_correct = 1";
-                                $result_correct = mysqli_query($connect, $sql_correct);
-
-                                $total_correct = 0;
-                                if ($result_correct->num_rows > 0) {
-                                    $row_correct = $result_correct->fetch_assoc();
-                                    $total_correct = $row_correct['correct'];
-                                }
-
-                                $sql_total = "SELECT COUNT(*) as total FROM questions WHERE difficult = '$difficulty'";
-                                $result_total = mysqli_query($connect, $sql_total);
-                                $total_questions = 0;
-                                if ($result_total->num_rows > 0) {
-                                    $row_total = $result_total->fetch_assoc();
-                                    $total_questions = $row_total['total'];
-                                }
-
-                                $total_correct_all += $total_correct;
-                                $total_questions_all += $total_questions;
-
-                                $percen = $total_questions > 0 ? round(($total_correct / $total_questions) * 100, 2) : 0;
-
-                                if ($percen >= 80) {
-                                    $completed_quizzes++;
-                                }
-                                
-                                $score_display = "$total_correct / $total_questions";
-                                $active_class = $previous ? "quiz-card active" : "quiz-card";
-
-                                if ($previous) {
-                                    if ($percen >= 80) {
-                                        $icon = "<i class='fa fa-check' style='color:green; margin-right: 8px;'></i>";
-                                        $button = "<button disabled class='btthree'>Completed</button>";
-                                        $previous = true;
-                                    } else {
-                                        $icon = "<i class='fa fa-check' style='color:green; margin-right: 8px;'></i>";
-                                        $button = "<button class='btone'><a href='Questionpaper.php?difficult=$difficulty'>Start Quiz</a></button>";
-                                        $previous = false;
-                                    }
-                                } else {
-                                    $icon = "<i class='fa fa-lock' style='color:gray; margin-right: 8px;'></i>";
-                                    $button = "<button class='bttwo popup-trigger'>Unavailable</button>";
-                                }
-
-                                echo "<div class='$active_class'>
-                                        <i class='fa fa-book' aria-hidden='true'></i>
-                                        <div class='text'>
-                                            <h3>$icon Quiz $difficulty</h3>
-                                            <p>$score_display • $percen%</p>
-                                        </div>
-                                        
-                                        $button
-                                    </div>";
-                            }
-                            $overall_percent = $total_questions_all > 0 ? round(($total_correct_all / $total_questions_all) * 100, 2) : 0;
-                            $progress_circle_1 = "<div class='progresswrapper progresswrapper1'>
-                                                    <div class='progress-label'>Overall Percentage <br>for whole quiz: $overall_percent%</div>
-                                                    <div class='progress-circle progressbar1' data-percentage='$overall_percent'>
-                                                        <svg class='progress-ring' width='120' height='120'>
-                                                            <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                            <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                        </svg>
-                                                        <div class='progress-text'>$overall_percent%</div>
-                                                    </div>
-                                                </div>";
-
-
-                            $quiz_percent = $total_quizzes > 0 ? round(($completed_quizzes / $total_quizzes) * 100, 2) : 0;
-                            $progress_circle_2 = "<div class='progresswrapper progresswrapper2'>
-                                                    <div class='progress-label'>Quizzes <br>Completed: $completed_quizzes out of $total_quizzes</div>
-                                                    <div class='progress-circle progressbar2' data-percentage='$quiz_percent'>
-                                                        <svg class='progress-ring' width='120' height='120'>
-                                                            <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                            <circle class='progress-ring__circle' stroke-width='8' fill='transparent' r='54' cx='60' cy='60'/>
-                                                        </svg>
-                                                        <div class='progress-text'>$completed_quizzes / $total_quizzes</div>
-                                                    </div>
-                                                </div>";
-                                                
-
-                                                $xp_sql = "SELECT experience, level FROM student_level WHERE student_id = '$user_id'";
-                                                $xp_result = mysqli_query($connect, $xp_sql);
-                                                
-                                                $current_xp = 0;
-                                                $current_level = 1;
-                                                
-                                                if ($xp_result && mysqli_num_rows($xp_result) > 0) {
-                                                    $xp_row = mysqli_fetch_assoc($xp_result);
-                                                    $current_xp = (int)$xp_row['experience'];
-                                                    $current_level = (int)$xp_row['level'];
-                                                }
-                                                
-                                                $xp_needed = 100 + ($current_level - 1) * 50;
-                                                $xp_percent = $xp_needed > 0 ? round(($current_xp / $xp_needed) * 100, 2) : 0;
-                                                
-                                                $progress_circle_3 = "
-                                                    <div class='xp-section'>
-                                                        <img src='$fullPath' alt='Avatar' class='Avatar'>
-                                                        <div class='xp-bar-container'>
-                                                            <div class='xp-label'><p>Name: {$user_name}</p></div>
-                                                            <div class='xp-bar'>
-                                                                <div class='xp-fill' style='width: {$xp_percent}%;'></div>
-                                                            </div>
-                                                            <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
-                                                        </div>
-                                                    </div>
-                                                ";   
-                        }
-                        ?>
-                    </div>
-                </div>
-
-                <div class="quizcurve"></div>
-
-                <div class="quizright">
-                        <div class="progress-xp-box">
-                            <?php 
-                                echo $progress_circle_3;
-                            ?>
-                        </div>
-                        <div class="progress-duo-box">
-                            <?php 
-                                echo $progress_circle_1;
-                                echo $progress_circle_2;
-                            ?>
-                        </div>
-                        <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
+            <div id="popup" class="popup">
+                <div class="popup-content">
+                    <p>Achieve over 80% to advance to the next level.</p>
+                    <button onclick="closePopup()">OK</button>
                 </div>
             </div>
+            <?php
+                // Initialize required variables
+                $progress_circle_1 = "";
+                $progress_circle_2 = "";
+                $progress_circle_3 = "";
+                $quiz_cards_html = "";
+
+                // XP & level (progress_circle_3)
+                $xp_sql = "SELECT experience, level FROM student_level WHERE student_id = '$user_id'";
+                $xp_result = mysqli_query($connect, $xp_sql);
+                $current_xp = 0;
+                $current_level = 1;
+
+                if ($xp_result && mysqli_num_rows($xp_result) > 0) {
+                    $xp_row = mysqli_fetch_assoc($xp_result);
+                    $current_xp = (int)$xp_row['experience'];
+                    $current_level = (int)$xp_row['level'];
+                }
+
+                $xp_needed = 100 + ($current_level - 1) * 50;
+                $xp_percent = $xp_needed > 0 ? round(($current_xp / $xp_needed) * 100, 2) : 0;
+
+                $progress_circle_3 = "
+                    <div class='xp-section'>
+                        <img src='$fullPath' alt='Avatar' class='Avatar'>
+                        <div class='xp-bar-container'>
+                            <div class='xp-label'><p>Name: {$user_name}</p></div>
+                            <div class='xp-bar'>
+                                <div class='xp-fill' style='width: {$xp_percent}%;'></div>
+                            </div>
+                            <div class='xp-label'>LEVEL $current_level > $current_xp / $xp_needed XP</div>
+                        </div>
+                    </div>
+                ";
+
+                // Quiz data & progress (progress_circle_1, progress_circle_2, and quiz cards)
+                $total_correct_all = 0;
+                $total_questions_all = 0;
+                $total_quizzes = 0;
+                $completed_quizzes = 0;
+                $previous = true;
+
+                if ($result_quiz->num_rows > 0) {
+                    while ($row = $result_quiz->fetch_assoc()) {
+                        $difficulty = $row['difficult'];
+                        $total_quizzes++;
+
+                        // Correct answers
+                        $sql_correct = "SELECT COUNT(*) as correct FROM student_answers 
+                                        JOIN questions ON student_answers.question_id = questions.id
+                                        WHERE student_answers.student_id = '$user_id'
+                                        AND questions.difficult = '$difficulty' 
+                                        AND student_answers.is_correct = 1";
+                        $result_correct = mysqli_query($connect, $sql_correct);
+                        $total_correct = 0;
+                        if ($result_correct->num_rows > 0) {
+                            $row_correct = $result_correct->fetch_assoc();
+                            $total_correct = $row_correct['correct'];
+                        }
+
+                        // Total questions
+                        $sql_total = "SELECT COUNT(*) as total FROM questions WHERE difficult = '$difficulty'";
+                        $result_total = mysqli_query($connect, $sql_total);
+                        $total_questions = 0;
+                        if ($result_total->num_rows > 0) {
+                            $row_total = $result_total->fetch_assoc();
+                            $total_questions = $row_total['total'];
+                        }
+
+                        $total_correct_all += $total_correct;
+                        $total_questions_all += $total_questions;
+
+                        $percen = $total_questions > 0 ? round(($total_correct / $total_questions) * 100, 2) : 0;
+
+                        if ($percen >= 80) {
+                            $completed_quizzes++;
+                        }
+
+                        $score_display = "$total_correct / $total_questions";
+                        $active_class = $previous ? "quiz-card active" : "quiz-card";
+
+                        if ($previous) {
+                            if ($percen >= 80) {
+                                $icon = "<i class='fa fa-check' style='color:green; margin-right: 8px;'></i>";
+                                $button = "<button disabled class='btthree'>Completed</button>";
+                                $previous = true;
+                            } else {
+                                $icon = "<i class='fa fa-check' style='color:green; margin-right: 8px;'></i>";
+                                $button = "<button class='btone'><a href='Questionpaper.php?difficult=$difficulty'>Start Quiz</a></button>";
+                                $previous = false;
+                            }
+                        } else {
+                            $icon = "<i class='fa fa-lock' style='color:gray; margin-right: 8px;'></i>";
+                            $button = "<button class='bttwo popup-trigger'>Start Quiz</button>";
+                        }
+
+                        $status_text = 'Incomplete';
+                        $status_class = 'status-unavailable';
+                        
+                        if ($previous) {
+                            if ($percen >= 80) {
+                                $status_text = 'Completed';
+                                $status_class = 'status-completed';
+                            } else {
+                                $status_text = 'Available';
+                                $status_class = 'status-available';
+                            }
+                        }
+
+                        $icons = ['📕', '📘', '📗', '📙', '📒', '📔', '📚', '📓'];
+                        $icon = $icons[array_rand($icons)];
+                        
+                        $quiz_cards_html .= "
+                            <div class='quiz-item'>
+                                <div class='quiz-icon'>$icon</div>
+                                <div class='quiz-details'>
+                                    <h4 class='quiz-title'>Quiz $difficulty</h4>
+                                    <p class='quiz-status $status_class'>$status_text</p>
+                                    <p class='quiz-score'>Score: $score_display</p>
+                                    <p class='quiz-percent'>$percen%</p>
+                                </div>
+                                <div class='quiz-action'>$button</div>
+                            </div>
+                            <hr class='quiz-item-underline'>
+                        ";
+                        
+                    }
+
+                    // Build progress_circle_1 (Overall %)
+                    $overall_percent = $total_questions_all > 0 ? round(($total_correct_all / $total_questions_all) * 100, 2) : 0;
+                    $progress_circle_1 = "
+                        <div class='progresswrapper progresswrapper1'>
+                            <div class='progress-label'>Overall Percentage <br>for whole quiz: $overall_percent%</div>
+                            <div class='progress-circle progressbar1' data-percentage='$overall_percent'>
+                                <svg class='progress-ring' width='120' height='120'>
+                                    <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='6' fill='transparent' r='40' cx='45' cy='45'/>
+                                    <circle class='progress-ring__circle' stroke-width='6' fill='transparent' r='40' cx='45' cy='45'/>
+                                </svg>
+                                <div class='progress-text'>$overall_percent%</div>
+                            </div>
+                        </div>
+                    ";
+
+                    // Build progress_circle_2 (Completed quizzes)
+                    $quiz_percent = $total_quizzes > 0 ? round(($completed_quizzes / $total_quizzes) * 100, 2) : 0;
+                    $progress_circle_2 = "
+                        <div class='progresswrapper progresswrapper2'>
+                            <div class='progress-label'>Quizzes <br>Completed: $completed_quizzes out of $total_quizzes</div>
+                            <div class='progress-circle progressbar2' data-percentage='$quiz_percent'>
+                                <svg class='progress-ring' width='120' height='120'>
+                                    <circle class='progress-ring__circle-bg' stroke='#eee' stroke-width='6' fill='transparent' r='40' cx='45' cy='45'/>
+                                    <circle class='progress-ring__circle' stroke-width='6' fill='transparent' r='40' cx='45' cy='45'/>
+                                </svg>
+                                <div class='progress-text'>$completed_quizzes / $total_quizzes</div>
+                            </div>
+                        </div>
+                    ";
+                }
+            ?>
+            <div class="quizbox">
+                <div class="quizright">
+                    <div class="progress-xp-box">
+                        <?php echo $progress_circle_3; ?>
+                    </div>
+                    <div class="progress-duo-box">
+                        <?php echo $progress_circle_1; ?>
+                        <?php echo $progress_circle_2; ?>
+                    </div>
+                </div>
+                <div class="quizleft">
+                    <div class="quiz-container">
+                        <h1>Quiz</h1>
+                        <?php echo $quiz_cards_html; ?>
+                    </div>
+                        <div class="chatbox">adff</div>
+                </div>        
+            </div>
+            <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
         </div>
         
         <!--Profile Page-->
@@ -578,8 +614,7 @@
             </form>
         </div>
 
-        <!--Enroll Page-->
-                    
+        <!--Enroll Page-->                
         <div class="container tab-content" id="exroll">
             <div class="enroll_box">
             <?php foreach ($result as $class): ?>
@@ -612,7 +647,6 @@
             <?php endforeach; ?>
             </div>
         </div>
-    
 
         <!--Change Class Page-->
         <div class="container tab-content" id="recent">
@@ -665,176 +699,172 @@ $connect->close();
 ?>
 
 <script>
-//Enroll Page JS
-const hasClass = <?php echo $hasClass ? 'true' : 'false'; ?>;
+    //Enroll Page JS
+    const hasClass = <?php echo $hasClass ? 'true' : 'false'; ?>;
 
-if (hasClass) {
-    document.querySelectorAll('.enroll_btn').forEach(button => {
-        button.style.display = 'none';
-    });
-}
-
-//Profile Page JS
-function showPassword(inputId, iconId) {
-const passwordInput = document.getElementById(inputId);
-const icon = document.getElementById(iconId);
-
-if (passwordInput && icon) {
-    if (passwordInput.type === 'password') {
-    passwordInput.type = 'text';
-    icon.textContent = 'visibility';
-    } else {
-    passwordInput.type = 'password';
-    icon.textContent = 'visibility_off';
+    if (hasClass) {
+        document.querySelectorAll('.enroll_btn').forEach(button => {
+            button.style.display = 'none';
+        });
     }
-}
-}
 
-document.querySelector('form.changePassword_box').addEventListener('submit', function(e) {
-const newPass = document.getElementById('new_Password').value;
-const confirmPass = document.getElementById('confirmed_new_Password').value;
+    //Profile Page JS
+    function showPassword(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
 
-if (newPass !== confirmPass) {
-    e.preventDefault(); 
-    alert('New Password does not match Confirmed Password!');
-    return false;
-}
-
-return true;
-});
-
-function changeAvatar(){
-    const Avatar = document.getElementById("change_Avatar")
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    const sidebarLinks = document.querySelectorAll('.sidebar-link'); // Sidebar links
-    const sidebarItems = document.querySelectorAll('#sidebar ul li'); // Sidebar <li> items (all of them)
-    const tabContents = document.querySelectorAll('.tab-content'); // Tab containers
-
-    // Ensure the first sidebar link and tab content are active by default
-    sidebarLinks[0].classList.add('active'); // Adding active to the first sidebar link
-    sidebarItems[1].classList.add('active'); // Adding active to the second li (starting from the sidebar links)
-    tabContents[0].classList.add('active'); // Make sure the first tab content is shown
-
-    sidebarLinks.forEach((link, index) => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent default link behavior
-
-            // Remove 'active' class from all sidebar links and <li> items
-            sidebarLinks.forEach(link => link.classList.remove('active'));
-            sidebarItems.forEach(item => item.classList.remove('active'));
-
-            // Add 'active' class to the clicked sidebar link and its parent <li>
-            link.classList.add('active');
-            sidebarItems[index + 1].classList.add('active'); // Add 'active' to the corresponding <li> (skip the first item)
-
-            // Remove 'active' from all tab containers
-            tabContents.forEach(content => content.classList.remove('active'));
-
-            // Add 'active' class to the corresponding tab content (index matches sidebar)
-            if (tabContents[index]) {
-                tabContents[index].classList.add('active');
-            }
-        });
-    });
-});
-
-
-    /*pop out window */
-    document.querySelectorAll('.popup-trigger').forEach(button => {
-        button.addEventListener('click', () => {
-            alert("Achieve over 80% to advance to the next level.");
-        });
-    });
-
-    /*circle color */
-
-    document.querySelectorAll('.progress-circle').forEach(circle => {
-    const percent = parseFloat(circle.getAttribute('data-percentage'));
-    const radius = 54;  // match the circle's radius
-    const circumference = 2 * Math.PI * radius;
-    const progress = circle.querySelector('.progress-ring__circle');
-    const text = circle.querySelector('.progress-text');
-
-    // Set initial stroke dasharray and dashoffset for the progress circle
-    progress.style.strokeDasharray = `${circumference}`;
-    progress.style.strokeDashoffset = circumference;
-
-    let currentPercent = 0;
-    const stepTime = 10; // Update every 10ms for smooth animation
-    const increment = percent / 100; // Small increment for each step
-
-    const updateProgress = () => {
-        if (currentPercent <= percent) {
-            // Calculate strokeDashoffset based on current percentage
-            const offset = circumference - (currentPercent / 100) * circumference;
-            progress.style.strokeDashoffset = offset;
-            text.textContent = `${Math.round(currentPercent)}%`;  // Update number inside circle
-
-            currentPercent += increment;  // Increase the percentage
-            requestAnimationFrame(updateProgress);  // Request next frame
+    if (passwordInput && icon) {
+        if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.textContent = 'visibility';
         } else {
-            // Once animation is complete, ensure the final value is set
-            text.textContent = `${percent}%`;
+        passwordInput.type = 'password';
+        icon.textContent = 'visibility_off';
         }
-    };
+    }
+    }
 
-    // Start the animation
-    updateProgress();
+    document.querySelector('form.changePassword_box').addEventListener('submit', function(e) {
+    const newPass = document.getElementById('new_Password').value;
+    const confirmPass = document.getElementById('confirmed_new_Password').value;
+
+    if (newPass !== confirmPass) {
+        e.preventDefault(); 
+        alert('New Password does not match Confirmed Password!');
+        return false;
+    }
+
+    return true;
     });
 
-//sidebar
-const toggleButton = document.getElementById('toggle-btn')
-const sidebar = document.getElementById('sidebar')
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebarLinks = document.querySelectorAll('.sidebar-link'); // Sidebar links
+        const sidebarItems = document.querySelectorAll('#sidebar ul li'); // Sidebar <li> items (all of them)
+        const tabContents = document.querySelectorAll('.tab-content'); // Tab containers
 
-function toggleSidebar(){
-sidebar.classList.toggle('close')
-toggleButton.classList.toggle('rotate')
+        // Ensure the first sidebar link and tab content are active by default
+        sidebarLinks[0].classList.add('active'); // Adding active to the first sidebar link
+        sidebarItems[1].classList.add('active'); // Adding active to the second li (starting from the sidebar links)
+        tabContents[0].classList.add('active'); // Make sure the first tab content is shown
 
-closeAllSubMenus()
-}
+        sidebarLinks.forEach((link, index) => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent default link behavior
 
-function toggleSubMenu(button){
+                // Remove 'active' class from all sidebar links and <li> items
+                sidebarLinks.forEach(link => link.classList.remove('active'));
+                sidebarItems.forEach(item => item.classList.remove('active'));
 
-if(!button.nextElementSibling.classList.contains('show')){
-    closeAllSubMenus()
-}
+                // Add 'active' class to the clicked sidebar link and its parent <li>
+                link.classList.add('active');
+                sidebarItems[index + 1].classList.add('active'); // Add 'active' to the corresponding <li> (skip the first item)
 
-button.nextElementSibling.classList.toggle('show')
-button.classList.toggle('rotate')
+                // Remove 'active' from all tab containers
+                tabContents.forEach(content => content.classList.remove('active'));
 
-if(sidebar.classList.contains('close')){
+                // Add 'active' class to the corresponding tab content (index matches sidebar)
+                if (tabContents[index]) {
+                    tabContents[index].classList.add('active');
+                }
+            });
+        });
+    });
+
+
+        /*pop out window */
+        document.querySelectorAll('.popup-trigger').forEach(button => {
+            button.addEventListener('click', () => {
+                alert("Achieve over 80% to advance to the next level.");
+            });
+        });
+
+        /*circle color */
+
+        document.querySelectorAll('.progress-circle').forEach(circle => {
+        const percent = parseFloat(circle.getAttribute('data-percentage'));
+        const radius = 54;  // match the circle's radius
+        const circumference = 2 * Math.PI * radius;
+        const progress = circle.querySelector('.progress-ring__circle');
+        const text = circle.querySelector('.progress-text');
+
+        // Set initial stroke dasharray and dashoffset for the progress circle
+        progress.style.strokeDasharray = `${circumference}`;
+        progress.style.strokeDashoffset = circumference;
+
+        let currentPercent = 0;
+        const stepTime = 10; // Update every 10ms for smooth animation
+        const increment = percent / 100; // Small increment for each step
+
+        const updateProgress = () => {
+            if (currentPercent <= percent) {
+                // Calculate strokeDashoffset based on current percentage
+                const offset = circumference - (currentPercent / 100) * circumference;
+                progress.style.strokeDashoffset = offset;
+                text.textContent = `${Math.round(currentPercent)}%`;  // Update number inside circle
+
+                currentPercent += increment;  // Increase the percentage
+                requestAnimationFrame(updateProgress);  // Request next frame
+            } else {
+                // Once animation is complete, ensure the final value is set
+                text.textContent = `${percent}%`;
+            }
+        };
+
+        // Start the animation
+        updateProgress();
+        });
+
+    //sidebar
+    const toggleButton = document.getElementById('toggle-btn')
+    const sidebar = document.getElementById('sidebar')
+
+    function toggleSidebar(){
     sidebar.classList.toggle('close')
     toggleButton.classList.toggle('rotate')
-}
-}
 
-function closeAllSubMenus(){
-Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
-    ul.classList.remove('show')
-    ul.previousElementSibling.classList.remove('rotate')
-})
-}
-
-//rating star
-document.querySelectorAll('.rating').forEach(el => {
-    const rating = parseFloat(el.dataset.rating);
-    const starCount = rating / 2;
-    let starsHTML = '';
-
-    for (let i = 1; i <= 5; i++) {
-        if (i <= Math.floor(starCount)) {
-            starsHTML += '<i class="fas fa-star"></i>'; // full star
-        } else if (i - 0.5 <= starCount) {
-            starsHTML += '<i class="fas fa-star-half-alt"></i>'; // half star
-        } else {
-            starsHTML += '<i class="far fa-star"></i>'; // empty star
-        }
+    closeAllSubMenus()
     }
 
-    el.querySelector('.stars').innerHTML = starsHTML;
-});
+    function toggleSubMenu(button){
+
+    if(!button.nextElementSibling.classList.contains('show')){
+        closeAllSubMenus()
+    }
+
+    button.nextElementSibling.classList.toggle('show')
+    button.classList.toggle('rotate')
+
+    if(sidebar.classList.contains('close')){
+        sidebar.classList.toggle('close')
+        toggleButton.classList.toggle('rotate')
+    }
+    }
+
+    function closeAllSubMenus(){
+    Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
+        ul.classList.remove('show')
+        ul.previousElementSibling.classList.remove('rotate')
+    })
+    }
+
+    //rating star
+    document.querySelectorAll('.rating').forEach(el => {
+        const rating = parseFloat(el.dataset.rating);
+        const starCount = rating / 2;
+        let starsHTML = '';
+
+        for (let i = 1; i <= 5; i++) {
+            if (i <= Math.floor(starCount)) {
+                starsHTML += '<i class="fas fa-star"></i>'; // full star
+            } else if (i - 0.5 <= starCount) {
+                starsHTML += '<i class="fas fa-star-half-alt"></i>'; // half star
+            } else {
+                starsHTML += '<i class="far fa-star"></i>'; // empty star
+            }
+        }
+
+        el.querySelector('.stars').innerHTML = starsHTML;
+    });
 
 
 </script>

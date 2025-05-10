@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Responsive Dashboard with Quiz</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #e5e7eb;
+      --light-bg: #f9fafb;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text);
+      padding: 1rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background-color: var(--bg);
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filters button {
+      background: #f3f4f6;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .chart-placeholder {
+      margin-top: 1rem;
+      height: 200px;
+      background: linear-gradient(to right, #e0e7ff, #dbeafe);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3b82f6;
+      font-weight: bold;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .stat {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .stat h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat span {
+      color: var(--success);
+      font-size: 0.9rem;
+    }
+
+    .customers {
+      margin-top: 1.5rem;
+    }
+
+    .customer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .customer-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .customer-name {
+      font-weight: bold;
+    }
+
+    .customer-email {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* QUIZ SECTION */
+
+    .quiz-section {
+      margin-top: 1.5rem;
+    }
+
+    .quiz-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .quiz-icon {
+      font-size: 2rem;
+    }
+
+    .quiz-details {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .quiz-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .quiz-status {
+      font-size: 0.9rem;
+      margin: 0.2rem 0;
+    }
+
+    .quiz-status.completed {
+      color: var(--success);
+    }
+
+    .quiz-status.unavailable {
+      color: var(--danger);
+    }
+
+    .quiz-score,
+    .quiz-percent {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .quiz-button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .quiz-button:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .filters {
+        flex-direction: column;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.25rem;
+      }
+
+      .quiz-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .quiz-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Column -->
+    <div>
+      <div class="card">
+        <div class="header">
+          <h1>Sales Report</h1>
+          <div class="filters">
+            <button>12 Months</button>
+            <button>6 Months</button>
+            <button>30 Days</button>
+            <button>7 Days</button>
+            <button>Export PDF</button>
+          </div>
+        </div>
+        <div class="chart-placeholder">
+          [ Chart Placeholder ]
+        </div>
+      </div>
+
+      <!-- ✅ Quiz Progress Section -->
+      <div class="card quiz-section">
+        <h2>Quiz Progress</h2>
+
+        <div class="quiz-item">
+          <div class="quiz-icon">📘</div>
+          <div class="quiz-details">
+            <h4 class="quiz-title">Introduction to Biology</h4>
+            <p class="quiz-status completed">Completed</p>
+            <p class="quiz-score">Score: 4 / 5</p>
+            <p class="quiz-percent">80%</p>
+          </div>
+          <button class="quiz-button">Start Quiz</button>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-icon">📕</div>
+          <div class="quiz-details">
+            <h4 class="quiz-title">Photosynthesis</h4>
+            <p class="quiz-status unavailable">Unavailable</p>
+            <p class="quiz-score">Score: 0 / 5</p>
+            <p class="quiz-percent">0%</p>
+          </div>
+          <button class="quiz-button" disabled>Start Quiz</button>
+        </div>
+
+        <div class="quiz-item">
+          <div class="quiz-icon">📗</div>
+          <div class="quiz-details">
+            <h4 class="quiz-title">Cell Structure</h4>
+            <p class="quiz-status completed">Completed</p>
+            <p class="quiz-score">Score: 5 / 5</p>
+            <p class="quiz-percent">100%</p>
+          </div>
+          <button class="quiz-button">Start Quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="stats">
+      <div class="stat">
+        <h2>33,493</h2>
+        <p>Total Customers</p>
+        <span>+36%</span>
+      </div>
+      <div class="stat">
+        <h2>84,382</h2>
+        <p>Total Orders</p>
+        <span>+36%</span>
+      </div>
+
+      <div class="card customers">
+        <h3>Recent Customers</h3>
+        <div class="customer">
+          <div class="customer-info">
+            <span class="customer-name">Jenny Wilson</span>
+            <span class="customer-email">w.lawson@example.com</span>
+          </div>
+          <div>$11,234</div>
+        </div>
+        <div class="customer">
+          <div class="customer-info">
+            <span class="customer-name">Devon Lane</span>
+            <span class="customer-email">dat.roberts@example.com</span>
+          </div>
+          <div>$11,159</div>
+        </div>
+        <div class="customer">
+          <div class="customer-info">
+            <span class="customer-name">Jane Cooper</span>
+            <span class="customer-email">jgraham@example.com</span>
+          </div>
+          <div>$10,483</div>
+        </div>
+        <div class="customer">
+          <div class="customer-info">
+            <span class="customer-name">Dianne Russell</span>
+            <span class="customer-email">curtis.d@example.com</span>
+          </div>
+          <div>$9,084</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

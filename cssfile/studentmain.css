@@ -338,29 +338,35 @@ main{
   display: flex;
   min-height: 85vh;
   overflow: hidden;
+  flex-direction: column;
 }
 
 .quizleft, .quizright {
   width: 100%;
   display: flex;
-  align-items: center;
+}
+
+.quizleft{
+  margin-top: -60px;
+  flex-direction: row;
 }
 
 .quizright{
-  flex-direction: column;
-  margin-top: 20px;
+  flex-direction: row;
 }
 
 .quiz-container {
-  position: relative;
-  margin: 20px auto;
+  background-color: var(--white);
+  padding: 20px 50px;
+  border-radius: 8px;
+  margin-left: 50px;
+  width: 100%;
+  min-width: 41vw;
 }
 
-.quizcurve {
+.quiz-container h1{
+  font-size: 35px;
   margin: 15px 0;
-  width: 10px;
-  background: var(--third-color);
-  border-radius: 20px;
 }
 
 
@@ -377,52 +383,72 @@ main{
   }
 }
 
-.quiz-card {
+.quiz-item {
   display: flex;
   align-items: center;
-  background-color: white;
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
   flex-wrap: wrap;
-  max-width: 50vw;
-  width: 100%;
+  border-bottom: 2px solid transparent;
+}
+
+
+.quiz-item-underline {
+  border: none;
+  border-top: 2px solid  var(--third-color);
+  margin: 0;
+}
+
+.quiz-icon {
+  font-size: 30px;
+  width: 40px;
   margin: 20px;
 }
 
-.sidebar-close .quiz-card {
-  min-width: 500px;
-}
-
-.quiz-card:hover{
-  background: #8888883b;
-  scale: 1.05;
-}
-
-.fa-book {
-  font-size: 60px;
-}
-
-.text {
+.quiz-details {
   flex-grow: 1;
-  min-width: 120px;
-  margin: 0 0 0 25px;
+  min-width: 200px;
 }
 
-.quiz-card h3 {
+.quiz-title {
+  font-size: 1.1rem;
+  font-weight: bold;
   margin: 0;
-  color: #333;
+  display: flex;
+  flex-direction: row;
 }
 
-.quiz-card p {
-  margin: 5px 0 0;
-  color: #888;
+.quiz-status {
+  font-size: 0.9rem;
+  color: #6b7280;
 }
 
-.quiz-card .btone,
-.quiz-card .bttwo,
-.quiz-card .btthree,
+.quiz-score,
+.quiz-percent {
+  font-size: 0.9rem;
+}
+
+.quiz-action {
+  margin-left: auto;
+}
+
+.status-completed {
+  color: #16a34a;
+}
+
+.status-unavailable {
+  color: #dc2626;
+}
+
+.status-available {
+  color: #6b7280;
+}
+
+.btone,
+.bttwo,
+.btthree,
 .btfour {
   border: none;
   color: var(--white);
@@ -433,7 +459,7 @@ main{
   min-width: 120px;
 }
 
-.quiz-card .btone,
+.btone,
 .btfour{
   box-shadow:
   inset 0 1px 0 0 rgba(255,255,255,0.3),
@@ -445,23 +471,28 @@ main{
   overflow: hidden;
 }
 
-.quiz-card .btone,
-.quiz-card .bttwo,
+.btone,
+.bttwo,
 .btfour{
   background-color: var(--secondary-color);
 }
 
-.quiz-card .btthree{
+.bttwo{
+  background-color: #b95eff;
+}
+
+
+.btthree{
   background-color: lawngreen;
 }
 
-.quiz-card button a,
+.btone a,
 .btfour a{
   text-decoration: none;
   color: var(--white);
 }
 
-.quiz-card .btone:hover,
+.btone:hover,
 .btfour:hover {
   transform: translateY(4px);
   box-shadow:
@@ -479,20 +510,21 @@ main{
 
 .btfour{
   height: 50px;
-  min-width: 200px
+  max-width: 100px;
+  float: right;
 }
 
 .xp-section .Avatar{
-  margin: 0 30px;
-  width: 50px;
-  height: 50px;
+  margin: 0 50px;
+  width: 135px;
+  height: 135px;
   border: 100px;
 }
 
 .progress-circle {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 92px;
+  height: 150px;
   margin: 20px 10px;
 }
 
@@ -527,15 +559,17 @@ main{
 }
 
 .xp-section{
-  margin: 15px 60px;
+  margin: 27px 15px 15px 20px;
+  min-height: 200px;
 }
 
 .progresswrapper{
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 50vw;
-  margin: 0 30px;
+  max-width: 90%;
+  max-height: 120px;
+  margin: 7px 30px 7px 0;
 }
 
 .btfour{
@@ -544,8 +578,9 @@ main{
 
 .xp-section,
 .progresswrapper{
-  border-radius: 20px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .xp-section,
@@ -559,8 +594,8 @@ main{
 
 .xp-bar-container {
   width: 100%;
-  max-width: 600px;
-  margin: 18px 0;
+  max-width: 700px;
+  margin: 15px 0;
 }
 
 .xp-label {
@@ -571,13 +606,13 @@ main{
 }
 
 .xp-bar {
-  width: 80%;
+  width: 90%;
   background-color: #eee;
   border-radius: 20px;
   height: 20px;
   overflow: hidden;
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-  margin: 10px 0;  
+  margin: 30px 0;  
 }
 
 .xp-fill {
@@ -588,15 +623,23 @@ main{
 
 .progress-xp-box{
   width: 100%;
-  max-width: 50vw;
-  margin: 20px;
+  min-width: 50vw;
+  margin: 0 0 0 30px;
 }
 
 .progress-duo-box{
   display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 48vw;
-  margin: 20px;
+  max-width: 40vw;
+  margin: 20px 0;
+}
+
+.chatbox{
+  background-color: var(--white);
+  width: 100%;
+  max-width: 40vw;
+  margin: 100px 50px;
 }
 
 
