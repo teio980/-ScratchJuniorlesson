@@ -11,7 +11,7 @@ include 'header_Admin.php';
     <link rel="stylesheet" href="../cssfile/add_teacher.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link rel="stylesheet" href="../cssfile/headerAdmin.css">
-    <title>Add Teacher</title>
+    <title>Add User</title>
 </head>
 <body>
     <div class="main">
@@ -55,6 +55,12 @@ include 'header_Admin.php';
                     <label for="identity_T">Teacher</label>
                     <input type="radio" name="identity" id="identity_T" value="teacher"> 
                 </div>
+                <?php if ($_SESSION['identity'] == 'superadmin'): ?>
+                    <div class="radio_option">
+                        <label for="identity_A">Admin</label>
+                        <input type="radio" name="identity" id="identity_A" value="admin"> 
+                    </div>
+                <?php endif; ?>
             </div>
             <button type="submit">Register</button>
         </form>

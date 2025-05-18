@@ -9,7 +9,7 @@ if (!isset($_SESSION['identity'])) {
     exit();
 }
 
-if ($_SESSION['identity'] != 'admin') {
+if ($_SESSION['identity'] != 'admin' && $_SESSION['identity'] != 'superadmin') {
     echo"<script>
     alert('You have no access to this page.');
     window.location.href = '../bkindex.php';

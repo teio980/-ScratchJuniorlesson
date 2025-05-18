@@ -26,7 +26,7 @@ $unreadMessage = $getMassageUnreadStmt->fetchAll();
         <li><a href="manageClass.php">Manage Class</a></li>
         <li><a href="viewClassPerformance.php">View Class</a></li>
         <li><a href="manageChangeClass.php">Change Class Requests</a></li>
-        <li><a href="manageEvaluationreport.php">Evaluation Report</a></li>
+        <li><a href="admin_profile.php">Personal Profile</a></li>
         </ul>
     </div>
     <?php foreach ($unreadMessage as $message): ?>

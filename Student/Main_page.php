@@ -787,7 +787,6 @@
                     <input type="hidden" name="class_id" value="<?php echo htmlspecialchars($class['class_id']) ?>">
 
                     <div class="enrollment_container">
-                        <div><img src="path_to_class_image" alt="Class Image"></div>
                         <div>
                             <h4><?php echo htmlspecialchars($class['class_name']) ?></h4>
                             <p>Teach by: <?php 

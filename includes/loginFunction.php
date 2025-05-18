@@ -37,6 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     case 'admin':
                         header('Location: ../Admin/Main_page.php');
                         break;
+                    case 'superadmin':
+                        header('Location: ../Admin/Main_page.php');
+                        break;
                 }
                 exit();
             } else {

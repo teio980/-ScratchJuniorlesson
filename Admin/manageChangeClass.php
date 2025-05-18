@@ -28,6 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
     $updateCurCapacitySql = "UPDATE class SET current_capacity = current_capacity + 1 WHERE class_id = :C_ID AND max_capacity > current_capacity;";
     $updateCurCapacityStmt = $pdo->prepare($updateCurCapacitySql);
 
+    $deductCurCapacitySql = "UPDATE class SET current_capacity = current_capacity - 1 WHERE class_id = :C_ID AND current_capacity > 0;";
+    $deductCurCapacityStmt = $pdo->prepare($deductCurCapacitySql);
+
     foreach ($selectedIds as $combinedValue) {
         list($changeId, $studentId, $new_class_Code, $old_class_Code, $status) = explode('|', $combinedValue);
         
@@ -44,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
 
         
 
-            if($updateCurCapacityStmt->execute([':C_ID'=>$new_class_id])){
+            if($updateCurCapacityStmt->execute([':C_ID'=>$new_class_id]) && $deductCurCapacityStmt->execute([':C_ID'=>$new_class_id])){
                 $updateClassStmt->execute([
                             ':new_C_ID' => $new_class_id,
                             ':S_ID' => $studentId,
