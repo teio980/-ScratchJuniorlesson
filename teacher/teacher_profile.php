@@ -1,9 +1,8 @@
 <?php
     session_start();
     include '../includes/connect_DB.php';
-    include '../resheadAfterLogin.php';
     $userID = $_SESSION["user_id"];
-    $sql = "SELECT S_Username AS Username, S_Mail AS Mail FROM student WHERE student_id LIKE :ID";
+    $sql = "SELECT T_Username AS Username, T_Mail AS Mail FROM teacher WHERE teacher_id LIKE :ID";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':ID', $userID );
     $stmt->execute();
@@ -32,17 +31,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../cssfile/reshead.css">
+    <link rel="stylesheet" href="../cssfile/headerAdmin.css">
     <link rel="stylesheet" href="../cssfile/personal_profile.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-    <title>Personal Profile</title>
+    <title>Document</title>
 </head>
 <body>
     <h1>Personal Profile</h1>
-    <form action="">
-        <img src="<?php echo $fullPath; ?>" alt="Avatar">
+    <form action="../includes/change_teacher_Avatar.php" class="avatar_container" method="post" enctype="multipart/form-data">
+    <input type="file" name="change_Avatar" id="change_Avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="this.form.submit()">
+    <label for="change_Avatar" style="cursor: pointer;">
+        <img src="<?php echo $fullPath; ?>" alt="Avatar" class="avatar">
+    </label>
     </form>
     <form action="../includes/change_Username.php" method="post" class="changeUsernameEmail_box">
+        <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($user_id) ?>">
         <div class="UsernameEmail_box">
         <label for="new_Username">Username(6-12 Characters):</label>
         <input type="text" name="new_Username" id="new_Username"  minlength="6" maxlength="12" required value="<?php echo htmlspecialchars($user['Username']) ?>">
@@ -56,6 +59,7 @@
         <button type="submit" class="save_btn">Save Changes</button>
     </form>
     <form action="../includes/change_Password.php" method="post" class="changePassword_box">
+        <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($user_id) ?>">
 
         <div class="password_box">
         <label for="old_Password">Old Password:</label>
@@ -97,14 +101,14 @@
     document.querySelector('form.changePassword_box').addEventListener('submit', function(e) {
     const newPass = document.getElementById('new_Password').value;
     const confirmPass = document.getElementById('confirmed_new_Password').value;
-    
+
     if (newPass !== confirmPass) {
         e.preventDefault(); 
         alert('New Password does not match Confirmed Password!');
         return false;
     }
-    
+
     return true;
     });
-    </script>
+</script>
 </html>

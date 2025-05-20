@@ -2,22 +2,40 @@
 session_start();
 include 'header_Admin.php';
 include '../includes/connect_DB.php';
-
+$identity = $_SESSION['identity'];
 $users = [];
 $keywords = '';
 if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])) {
     $keywords = $_POST['query'];
-    $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student WHERE S_Username LIKE :keywords
+    if($identity == "superadmin"){
+        $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student WHERE S_Username LIKE :keywords
+                UNION ALL
+                SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords
+                UNION ALL
+                SELECT identity , admin_id AS U_ID , A_Username AS U_Username, A_Mail AS U_Mail FROM admin WHERE A_Username LIKE :keywords AND identity != 'superadmin'"; 
+    }else{
+       $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student WHERE S_Username LIKE :keywords
             UNION ALL
-            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords";
+            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords"; 
+    }
+    
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':keywords', '%' . $keywords . '%');
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student 
+    if($identity == "superadmin"){
+        $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student
+                UNION ALL
+                SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher
+                UNION ALL
+                SELECT identity , admin_id AS U_ID , A_Username AS U_Username, A_Mail AS U_Mail FROM admin WHERE identity != 'superadmin'"; 
+    }else{
+       $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student 
             UNION ALL
             SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher";
+    }
+    
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $users = $stmt->fetchAll();

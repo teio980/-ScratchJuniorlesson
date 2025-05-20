@@ -2,47 +2,57 @@
 include '../includes/connect_DB.php';
 include 'header_Admin.php';
 $keywords = '';
-if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])) {
-            $keywords = $_POST['query'];
-            $getClassPerformanceSql = "SELECT 
-                                            c.class_id,
-                                            c.class_code,
-                                            c.class_name,
-                                            t.teacher_id,
-                                            t.T_Username,
-                                            t.T_Mail,
-                                            s.student_id,
-                                            s.S_Username
-            FROM class c
-            LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
-            LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
-            LEFT JOIN student_class sc ON c.class_id = sc.class_id
-            LEFT JOIN student s ON sc.student_id = s.student_id
-            WHERE class_code LIKE :keywords;
-            ";
-            $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
-            $getClassPerformanceStmt->bindValue(':keywords', '%' . $keywords . '%');
-            $getClassPerformanceStmt->execute();
-            $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
-}else{
-$getClassPerformanceSql = "SELECT 
-                                c.class_id,
-                                c.class_code,
-                                c.class_name,
-                                t.teacher_id,
-                                t.T_Username,
-                                t.T_Mail,
-                                s.student_id,
-                                s.S_Username
-                            FROM class c
-                            LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
-                            LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
-                            LEFT JOIN student_class sc ON c.class_id = sc.class_id
-                            LEFT JOIN student s ON sc.student_id = s.student_id;
-                            ";
-$getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
-$getClassPerformanceStmt->execute();
-$ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
+$limit = 15; 
+
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$start = ($page - 1) * $limit;
+
+// Check for search query in GET parameters
+if (isset($_GET["query"]) && !empty($_GET["query"])) {
+    $keywords = $_GET['query'];
+    $getClassPerformanceSql = "SELECT 
+                                    c.class_id,
+                                    c.class_code,
+                                    c.class_name,
+                                    t.teacher_id,
+                                    t.T_Username,
+                                    t.T_Mail,
+                                    s.student_id,
+                                    s.S_Username
+    FROM class c
+    LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
+    LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
+    LEFT JOIN student_class sc ON c.class_id = sc.class_id
+    LEFT JOIN student s ON sc.student_id = s.student_id
+    WHERE class_code LIKE :keywords;
+    ";
+    $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
+    $getClassPerformanceStmt->bindValue(':keywords', '%' . $keywords . '%');
+    $getClassPerformanceStmt->execute();
+    $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
+    $total_items = count($ClassPerformanceDetail);
+    $total_pages = ceil($total_items / $limit);
+} else {
+    $getClassPerformanceSql = "SELECT 
+                                    c.class_id,
+                                    c.class_code,
+                                    c.class_name,
+                                    t.teacher_id,
+                                    t.T_Username,
+                                    t.T_Mail,
+                                    s.student_id,
+                                    s.S_Username
+                                FROM class c
+                                LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
+                                LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
+                                LEFT JOIN student_class sc ON c.class_id = sc.class_id
+                                LEFT JOIN student s ON sc.student_id = s.student_id;
+                                ";
+    $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
+    $getClassPerformanceStmt->execute();
+    $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
+    $total_items = count($ClassPerformanceDetail);
+    $total_pages = ceil($total_items / $limit);
 }
 ?>
 
@@ -58,9 +68,9 @@ $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 <div class="search-container">
-        <form action="" method="post">
-            <input type="text" name="query" id="searchInput" placeholder="Search..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
-            <button type="submit" class="search-button" name="search">
+        <form action="" method="get">
+            <input type="text" name="query" id="searchInput" placeholder="Search Class Code..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
+            <button type="submit" class="search-button">
                 <span class="material-symbols-outlined">search</span>
             </button>
         </form>
@@ -82,20 +92,76 @@ $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($ClassPerformanceDetail as $row): ?>
+                <?php 
+                for ($i = $start; $i < $start + $limit && $i < count($ClassPerformanceDetail); $i++): ?>
                     <tr>
-                        <td><?= htmlspecialchars($row['class_id']) ?></td>
-                        <td><?= htmlspecialchars($row['class_code']) ?></td>
-                        <td><?= htmlspecialchars($row['class_name']) ?></td>
-                        <td><?= htmlspecialchars($row['teacher_id']) ?></td>
-                        <td><?= htmlspecialchars($row['T_Username']) ?></td>
-                        <td><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=<?= urlencode($row['T_Mail']) ?>"><?= htmlspecialchars($row['T_Mail']) ?></a></td>
-                        <td><?= htmlspecialchars($row['student_id']) ?></td>
-                        <td><?= htmlspecialchars($row['S_Username']) ?></td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_id']) ?></td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_code']) ?></td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_name']) ?></td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['teacher_id']) ?></td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['T_Username']) ?></td>
+                        <td>
+                            <a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=<?= urlencode($ClassPerformanceDetail[$i]['T_Mail']) ?>">
+                                <?= htmlspecialchars($ClassPerformanceDetail[$i]['T_Mail']) ?>
+                            </a>
+                        </td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['student_id']) ?></td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['S_Username']) ?></td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endfor; ?>
             </tbody>
         </table> 
     </form>
+    <?php if ($total_pages > 1): ?>
+        <div class="pagination">
+            <?php 
+            // Build query string for pagination links
+            $query_params = '';
+            if (!empty($keywords)) {
+                $query_params = '&query=' . urlencode($keywords);
+            }
+            ?>
+            
+            <?php if ($page > 1): ?>
+                <a href="?page=1<?= $query_params ?>">&laquo;&laquo;</a>
+                <a href="?page=<?= $page - 1 ?><?= $query_params ?>">&laquo;</a>
+            <?php else: ?>
+                <span class="disabled">&laquo;&laquo;</span>
+                <span class="disabled">&laquo;</span>
+            <?php endif; ?>
+
+            <?php
+            $range = 2; 
+            $start_page = max(1, $page - $range);
+            $end_page = min($total_pages, $page + $range);
+
+            if ($start_page > 1) {
+                echo '<a href="?page=1' . $query_params . '">1</a>';
+                if ($start_page > 2) echo '<span>...</span>';
+            }
+
+            for ($i = $start_page; $i <= $end_page; $i++) {
+                if ($i == $page) {
+                    echo '<span class="current">' . $i . '</span>';
+                } else {
+                    echo '<a href="?page=' . $i . $query_params . '">' . $i . '</a>';
+                }
+            }
+
+            if ($end_page < $total_pages) {
+                if ($end_page < $total_pages - 1) echo '<span>...</span>';
+                echo '<a href="?page=' . $total_pages . $query_params . '">' . $total_pages . '</a>';
+            }
+            ?>
+
+            <?php if ($page < $total_pages): ?>
+                <a href="?page=<?= $page + 1 ?><?= $query_params ?>">&raquo;</a>
+                <a href="?page=<?= $total_pages ?><?= $query_params ?>">&raquo;&raquo;</a>
+            <?php else: ?>
+                <span class="disabled">&raquo;</span>
+                <span class="disabled">&raquo;&raquo;</span>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 </body>
 </html>

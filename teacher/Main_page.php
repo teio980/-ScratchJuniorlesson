@@ -22,6 +22,7 @@ include '../phpfile/connect.php';
         <button onclick="location.href='quizupload.php'">Upload Quiz Questions</button>
         <button onclick="location.href='availablework.php'">Work for student</button>
         <button onclick="location.href='view_class.php'">View Class</button>
+        <button onclick="location.href='teacher_profile.php'">Personal Profile</button>
     </div>
 
     <script src="../javascriptfile/teacher_main.js"></script>

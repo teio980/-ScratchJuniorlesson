@@ -83,4 +83,33 @@
         <button type="submit" class="save_btn">Save Changes</button>
     </form>
 </body>
+<script>
+    function showPassword(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    if (passwordInput && icon) {
+        if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.textContent = 'visibility';
+        } else {
+        passwordInput.type = 'password';
+        icon.textContent = 'visibility_off';
+        }
+    }
+    }
+
+    document.querySelector('form.changePassword_box').addEventListener('submit', function(e) {
+    const newPass = document.getElementById('new_Password').value;
+    const confirmPass = document.getElementById('confirmed_new_Password').value;
+
+    if (newPass !== confirmPass) {
+        e.preventDefault(); 
+        alert('New Password does not match Confirmed Password!');
+        return false;
+    }
+
+    return true;
+    });
+</script>
 </html>

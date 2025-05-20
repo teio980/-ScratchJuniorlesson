@@ -48,14 +48,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
 
-        $currentYear = date("Y");
-        $sql_S_checkQty = "SELECT COUNT(*) FROM student WHERE student_id LIKE :targetID";
-        $stmt_S_checkQty = $pdo->prepare($sql_S_checkQty);
-        $stmt_S_checkQty->bindValue(':targetID', 'STU' . $currentYear . '%');
-        $stmt_S_checkQty->execute();
-        $student_Qty = $stmt_S_checkQty->fetchColumn();
-        $student_id = 'STU'.$currentYear.str_pad($student_Qty + 1, 6, '0', STR_PAD_LEFT);
-        if(isset($_FILES['U_Avatar']) && $_FILES['U_Avatar']['error'] === UPLOAD_ERR_OK){
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $insertSql = "INSERT INTO student (S_Username, S_Password, S_Mail, identity) 
+                      VALUES (:name, :password, :email, :identity)";
+        $insertStmt = $pdo->prepare($insertSql);
+
+        $insertStmt->bindParam(':name', $username);
+        $insertStmt->bindParam(':email', $email);
+        $insertStmt->bindParam(':password', $hashedPassword);
+        $insertStmt->bindParam(':identity', $identity);
+        
+        if ($insertStmt->execute()) {
+            $last_id = $pdo->lastInsertId();
+            $update_sql = "UPDATE student 
+                            SET student_id = CONCAT('STU', YEAR(CURDATE()), LPAD(?, 6, '0')) 
+                            WHERE auto_id = ?";
+            $update_stmt = $pdo->prepare($update_sql);
+            $update_stmt->execute([$last_id, $last_id]);
+
+            if(isset($_FILES['U_Avatar']) && $_FILES['U_Avatar']['error'] === UPLOAD_ERR_OK){
+
+            $getUserId = "SELECT student_id FROM student WHERE auto_id = ?";
+            $getUserIdStmt = $pdo->prepare($getUserId);
+            $getUserIdStmt->execute([$last_id]);
+            $student_id = $getUserIdStmt->fetchColumn();
+            
             $fileName = $_FILES['U_Avatar']['name'];
             $fileTmpName = $_FILES['U_Avatar']['tmp_name'];
             $fileSize = $_FILES['U_Avatar']['size'];
@@ -75,19 +92,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             move_uploaded_file($fileTmpName, $destination);
         }
-        
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $insertSql = "INSERT INTO student (student_id, S_Username, S_Password, S_Mail, identity) 
-                      VALUES (:S_ID, :name, :password, :email, :identity)";
-        $insertStmt = $pdo->prepare($insertSql);
-
-        $insertStmt->bindParam(':S_ID', $student_id);
-        $insertStmt->bindParam(':name', $username);
-        $insertStmt->bindParam(':email', $email);
-        $insertStmt->bindParam(':password', $hashedPassword);
-        $insertStmt->bindParam(':identity', $identity);
-        
-        if ($insertStmt->execute()) {
             echo "<script>
                 alert('Register Successful!!');
                 window.location.href = '../login.php';

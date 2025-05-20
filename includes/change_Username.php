@@ -1,9 +1,23 @@
 <?php
 include 'connect_DB.php';
+session_start();
+$identity = $_SESSION['identity'];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["new_Username"];
     $mail = $_POST["new_Mail"];
     $student_id = $_POST["student_id"];
+    
+    if($identity == "student"){
+        $url = '../Student/Personal_Profile.php';
+        $sql = "UPDATE student SET S_Username = :username, S_Mail = :mail WHERE student_id = :ID";
+    }
+    elseif($identity == "teacher"){
+        $url = '../teacher/Personal_Profile.php';
+        $sql = "UPDATE teacher SET T_Username = :username, T_Mail = :mail WHERE teacher_id = :ID";
+    }elseif($identity == "admin" || $identity == "superadmin"){
+        $url = '../Admin/admin_profile.php';
+        $sql = "UPDATE admin SET A_Username = :username, A_Mail = :mail WHERE admin_id = :ID";
+    }
 
     $checkUsernameSql = "SELECT S_Username FROM student WHERE S_Username = :username AND student_id != :U_ID
                         UNION ALL
@@ -30,18 +44,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if($checkUsernameStmt->rowCount() > 0){
         echo "<script>
         alert('Username Exists. Please change your username and Try Again.');
-        window.location.href = '../Student/Personal_Profile.php';
+        window.location.href = '$url';
         </script>";
         exit();
     } elseif($checkEmailStmt->rowCount() > 0){
         echo "<script>
         alert('Email Exists. Use other email to register.');
-        window.location.href = '../Student/Personal_Profile.php';
+        window.location.href = '$url';
         </script>";
         exit();
     }
 
-    $sql = "UPDATE student SET S_Username = :username, S_Mail = :mail WHERE student_id = :ID";
+    
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':username',$username);
     $stmt->bindParam(':mail',$mail);
@@ -50,13 +64,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if($stmt->execute()){
         echo "<script>
             alert('Personal Information Sucessful Updated!');
-            window.location.href = '../Student/Personal_Profile.php';
+            window.location.href = '$url';
             </script>";
             exit();
     }else{
         echo "<script>
             alert('Personal Information Failed to Updated!\nPlease Try Again Later.');
-            window.location.href = '../Student/Personal_Profile.php';
+            window.location.href = '$url';
             </script>";
             exit();
     }
