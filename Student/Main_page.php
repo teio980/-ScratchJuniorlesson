@@ -425,6 +425,7 @@
                 ";
 
                 $feedback_result = mysqli_query($connect, $feedback_query);
+                $counter = 0;
 
                 if ($feedback_result && mysqli_num_rows($feedback_result) > 0) {
                     while ($row = mysqli_fetch_assoc($feedback_result)) {
@@ -433,9 +434,19 @@
                         $rating = htmlspecialchars($row['rating']);
                         $comments = htmlspecialchars($row['comments']);
                         $marked_time = htmlspecialchars($row['created_at']);
+                        $backgrounds = [
+                            "linear-gradient(to bottom right, #ff5e62, #ff9966)",
+                            "linear-gradient(to bottom right, #4a90e2, #5cd2e6)",
+                            "linear-gradient(to bottom right, #f8b500, #fceabb)",
+                            "linear-gradient(to bottom right, #6dd5ed, #2193b0)",
+                            "linear-gradient(to bottom right, #ff758c, #ff7eb3)",
+                            "linear-gradient(to bottom right, #43cea2, #185a9d)",
+                        ];
+                        $bg_style = $backgrounds[$counter % count($backgrounds)];
+                        $counter++;
 
                         echo '
-                        <div class="card project-card">
+                        <div class="card project-card" style="background: ' . $bg_style . '">
                             <div class="tittle">Submitted File: <br><a href="' . $file_path . '" target="_blank">' . $filename . '</a></div>
                             <div class="rating" data-rating="' . $rating . '">Rating: <strong></strong><span class="stars"></span></div>                        
                             <div class="comments">Comments: ' . $comments . '</div>
@@ -633,7 +644,7 @@
                             '😊', '😂', '😃', '😉', '😅', '🙂', '😁', '😄', '😆', '🙃',
                             '😇', '😋', '😜', '😝', '🤪', '😛', '🤗', '🤭', '🫢', '😺',
                             '😸', '😹', '😽', '🙀', '😻', '😼', '😎', '🫠', '😬', '😌',
-                            '😴', '🥱', '🤤', '😪', '🤓', '🫶', '👐', '👏', '✌️', '👍','🖕🏻'
+                            '😴', '🥱', '🤤', '😪', '🤓', '🫶', '👐', '👏', '✌️', '👍'
                         ],
                         2 => ['😎', '😍', '😘', '😋', '😺', '😻'],
                         3 => ['🤯', '😈', '😤', '🥵', '🧐', '😳'],
