@@ -106,7 +106,7 @@
         </li>
         <li class="active">
             <a href="#" class="sidebar-link">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24px" height="24px"><path d="M96 0C43 0 0 43 0 96L0 416c0 53 43 96 96 96l288 0 32 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-64c17.7 0 32-14.3 32-32l0-320c0-17.7-14.3-32-32-32L384 0 96 0zm0 384l256 0 0 64L96 448c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16zm16 48l192 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-192 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd" clip-rule="evenodd" d="M23 4C23 3.11596 21.855 2.80151 21.0975 2.59348C21.0279 2.57437 20.9616 2.55615 20.8997 2.53848C19.9537 2.26818 18.6102 2 17 2C15.2762 2 13.8549 2.574 12.8789 3.13176C12.7296 3.21707 12.5726 3.33492 12.4307 3.44143C12.2433 3.58215 12.0823 3.70308 12 3.70308C11.9177 3.70308 11.7567 3.58215 11.5693 3.44143C11.4274 3.33492 11.2704 3.21707 11.1211 3.13176C10.1451 2.574 8.72378 2 7 2C5.38978 2 4.0463 2.26818 3.10028 2.53848C3.04079 2.55547 2.97705 2.57302 2.91016 2.59144C2.156 2.79911 1 3.11742 1 4V17C1 17.3466 1.17945 17.6684 1.47427 17.8507C1.94329 18.1405 2.56224 17.8868 3.11074 17.662C3.30209 17.5835 3.48487 17.5086 3.64972 17.4615C4.4537 17.2318 5.61022 17 7 17C8.2613 17 9.20554 17.4161 9.9134 17.8517C10.0952 17.9636 10.279 18.1063 10.4676 18.2527C10.9338 18.6148 11.4298 19 12 19C12.5718 19 13.0653 18.6162 13.5307 18.2543C13.7195 18.1074 13.9037 17.9642 14.0866 17.8517C14.7945 17.4161 15.7387 17 17 17C18.3898 17 19.5463 17.2318 20.3503 17.4615C20.5227 17.5108 20.7099 17.5898 20.9042 17.6719C21.4443 17.9 22.0393 18.1513 22.5257 17.8507C22.8205 17.6684 23 17.3466 23 17V4ZM3.33252 4.55749C3.13163 4.62161 3 4.81078 3 5.02166V14.8991C3 15.233 3.32089 15.4733 3.64547 15.3951C4.53577 15.1807 5.67777 15 7 15C8.76309 15 10.0794 15.5994 11 16.1721V5.45567C10.7989 5.29593 10.5037 5.08245 10.1289 4.86824C9.35493 4.426 8.27622 4 7 4C5.41509 4 4.12989 4.30297 3.33252 4.55749ZM17 15C15.2369 15 13.9206 15.5994 13 16.1721V5.45567C13.2011 5.29593 13.4963 5.08245 13.8711 4.86824C14.6451 4.426 15.7238 4 17 4C18.5849 4 19.8701 4.30297 20.6675 4.55749C20.8684 4.62161 21 4.81078 21 5.02166V14.8991C21 15.233 20.6791 15.4733 20.3545 15.3951C19.4642 15.1807 18.3222 15 17 15Z" fill="#FFFFFF"></path><path d="M2.08735 20.4087C1.86161 19.9047 2.08723 19.3131 2.59127 19.0873C3.05951 18.8792 3.54426 18.7043 4.0318 18.5478C4.84068 18.2883 5.95911 18 7 18C8.16689 18 9.16285 18.6289 9.88469 19.0847C9.92174 19.1081 9.95807 19.131 9.99366 19.1534C10.8347 19.6821 11.4004 20 12 20C12.5989 20 13.1612 19.6829 14.0012 19.1538C14.0357 19.1321 14.0708 19.1099 14.1066 19.0872C14.8291 18.6303 15.8257 18 17 18C18.0465 18 19.1647 18.2881 19.9732 18.548C20.6992 18.7814 21.2378 19.0122 21.3762 19.073C21.8822 19.2968 22.1443 19.8943 21.9118 20.4105C21.6867 20.9106 21.0859 21.1325 20.5874 20.9109C20.1883 20.7349 19.7761 20.5855 19.361 20.452C18.6142 20.2119 17.7324 20 17 20C16.4409 20 15.9037 20.3186 15.0069 20.8841C14.2635 21.3529 13.2373 22 12 22C10.7619 22 9.73236 21.3521 8.98685 20.8829C8.08824 20.3173 7.55225 20 7 20C6.27378 20 5.39222 20.2117 4.64287 20.4522C4.22538 20.5861 3.80974 20.7351 3.4085 20.9128C2.9045 21.1383 2.31305 20.9127 2.08735 20.4087Z" fill="#FFFFFF"></path></g></svg>
             <span>Notes</span>
             </a>
         </li>
@@ -153,6 +153,12 @@
     </nav>
     <main>
         <?php include 'resheadstudent.php'; ?>
+
+        <!--Loading animate-->
+        <div id="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+        </div>
+
         <div class="mm">
         <!-- Teaching Notes Page -->
         <div class="container tab-content active" id="exercise">
@@ -627,7 +633,7 @@
                             '😊', '😂', '😃', '😉', '😅', '🙂', '😁', '😄', '😆', '🙃',
                             '😇', '😋', '😜', '😝', '🤪', '😛', '🤗', '🤭', '🫢', '😺',
                             '😸', '😹', '😽', '🙀', '😻', '😼', '😎', '🫠', '😬', '😌',
-                            '😴', '🥱', '🤤', '😪', '🤓', '🫶', '👐', '👏', '✌️', '👍'
+                            '😴', '🥱', '🤤', '😪', '🤓', '🫶', '👐', '👏', '✌️', '👍','🖕🏻'
                         ],
                         2 => ['😎', '😍', '😘', '😋', '😺', '😻'],
                         3 => ['🤯', '😈', '😤', '🥵', '🧐', '😳'],
@@ -637,7 +643,7 @@
                         7 => ['🎮', '🕹️', '🧩', '🏹', '⚔️', '🛡️'],
                         8 => ['🌈', '🌌', '🪐', '🌍', '🛰️', '☄️'],
                         9 => ['🎭', '🎨', '🎵', '🎤', '📸', '🎬'],
-                        10 => ['🫅', '💼', '🌟', '🥂', '🏛️', '💰', '🕊️']
+                        10 => ['🫅', '💼', '🌟', '🥂', '🏛️', '💰', '🕊️'],
                     ];
                 }
 
@@ -941,38 +947,56 @@ $connect->close();
     return true;
     });
 
+    //sidebar and active content
     document.addEventListener('DOMContentLoaded', function () {
-        const sidebarLinks = document.querySelectorAll('.sidebar-link'); // Sidebar links
-        const sidebarItems = document.querySelectorAll('#sidebar ul li'); // Sidebar <li> items (all of them)
-        const tabContents = document.querySelectorAll('.tab-content'); // Tab containers
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+        const sidebarItems = document.querySelectorAll('#sidebar ul li');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const overlay = document.getElementById('loading-overlay');
 
-        // Ensure the first sidebar link and tab content are active by default
-        sidebarLinks[0].classList.add('active'); // Adding active to the first sidebar link
-        sidebarItems[1].classList.add('active'); // Adding active to the second li (starting from the sidebar links)
-        tabContents[0].classList.add('active'); // Make sure the first tab content is shown
+        let activeIndex = localStorage.getItem('activeTabIndex');
+        activeIndex = activeIndex !== null ? parseInt(activeIndex, 10) : 0;
+
+        sidebarLinks.forEach(link => link.classList.remove('active'));
+        sidebarItems.forEach(item => item.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        sidebarLinks[activeIndex].classList.add('active');
+        if (sidebarItems[activeIndex + 1]) {
+            sidebarItems[activeIndex + 1].classList.add('active');
+        }
+        if (tabContents[activeIndex]) {
+            tabContents[activeIndex].classList.add('active');
+        }
 
         sidebarLinks.forEach((link, index) => {
             link.addEventListener('click', function (e) {
-                e.preventDefault(); // Prevent default link behavior
+                e.preventDefault();
 
-                // Remove 'active' class from all sidebar links and <li> items
-                sidebarLinks.forEach(link => link.classList.remove('active'));
-                sidebarItems.forEach(item => item.classList.remove('active'));
+                if (overlay) overlay.style.display = 'flex';
 
-                // Add 'active' class to the clicked sidebar link and its parent <li>
-                link.classList.add('active');
-                sidebarItems[index + 1].classList.add('active'); // Add 'active' to the corresponding <li> (skip the first item)
+                setTimeout(() => {
+                    if (overlay) overlay.style.display = 'none';
 
-                // Remove 'active' from all tab containers
-                tabContents.forEach(content => content.classList.remove('active'));
+                    sidebarLinks.forEach(link => link.classList.remove('active'));
+                    sidebarItems.forEach(item => item.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
 
-                // Add 'active' class to the corresponding tab content (index matches sidebar)
-                if (tabContents[index]) {
-                    tabContents[index].classList.add('active');
-                }
+                    link.classList.add('active');
+                    if (sidebarItems[index + 1]) {
+                        sidebarItems[index + 1].classList.add('active');
+                    }
+                    if (tabContents[index]) {
+                        tabContents[index].classList.add('active');
+                    }
+
+                    localStorage.setItem('activeTabIndex', index);
+                }, 1000);
             });
         });
     });
+
+
 
 
         /*pop out window */
