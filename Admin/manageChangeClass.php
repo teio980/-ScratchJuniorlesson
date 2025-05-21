@@ -133,13 +133,13 @@ $ChangeClassData = $getChangeClassStmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="4">No pending change class requests.</td>
+                    <td colspan="6">No change class requests.</td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
-    <button type="submit" name="approved_btn" value="approved" onclick="return confirmAction('approve')">Approve</button>
-    <button type="submit" name="rejected_btn" value="rejected" onclick="return confirmAction('reject')">Reject</button>
+    <button type="submit" name="approved_btn" value="approved" class="approved_btn" onclick="return confirmAction('approve')">Approve</button>
+    <button type="submit" name="rejected_btn" value="rejected" class="rejected_btn" onclick="return confirmAction('reject')">Reject</button>
     </form>
     <?php if (isset($_SESSION['message'])): ?>
         <script>

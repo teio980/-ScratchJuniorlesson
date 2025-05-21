@@ -12,11 +12,13 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
                 UNION ALL
                 SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords
                 UNION ALL
-                SELECT identity , admin_id AS U_ID , A_Username AS U_Username, A_Mail AS U_Mail FROM admin WHERE A_Username LIKE :keywords AND identity != 'superadmin'"; 
+                SELECT identity , admin_id AS U_ID , A_Username AS U_Username, A_Mail AS U_Mail FROM admin WHERE A_Username LIKE :keywords AND identity != 'superadmin'
+                ORDER BY U_Username ASC"; 
     }else{
        $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student WHERE S_Username LIKE :keywords
             UNION ALL
-            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords"; 
+            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords
+            ORDER BY U_Username ASC"; 
     }
     
     $stmt = $pdo->prepare($sql);
@@ -29,11 +31,13 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
                 UNION ALL
                 SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher
                 UNION ALL
-                SELECT identity , admin_id AS U_ID , A_Username AS U_Username, A_Mail AS U_Mail FROM admin WHERE identity != 'superadmin'"; 
+                SELECT identity , admin_id AS U_ID , A_Username AS U_Username, A_Mail AS U_Mail FROM admin WHERE identity != 'superadmin'
+                ORDER BY U_Username ASC"; 
     }else{
        $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student 
             UNION ALL
-            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher";
+            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher
+            ORDER BY U_Username ASC";
     }
     
     $stmt = $pdo->prepare($sql);
@@ -75,15 +79,21 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
                 </tr>
             </thead>
             <tbody>
-            <?php foreach ($users as $user): ?>
-                <tr>   
-                    <td><input type="checkbox" name="selected_users[]" value="<?php echo $user['U_ID'] . '|' . $user['identity']?>"></td>
-                    <td><?php echo htmlspecialchars($user['U_ID']) ?></td>
-                    <td><?php echo htmlspecialchars($user['U_Username']) ?></td>
-                    <td><?php echo htmlspecialchars($user['U_Mail']) ?></td>
-                    <td><?php echo htmlspecialchars($user['identity']) ?></td>
+            <?php if (!empty($users)): ?>
+                <?php foreach ($users as $user): ?>
+                    <tr>   
+                        <td><input type="checkbox" name="selected_users[]" value="<?php echo $user['U_ID'] . '|' . $user['identity']?>"></td>
+                        <td><?php echo htmlspecialchars($user['U_ID']) ?></td>
+                        <td><?php echo htmlspecialchars($user['U_Username']) ?></td>
+                        <td><?php echo htmlspecialchars($user['U_Mail']) ?></td>
+                        <td><?php echo htmlspecialchars($user['identity']) ?></td>
+                    </tr>
+                 <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5">No User Record.</td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endif; ?>
             </tbody>
         </table> 
         <a href="addUser.php" style="text-decoration: none;">

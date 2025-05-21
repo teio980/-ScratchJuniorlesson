@@ -7,7 +7,6 @@ $limit = 15;
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $start = ($page - 1) * $limit;
 
-// Check for search query in GET parameters
 if (isset($_GET["query"]) && !empty($_GET["query"])) {
     $keywords = $_GET['query'];
     $getClassPerformanceSql = "SELECT 
@@ -115,7 +114,6 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
     <?php if ($total_pages > 1): ?>
         <div class="pagination">
             <?php 
-            // Build query string for pagination links
             $query_params = '';
             if (!empty($keywords)) {
                 $query_params = '&query=' . urlencode($keywords);

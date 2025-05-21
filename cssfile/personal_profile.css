@@ -76,13 +76,40 @@ h1{
   box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
 }
 
-.avatar{
-    width :80px; 
-    height :80px; 
-}
-
-.avatar_container{
+.avatar_container {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative; 
 }
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.avatar:hover {
+    filter: brightness(0.7);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+#edit_avatar_icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.avatar_container:hover #edit_avatar_icon {
+    opacity: 1;
+}
+

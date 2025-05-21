@@ -90,25 +90,31 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
                     <th>Current Capacity</th>
                 </tr>
             </thead>
-            <tbody>
-            <?php foreach ($result as $class): ?>
-                <tr>   
-                    <td><input type="checkbox" name="selected_classes[]" value="<?= htmlspecialchars($class['class_id'])?>"></td>
-                    <td><?php echo htmlspecialchars($class['class_id']) ?></td>
-                    <td><?php echo htmlspecialchars($class['class_code']) ?></td>
-                    <td><?php echo htmlspecialchars($class['class_name']) ?></td>
-                    <td><?php 
-                    $teacherNames = array();
-                    foreach ($class['teachers'] as $teacher) {
-                        $teacherNames[] = htmlspecialchars($teacher['T_Username']);
-                    }
-                    echo implode(', ', $teacherNames);
-                    ?></td>
-                    <td><?php echo htmlspecialchars($class['description']) ?></td>
-                    <td><?php echo htmlspecialchars($class['max_capacity']) ?></td>
-                    <td><?php echo htmlspecialchars($class['current_capacity']) ?></td>
+            <tbody><?php if (!empty($result)): ?>
+                <?php foreach ($result as $class): ?>
+                    <tr>   
+                        <td><input type="checkbox" name="selected_classes[]" value="<?= htmlspecialchars($class['class_id'])?>"></td>
+                        <td><?php echo htmlspecialchars($class['class_id']) ?></td>
+                        <td><?php echo htmlspecialchars($class['class_code']) ?></td>
+                        <td><?php echo htmlspecialchars($class['class_name']) ?></td>
+                        <td><?php 
+                        $teacherNames = array();
+                        foreach ($class['teachers'] as $teacher) {
+                            $teacherNames[] = htmlspecialchars($teacher['T_Username']);
+                        }
+                        echo implode(', ', $teacherNames);
+                        ?></td>
+                        <td><?php echo htmlspecialchars($class['description']) ?></td>
+                        <td><?php echo htmlspecialchars($class['max_capacity']) ?></td>
+                        <td><?php echo htmlspecialchars($class['current_capacity']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="8">No Class Record.</td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endif; ?>
+            
             </tbody>
         </table> 
         <button type="button" onclick="showAddForm()" class="add_btn">Add</button>

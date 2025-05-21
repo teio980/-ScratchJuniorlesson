@@ -7,7 +7,7 @@ include 'reshead.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="cssfile/register.css">
-    <link rel="stylesheet" href="cssfile/header.css">
+    <link rel="stylesheet" href="cssfile/reshead.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <title>Register</title>
 </head>

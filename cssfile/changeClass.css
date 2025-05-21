@@ -26,3 +26,33 @@ th {
 tr:nth-child(even) {
     background-color: #95c0b8;
 }
+
+.approved_btn{
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.approved_btn:hover {
+    background-color: #45a049;
+}
+
+.rejected_btn{
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.rejected_btn:hover {
+    background-color: rgba(255, 13, 0, 0.66);
+}

@@ -42,6 +42,7 @@
     <input type="file" name="change_Avatar" id="change_Avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="this.form.submit()">
     <label for="change_Avatar" style="cursor: pointer;">
         <img src="<?php echo $fullPath; ?>" alt="Avatar" class="avatar">
+        <span class="material-symbols-outlined" id="edit_avatar_icon">edit</span>
     </label>
     </form>
     <form action="../includes/change_Username.php" method="post" class="changeUsernameEmail_box">

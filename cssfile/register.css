@@ -23,13 +23,13 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: aqua;
+    background-color: rgba(0, 221, 255, 0.8);
     border-radius: 10px;
     border-color: black;
     border: 1px solid;
     margin: 5% 1% 5% 2px;
     width: 66%;
-    height: 80%;
+    height: 85%;
 }
 
 .Register_form{

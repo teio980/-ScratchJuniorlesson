@@ -37,17 +37,26 @@ foreach ($notifications as $row) {
             <ul class="side">
                 <li><button style="all: unset; cursor : pointer;" ><span class="material-symbols-outlined" id="notification_icon" onclick="showNotifications()">notifications</span></button></li>
                 <li><a href="Main_page.php" class="spe">Home</a></li>
-                <li><a href="Personal_Profile.php" class="spe">Personal Profile</a></li>
                 <li><a href="../includes/logout.php" class="spe">Sign Out</a></li>
             </ul>
         </div>
         <div class="notification_container" id="notification_container">
-            <?php foreach ($notifications as $row): ?>
-            <div class="notification_content">
-                <h4>Change Class Request</h4>
-                <div>Your change class request ID:<?php echo htmlspecialchars($row['ID'])?> has been <?php echo htmlspecialchars($row['status'])?></div>
-            </div>
-            <?php endforeach;?>
+            <?php if (!empty($notifications)): ?>
+                <?php foreach ($notifications as $row): ?>
+                    <div class="notification_content">
+                        <h4>Change Class Request</h4>
+                        <?php if ($row['status'] == 'pending'): ?>
+                        <div>Your change class request ID:<?php echo htmlspecialchars($row['ID'])?> Sent successfully, now is <?php echo htmlspecialchars($row['status'])?>.</div>
+                        <?php else: ?>
+                        <div>Your change class request ID:<?php echo htmlspecialchars($row['ID'])?> has been <?php echo htmlspecialchars($row['status'])?>.</div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach;?>
+            <?php else: ?>
+                <tr>
+                    <div>You don't have any notifications at now.</div>
+                </tr>
+            <?php endif; ?>
         </div>
     </div>
     </div>
