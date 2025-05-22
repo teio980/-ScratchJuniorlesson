@@ -1,0 +1,65 @@
+<?php
+session_start();
+require_once '../phpfile/connect.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $content_type = $_POST['content_type'] ?? '';
+    $content_id = $_POST['content_id'] ?? '';
+    $class_id = $_POST['class_id'] ?? '';
+    $message = $_POST['message'] ?? '';
+    $user_id = $_SESSION['user_id'] ?? '';
+    
+    // 验证用户身份
+    $user_type = '';
+    $sql = "SELECT identity FROM (
+            SELECT teacher_id AS id, identity FROM teacher WHERE teacher_id = ?
+            UNION
+            SELECT student_id AS id, identity FROM student WHERE student_id = ?
+            UNION
+            SELECT admin_id AS id, identity FROM admin WHERE admin_id = ?
+        ) AS users LIMIT 1";
+    $stmt = $connect->prepare($sql);
+    $stmt->bind_param("sss", $user_id, $user_id, $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows === 0) {
+        die("Invalid user");
+    }
+    
+    $user = $result->fetch_assoc();
+    $sender_type = ($user['identity'] === 'teacher') ? 'teacher' : 'student';
+    
+    // 生成评论ID
+    $sql = "SELECT COUNT(*) FROM content_comments";
+    $result = $connect->query($sql);
+    $row = $result->fetch_row();
+    $comment_id = 'CMT' . str_pad($row[0] + 1, 7, '0', STR_PAD_LEFT);
+    
+    // 插入评论
+    $insert_sql = "INSERT INTO content_comments 
+                  (comment_id, content_type, content_id, class_id, 
+                  sender_id, sender_type, message)
+                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $connect->prepare($insert_sql);
+    $stmt->bind_param("sssssss", 
+        $comment_id, 
+        $content_type, 
+        $content_id, 
+        $class_id,
+        $user_id,
+        $sender_type,
+        $message
+    );
+    
+    if ($stmt->execute()) {
+        // 返回来源页面
+        $referer = $_SERVER['HTTP_REFERER'] ?? 'assigned_lessons.php';
+        header("Location: $referer");
+    } else {
+        die("Failed to post comment: " . $stmt->error);
+    }
+} else {
+    die("Invalid request");
+}
+?>

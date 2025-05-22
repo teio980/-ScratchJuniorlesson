@@ -12,68 +12,57 @@ if ($Classid && mysqli_num_rows($Classid) > 0) {
     while ($row = mysqli_fetch_assoc($Classid)) {
         $class_id = $row['class_id'];
 
-        // 获取班级基本信息
-        $sqlclass = "SELECT class_code, class_name, current_capacity FROM class WHERE class_id = ?";
+        // Get class basic info
+        $sqlclass = "SELECT class_id, class_code, class_name, current_capacity FROM class WHERE class_id = ?";
         $stmt = $connect->prepare($sqlclass);
         $stmt->bind_param("s", $class_id);
         $stmt->execute();
         $ClassResult = $stmt->get_result();
 
         if ($classInfo = $ClassResult->fetch_assoc()) {
-            $studentScores = [];
+            $studentAverages = [];
+            $studentCount = 0;
 
-            // 获取班级中所有学生
+            // Get all students in class with their averages
             $getStudentsQuery = "
-                SELECT student_id
-                FROM student_class
-                WHERE class_id = '$class_id'
+                SELECT s.student_id, s.student_average
+                FROM student_class sc
+                JOIN student s ON sc.student_id = s.student_id
+                WHERE sc.class_id = '$class_id' AND s.student_average IS NOT NULL
             ";
             $studentResult = mysqli_query($connect, $getStudentsQuery);
 
             if ($studentResult && mysqli_num_rows($studentResult) > 0) {
                 while ($studentRow = mysqli_fetch_assoc($studentResult)) {
-                    $student_id = $studentRow['student_id'];
-
-                    // 获取该学生 lesson 分数（评分平均值）
-                    $lessonQuery = "
-                        SELECT AVG(rating) AS avg_rating
-                        FROM ratings
-                        WHERE student_id = '$student_id'
-                    ";
-                    $lessonResult = mysqli_query($connect, $lessonQuery);
-                    $lesson_score = null;
-
-                    if ($lessonRow = mysqli_fetch_assoc($lessonResult)) {
-                        $avg_rating = (float)$lessonRow['avg_rating'];
-                        if ($avg_rating > 0) {
-                            $lesson_score = min(round($avg_rating, 2), 100);
-                        }
-                    }
-
-                    // 添加学生分数用于班级平均计算（仅使用lesson_score）
-                    if ($lesson_score !== null) {
-                        $studentScores[] = $lesson_score;
+                    if ($studentRow['student_average'] !== null) {
+                        $studentAverages[] = $studentRow['student_average'];
+                        $studentCount++;
                     }
                 }
             }
 
-            // 计算班级平均分（学生lesson_score的平均值）
-            if (count($studentScores) > 0) {
-                $averageScore = round(array_sum($studentScores) / count($studentScores), 2);
-            } else {
-                $averageScore = 0;
+            // Calculate class average score
+            $classAverage = 0;
+            if (count($studentAverages) > 0) {
+                $classAverage = min(round(array_sum($studentAverages) / count($studentAverages)), 100);
+                
+                // Update class average in database
+                $updateClassQuery = "UPDATE class SET class_average = ? WHERE class_id = ?";
+                $updateStmt = $connect->prepare($updateClassQuery);
+                $updateStmt->bind_param("ds", $classAverage, $class_id);
+                $updateStmt->execute();
+                $updateStmt->close();
             }
-
-            $classInfo['average_score'] = $averageScore;
+            
+            $classInfo['class_average'] = $classAverage;
+            $classInfo['student_count'] = $studentCount;
             $classList[] = $classInfo;
         }
-
         $stmt->close();
     }
 }
 ?>
 
-<!-- HTML 显示部分 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,12 +80,14 @@ if ($Classid && mysqli_num_rows($Classid) > 0) {
                 <th>Class Name</th>
                 <th>Student Number</th>
                 <th>Average Score</th>
+                <th>Pass Status</th>
             </tr>
         </thead>
         <tbody>
             <?php 
                 if (!empty($classList)) {
                     foreach ($classList as $class) {
+                        $passStatus = $class['class_average'] >= 40 ? '✔' : '✘';
             ?>
                 <tr>
                     <td>
@@ -105,13 +96,14 @@ if ($Classid && mysqli_num_rows($Classid) > 0) {
                         </a>
                     </td>
                     <td><?php echo htmlspecialchars($class['class_name']); ?></td>
-                    <td><?php echo htmlspecialchars($class['current_capacity']); ?></td>
-                    <td><?php echo $class['average_score']; ?></td>
+                    <td><?php echo htmlspecialchars($class['student_count']); ?></td>
+                    <td><?php echo $class['class_average']; ?>%</td>
+                    <td><?php echo $passStatus; ?></td>
                 </tr>
             <?php 
                     }
                 } else {
-                    echo "<tr><td colspan='4'>No classes found.</td></tr>";
+                    echo "<tr><td colspan='5'>No classes found.</td></tr>";
                 }
             ?>
         </tbody>
