@@ -45,19 +45,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
         $old_class_row = $getClassIdStmt->fetch(PDO::FETCH_ASSOC);
         $old_class_id = $old_class_row['class_id'];
 
-        
-
-            if($updateCurCapacityStmt->execute([':C_ID'=>$new_class_id]) && $deductCurCapacityStmt->execute([':C_ID'=>$new_class_id])){
+            $pdo->beginTransaction();
+            try {
+                $updateCurCapacityStmt->execute([':C_ID'=>$new_class_id]);
+                
+                $deductCurCapacityStmt->execute([':C_ID'=>$old_class_id]);
+                
                 $updateClassStmt->execute([
-                            ':new_C_ID' => $new_class_id,
-                            ':S_ID' => $studentId,
-                            ':Old_C_ID' => $old_class_id
-                        ]);
-
+                    ':new_C_ID' => $new_class_id,
+                    ':S_ID' => $studentId,
+                    ':Old_C_ID' => $old_class_id
+                ]);
+                
                 $updateChangeClassStmt->execute([
-                            ':status' => $action,
-                            ':id' => $changeId
-                        ]);
+                    ':status' => $action,
+                    ':id' => $changeId
+                ]);
+                
+                $pdo->commit();
+            } catch (Exception $e) {
+                $pdo->rollBack();
+                $success = 0;
+                error_log("Error processing class change: " . $e->getMessage());
             }
 
         }else if ($action == 'rejected' && $status == 'approved') {

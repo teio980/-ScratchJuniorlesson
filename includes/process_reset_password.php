@@ -19,7 +19,7 @@ if($identity == 'student') {
     $stmt->execute([$token_hash]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
-} elseif($identity == 'admin') {
+} elseif($identity == 'admin' || $identity == 'superadmin') {
     $sql = "SELECT * FROM admin 
             WHERE reset_token = ? AND reset_token_expires > NOW()";
     $stmt = $pdo->prepare($sql);
@@ -35,7 +35,7 @@ if (!$user) {
     exit;
 }
 
-if (strlen($password) <= 8 || strlen($password) >= 12) {
+if (strlen($password) < 8 || strlen($password) > 12) {
     die("Password length must between 8-12 characters");
 }
 
@@ -75,7 +75,7 @@ if($identity == 'student') {
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$hashedPassword, $user['teacher_id']]);
     
-} elseif($identity == 'admin') {
+} elseif($identity == 'admin' || $identity == 'superadmin') {
     $sql = "UPDATE admin SET 
             A_Password = ?, 
             reset_token = NULL, 

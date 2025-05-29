@@ -5,8 +5,8 @@ include '../includes/connect_DB.php';
 $identity = $_SESSION['identity'];
 $users = [];
 $keywords = '';
-if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])) {
-    $keywords = $_POST['query'];
+if (isset($_GET["search"]) && isset($_GET["query"]) && !empty($_GET["query"])) {
+    $keywords = $_GET['query'];
     if($identity == "superadmin"){
         $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student WHERE S_Username LIKE :keywords
                 UNION ALL
@@ -58,7 +58,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
 </head>
 <body>
     <div class="search-container">
-        <form action="" method="post">
+        <form action="" method="get">
             <input type="text" name="query" id="searchInput" placeholder="Search Username..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
             <button type="submit" class="search-button" name="search">
                 <span class="material-symbols-outlined">search</span>

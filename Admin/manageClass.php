@@ -5,8 +5,8 @@ include '../includes/connect_DB.php';
 
 $class = [];
 $keywords = '';
-if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])) {
-    $keywords = $_POST['query'];
+if (isset($_GET["search"]) && isset($_GET["query"]) && !empty($_GET["query"])) {
+    $keywords = $_GET['query'];
     $class_sql = "SELECT class_id, class_code , class_name ,class_description AS description , max_capacity , current_capacity FROM class WHERE class_name LIKE :keywords";
     $stmt = $pdo->prepare($class_sql);
     $stmt->bindValue(':keywords', '%' . $keywords . '%');
@@ -67,7 +67,7 @@ if (isset($_POST["search"]) && isset($_POST["query"]) && !empty($_POST["query"])
 </head>
 <body>
     <div class="search-container">
-        <form action="" method="post">
+        <form action="" method="get">
             <input type="text" name="query" id="searchInput" placeholder="Search Class Name..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
             <button type="submit" class="search-button" name="search">
                 <span class="material-symbols-outlined">search</span>

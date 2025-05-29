@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $update_password_sql = "UPDATE admin SET A_Password = :password WHERE admin_id = :ID";
     }
 
-    if (strlen($new_Password) <= 8 || strlen($new_Password) >= 12) {
+    if (strlen($new_Password) < 8 || strlen($new_Password) > 12) {
         echo "<script>
         alert('Password length must be between 8-12 characters');
         window.location.href = '$url';

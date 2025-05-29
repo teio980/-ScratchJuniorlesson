@@ -21,9 +21,9 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
     FROM class c
     LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
     LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
-    LEFT JOIN student_class sc ON c.class_id = sc.class_id
-    LEFT JOIN student s ON sc.student_id = s.student_id
-    WHERE class_code LIKE :keywords;
+    INNER JOIN student_class sc ON c.class_id = sc.class_id
+    INNER JOIN student s ON sc.student_id = s.student_id
+    WHERE class_code LIKE :keywords 
     ";
     $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
     $getClassPerformanceStmt->bindValue(':keywords', '%' . $keywords . '%');
@@ -44,8 +44,8 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
                                 FROM class c
                                 LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
                                 LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
-                                LEFT JOIN student_class sc ON c.class_id = sc.class_id
-                                LEFT JOIN student s ON sc.student_id = s.student_id;
+                                INNER JOIN student_class sc ON c.class_id = sc.class_id
+                                INNER JOIN student s ON sc.student_id = s.student_id
                                 ";
     $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
     $getClassPerformanceStmt->execute();
@@ -66,7 +66,7 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
     <title>Class Performance</title>
 </head>
 <body>
-<div class="search-container">
+    <div class="search-container">
         <form action="" method="get">
             <input type="text" name="query" id="searchInput" placeholder="Search Class Code..."  value="<?php echo htmlspecialchars($keywords); ?>" required>
             <button type="submit" class="search-button">
@@ -76,7 +76,7 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
         <a href="viewClassPerformance.php" class="clear_search"><span class="material-symbols-outlined">close</span></a>
     </div>
 
-    <form action="delete_Class.php" method="post">
+    <form>
         <table>
             <thead>
                 <tr>
@@ -109,7 +109,8 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
                     </tr>
                 <?php endfor; ?>
             </tbody>
-        </table> 
+        </table>
+        <button onclick="printTable()" class="print-button">Print Table</button>
     </form>
     <?php if ($total_pages > 1): ?>
         <div class="pagination">
@@ -162,4 +163,19 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
         </div>
     <?php endif; ?>
 </body>
+<script>
+function printTable() {
+    const printContent = document.querySelector('table').outerHTML;
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Print Table</title>');
+    printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } table, th, td { border: 1px solid black; padding: 8px; text-align: left; }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<h1 style="text-align:center;">Class Performance Table</h1>');
+    printWindow.document.write(printContent);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
+}
+</script>
+
 </html>

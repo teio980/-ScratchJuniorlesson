@@ -810,7 +810,7 @@
                             <p>Teach by: <?php 
                                 $teacherNames = array();
                                 foreach ($class['teachers'] as $teacher) {
-                                    $teacherNames[] = htmlspecialchars($teacher['T_Username']);
+                                    echo htmlspecialchars($teacher['T_Username']);
                                 }
                             ?></p>
                             <p><?php echo htmlspecialchars($class['Description']) ?></p>
