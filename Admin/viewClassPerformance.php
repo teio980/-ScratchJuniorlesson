@@ -17,7 +17,8 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
                                     t.T_Username,
                                     t.T_Mail,
                                     s.student_id,
-                                    s.S_Username
+                                    s.S_Username,
+                                    s.student_average
     FROM class c
     LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
     LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
@@ -36,11 +37,13 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
                                     c.class_id,
                                     c.class_code,
                                     c.class_name,
+                                    c.class_average,
                                     t.teacher_id,
                                     t.T_Username,
                                     t.T_Mail,
                                     s.student_id,
-                                    s.S_Username
+                                    s.S_Username,
+                                    s.student_average
                                 FROM class c
                                 LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
                                 LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
@@ -83,11 +86,13 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
                     <th>Class ID</th>
                     <th>Class Code</th>
                     <th>Class Name</th>
+                    <th>Class Average Mark</th>
                     <th>Teacher ID</th>
                     <th>Teacher Username</th>
                     <th>Teacher Email</th>
                     <th>Student ID</th>
                     <th>Student Username</th>
+                    <th>Student Average Mark</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,6 +102,7 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
                         <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_id']) ?></td>
                         <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_code']) ?></td>
                         <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_name']) ?></td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_average']) ?></td>
                         <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['teacher_id']) ?></td>
                         <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['T_Username']) ?></td>
                         <td>
@@ -106,6 +112,7 @@ if (isset($_GET["query"]) && !empty($_GET["query"])) {
                         </td>
                         <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['student_id']) ?></td>
                         <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['S_Username']) ?></td>
+                        <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['student_average']) ?></td>
                     </tr>
                 <?php endfor; ?>
             </tbody>
