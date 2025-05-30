@@ -42,7 +42,6 @@ $unreadMessage = $getMassageUnreadStmt->fetchAll();
 fetch("../includes/passing_rate.php")
   .then(res => res.json())
   .then(data => {
-    console.log(data);
     const ctx = document.getElementById("passChart").getContext("2d");
     new Chart(ctx, {
       type: "pie",
@@ -59,8 +58,23 @@ fetch("../includes/passing_rate.php")
         plugins: {
           title: {
             display: true,
-            text: `Passing Rate for all student:${data.pass_rate}%`
+            text: `Passing Rate for all student:${data.pass_rate}%`,
+            color: 'black', 
+            font: {
+              size: 16, 
+              family: 'Arial', 
+              weight: 'bold' 
+            }
+          },
+          legend: {
+          labels: {
+            color: 'black',
+            font: {
+              size: 14,
+              family: 'Arial'
+            }
           }
+        }
         }
       }
     });
