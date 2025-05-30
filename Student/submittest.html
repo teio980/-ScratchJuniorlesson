@@ -1,213 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Submit Assignment</title>
+  <meta charset="UTF-8">
+  <title>Announcement Card</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f7f9fb;
-      color: #333;
-      padding: 30px;
+      font-family: "Segoe UI", sans-serif;
+      background: #f3f3f3;
+      padding: 20px;
     }
 
-    .submission-wrapper {
-      max-width: 700px;
-      margin: 0 auto;
+    .announcement-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    .announcement-card {
       background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 16px;
+      max-width: 700px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      border-left: 6px solid #9101df;
     }
 
-    h2 {
-      text-align: center;
-      color: #9101df;
+    .author-time {
+      color: #555;
+      font-size: 14px;
       margin-bottom: 10px;
+      font-weight: bold;
     }
 
-    p.description {
+    .message-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .message-body {
       font-size: 15px;
       line-height: 1.6;
+      white-space: pre-line;
       margin-bottom: 20px;
     }
 
-    .info {
-      background: #f3eaff;
-      padding: 15px;
-      border-left: 5px solid #9101df;
-      border-radius: 8px;
+    .message-body strong {
+      font-weight: 600;
+    }
+
+    .button-wrapper {
+      display: flex;
+      justify-content: flex-end;
       margin-bottom: 20px;
     }
 
-    .info strong {
-      display: block;
-      margin-bottom: 5px;
-      color: #9101df;
-    }
-
-    .thumbnail img {
-      width: 100%;
-      max-width: 300px;
-      display: block;
-      margin-bottom: 15px;
-      border-radius: 10px;
-    }
-
-    .download-link {
-      display: inline-block;
-      padding: 10px 15px;
+    .submit-button {
       background-color: #9101df;
       color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
       transition: background 0.3s ease;
     }
 
-    .download-link:hover {
-      background-color: #7201b2;
+    .submit-button:hover {
+      background-color: #7d00ca;
     }
 
-    .current-submission {
-      background: #fef9e7;
-      padding: 15px;
-      border-left: 5px solid #f1c40f;
-      border-radius: 8px;
-      margin: 20px 0;
+    .reply-section {
+      border-top: 1px solid #e0e0e0;
+      padding-top: 10px;
     }
 
-    form {
-      margin-top: 20px;
+    .reply {
+      font-size: 14px;
+      color: #444;
+      margin-top: 5px;
     }
-
-    /* Custom file input */
-    .file-upload {
-      position: relative;
-      display: inline-block;
-      width: 100%;
-      margin-bottom: 15px;
-    }
-
-    .file-upload input[type="file"] {
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-
-    .file-upload label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background-color: #9101df;
-  color: white;
-  padding: 12px;
-  text-align: center;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 16px;
-}
-
-
-    .file-upload label:hover {
-      background-color: #7201b2;
-    }
-
-    button {
-      background-color: #9101df;
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #7201b2;
-    }
-
-    .error-message {
-      color: red;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .floating-return-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #9101df;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  z-index: 999;
-}
-
-.floating-return-button:hover {
-  background-color: #6e00aa;
-  transform: scale(1.05);
-}
-
   </style>
 </head>
 <body>
 
-  <div class="submission-wrapper">
-    <h2>Lesson Title Here</h2>
-    <p class="description">This is the lesson description. Students can read instructions and understand what to submit.</p>
+<div class="announcement-wrapper">
+  <div class="announcement-card">
+    <div class="author-time">10:31 AM</div>
+    <div class="message-title">Assignment Submission Dateline</div>
+    <div class="message-body">
+      Assalammualaikum/Good Day.
 
-    <div class="info">
-      <strong>Submission Deadline:</strong>
-      April 30, 2025, 5:00 PM
-      <br>
-      <strong>Time Remaining:</strong>
-      2 days 5 hours 15 minutes
+      Dear students,
+      Leader the assignment submission will due date is on <strong>30 May 2025 before 5.00 pm</strong>.
+      <strong>Leader must submit all the required documents.</strong>
+      <strong>Please be ensure submit to correct platform. Submit to Class Notebook -> Assignment.</strong>
+      If you have a difficulties, please let me know.
+      <strong>Late submission will not be entertain</strong>
+      <strong>Thank you.</strong>
     </div>
 
-    <div class="thumbnail">
-      <img src="https://via.placeholder.com/300x180?text=Lesson+Thumbnail" alt="Lesson Thumbnail">
+    <div class="button-wrapper">
+      <button class="submit-button">Submit</button>
     </div>
 
-    <a href="#" class="download-link">Download Lesson File</a>
-
-    <div class="current-submission">
-      <strong>Current Submission:</strong>
-      <p>Filename: my_assignment.sjr</p>
-      <a href="#" target="_blank">View Submitted File</a>
-      <p>You can re-upload to update your submission below.</p>
+    <div class="reply-section">
+      <div class="author-time">Nur Liyana Binti Rosli · 10:34 AM</div>
+      <div class="reply">
+        You also can submit to the Assignment → Files → group assignment.
+        However, this submission can be seen by other student and it can cause a plagiarism by other student.
+        Take your own responsibility.
+      </div>
     </div>
-
-    <form action="#" method="POST" enctype="multipart/form-data">
-        <div class="file-upload">
-            <label for="file">
-              📁 Choose .sjr file to upload
-            </label>
-            <input type="file" name="file" id="file" accept=".sjr" required>
-          </div>
-          
-      <button type="submit">Submit</button>
-    </form>
-
-    <p class="error-message">Only .sjr files are allowed.</p>
   </div>
-
-  <a href="Main_page.php" class="floating-return-button">← Return</a>
-
+</div>
 
 </body>
 </html>

@@ -231,7 +231,7 @@
         </div>
 
         <!-- Exercise Page -->
-        <div class="container tab-content" id="exercise">
+        <div class="container tab-content active" id="exercise">
             <?php
             $check_sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
             $check_result = mysqli_query($connect, $check_sql);
@@ -246,7 +246,87 @@
                     </div>
                 ";
 
-                // ========== Submitted Section ==========
+            // ========== Not Yet Submitted ==========
+            $sql_work = "SELECT availability_id, student_work, expire_date, lesson_id FROM class_work WHERE class_id = '$class_id'";
+            $result_work = mysqli_query($connect, $sql_work);
+
+            $pending_cards = '';
+            $current_date = date('Y-m-d'); 
+
+            if ($result_work && mysqli_num_rows($result_work) > 0) {
+                while ($row = mysqli_fetch_assoc($result_work)) {
+                    $availability_id = $row['availability_id'];
+                    $lesson_id = $row['lesson_id'];
+
+                    // Skip if already submitted
+                    $check_submission = "SELECT 1 FROM student_submit WHERE student_id = '$user_id' AND lesson_id = '$lesson_id' AND class_id = '$class_id'";
+                    $result_submission = mysqli_query($connect, $check_submission);
+                    if (mysqli_num_rows($result_submission) > 0) continue;
+
+                    $student_work = htmlspecialchars($row['student_work']);
+                    $expire_date = htmlspecialchars($row['expire_date']);
+
+                    // Get lesson title
+                    $sql_lesson = "SELECT title FROM lessons WHERE file_name = '$student_work' LIMIT 1";
+                    $result_lesson = mysqli_query($connect, $sql_lesson);
+                    $lesson_title = $student_work;
+                    if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
+                        $lesson_row = mysqli_fetch_assoc($result_lesson);
+                        $lesson_title = htmlspecialchars($lesson_row['title']);
+                    }
+
+                    $is_expired = strtotime($expire_date) < strtotime($current_date);
+
+                    $button_html = $is_expired
+                        ? '<button class="submit-button disabled" disabled>Deadline Passed</button>'
+                        : '<a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '" class="submit-button">Submit</a>';
+
+                    $comment_html = '';
+                    $sql_comments = "
+                        SELECT c.message, c.created_at, t.T_Username
+                        FROM content_comments c
+                        JOIN teacher t ON c.sender_id = t.Teacher_ID
+                        WHERE c.availability_id = '$availability_id'
+                        AND c.sender_type = 'teacher'
+                    ";
+                    $result_comments = mysqli_query($connect, $sql_comments);
+                    if ($result_comments && mysqli_num_rows($result_comments) > 0) {
+                        while ($comment = mysqli_fetch_assoc($result_comments)) {
+                            $username = htmlspecialchars($comment['T_Username']);
+                            $message = htmlspecialchars($comment['message']);
+                            $created_at = htmlspecialchars($comment['created_at']);
+
+                            $comment_html .= '
+                            <div class="author-time">' . $username . ' · ' . $created_at . '</div>
+                            <div class="reply">' . $message . '</div>';
+                        }
+                    }
+
+                    $reply_section = '';
+                    if (!empty($comment_html)) {
+                        $reply_section = '<div class="reply-section">' . $comment_html . '</div>';
+                    }
+
+                    $pending_cards .= '
+                    <div class="announcement-card">
+                        <div class="circle-image"></div>
+                        <div class="author-time">Due: ' . $expire_date . '</div>
+                        <div class="message-title">' . $lesson_title . '</div>
+                        <div class="button-wrapper">' . $button_html . '</div>
+                        ' . $reply_section . '
+                    </div>';
+                }
+            }
+
+            if (!empty($pending_cards)) {
+                echo '
+                <div class="section-divider"><span class="section-title">Not Yet Submitted</span></div>
+                <div class="announcement-wrapper">' . $pending_cards . '</div>';
+            }
+
+
+
+             // ========== Submitted Section ==========
                 $sql_submitted = "
                     SELECT cw.availability_id, ss.filename AS student_work, cw.expire_date
                     FROM class_work cw
@@ -269,7 +349,7 @@
                     $student_work = htmlspecialchars($row['student_work']);
                     $expire_date = htmlspecialchars($row['expire_date']);
 
-                    $sql_lesson = "SELECT title FROM lessons WHERE lesson_file_name = '$student_work' LIMIT 1";
+                    $sql_lesson = "SELECT title FROM lessons WHERE file_name = '$student_work' LIMIT 1";
                     $result_lesson = mysqli_query($connect, $sql_lesson);
                     $lesson_title = $student_work;
                     if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
@@ -302,61 +382,7 @@
                 echo '</div>';
             }
 
-                // ========== Not Yet Submitted ==========
-                $sql_work = "SELECT availability_id, student_work, expire_date, lesson_id FROM class_work WHERE class_id = '$class_id'";
-                $result_work = mysqli_query($connect, $sql_work);
 
-                $pending_cards = '';
-                $counter = 0;
-                $current_date = date('Y-m-d'); 
-
-                if ($result_work && mysqli_num_rows($result_work) > 0) {
-                    while ($row = mysqli_fetch_assoc($result_work)) {
-                        $lesson_id = $row['lesson_id'];
-
-                        $check_submission = "SELECT 1 FROM student_submit WHERE student_id = '$user_id' AND lesson_id = '$lesson_id' AND class_id = '$class_id'";
-                        $result_submission = mysqli_query($connect, $check_submission);
-                        if (mysqli_num_rows($result_submission) > 0) continue;
-
-                        $student_work = htmlspecialchars($row['student_work']);
-                        $expire_date = htmlspecialchars($row['expire_date']);
-
-                        $sql_lesson = "SELECT title FROM lessons WHERE lesson_file_name = '$student_work' LIMIT 1";
-                        $result_lesson = mysqli_query($connect, $sql_lesson);
-                        $lesson_title = $student_work;
-                        if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
-                            $lesson_row = mysqli_fetch_assoc($result_lesson);
-                            $lesson_title = htmlspecialchars($lesson_row['title']);
-                        }
-
-                        $backgrounds = [
-                            "linear-gradient(to bottom right, #ff5e62, #ff9966)",
-                            "linear-gradient(to bottom right, #4a90e2, #5cd2e6)",
-                            "linear-gradient(to bottom right, #f8b500, #fceabb)",
-                        ];
-                        $bg_style = $backgrounds[$counter % count($backgrounds)];
-                        $counter++;
-
-                        $is_expired = strtotime($expire_date) < strtotime($current_date);
-                        $button_html = $is_expired
-                            ? '<button class="buttonsubmit disabled" disabled>Deadline Passed</button>'
-                            : '<button class="buttonsubmit"><a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Submit</a></button>';
-
-                        $pending_cards .= '
-                        <div class="card project-card" style="background: ' . $bg_style . '">
-                            <div class="lang-tag">Scratch Junior</div>
-                            <div class="circle"></div>
-                            <div class="title">' . $lesson_title . '</div>
-                            <div class="expireddate">' . $expire_date . '</div>
-                            ' . $button_html . '
-                        </div>';
-                    }
-                }
-
-                if (!empty($pending_cards)) {
-                    echo '<div class="section-divider"><span class="section-title">Not Yet Submitted</span></div>';
-                    echo '<div class="exercisewrapper">' . $pending_cards . '</div>';
-                }
 
                 // ========== Unavailable Section ==========
                 $sql_all_lessons = "SELECT lesson_id, title FROM lessons";
@@ -413,15 +439,14 @@
         </div>
 
         <!-- Marked Feedback Section -->
-        <div class="container tab-content" id="marked">
+        <div class="container tab-content active" id="marked">
             <div class="flr">
                 <?php
                 $feedback_query = "
-                    SELECT ssf.rating, ssf.comments, ssf.created_at, ss.filename 
-                    FROM student_submit_feedback ssf
-                    INNER JOIN student_submit ss ON ssf.submit_id = ss.submit_id
-                    WHERE ss.student_id = '$user_id'
-                    ORDER BY ssf.created_at DESC
+                    SELECT filename, score, description 
+                    FROM student_submit
+                    WHERE student_id = '$user_id' AND score IS NOT NULL
+                    ORDER BY upload_time DESC
                 ";
 
                 $feedback_result = mysqli_query($connect, $feedback_query);
@@ -431,9 +456,9 @@
                     while ($row = mysqli_fetch_assoc($feedback_result)) {
                         $filename = htmlspecialchars($row['filename']);
                         $file_path = "../Student/uploads/" . $filename;
-                        $rating = htmlspecialchars($row['rating']);
-                        $comments = htmlspecialchars($row['comments']);
-                        $marked_time = htmlspecialchars($row['created_at']);
+                        $score = htmlspecialchars($row['score']);
+                        $description = htmlspecialchars($row['description']);
+
                         $backgrounds = [
                             "linear-gradient(to bottom right, #ff5e62, #ff9966)",
                             "linear-gradient(to bottom right, #4a90e2, #5cd2e6)",
@@ -445,13 +470,46 @@
                         $bg_style = $backgrounds[$counter % count($backgrounds)];
                         $counter++;
 
+                        //star
+                        function renderStars($score) {
+                            $maxStars = 5;
+                            $starCount = ($score / 100) * $maxStars;
+                            $fullStars = floor($starCount);
+                            $halfStar = ($starCount - $fullStars) >= 0.5;
+                            $starsHtml = '';
+
+                            for ($i = 0; $i < $fullStars; $i++) {
+                                $starsHtml .= '<i class="fas fa-star"></i>';
+                            }
+
+                            if ($halfStar) {
+                                $starsHtml .= '<i class="fas fa-star-half-alt"></i>';
+                            }
+
+                            $emptyStars = $maxStars - $fullStars - ($halfStar ? 1 : 0);
+                            for ($i = 0; $i < $emptyStars; $i++) {
+                                $starsHtml .= '<i class="far fa-star"></i>';
+                            }
+
+                            return '<span class="stars">' . $starsHtml . '</span>';
+                        }
+
                         echo '
                         <div class="card project-card" style="background: ' . $bg_style . '">
+                            <div class="lang-tag">Marked</div>
+                            <div class="circle"></div>
                             <div class="tittle">Submitted File: <br><a href="' . $file_path . '" target="_blank">' . $filename . '</a></div>
-                            <div class="rating" data-rating="' . $rating . '">Rating: <strong></strong><span class="stars"></span></div>                        
-                            <div class="comments">Comments: ' . $comments . '</div>
-                            <div class="marked-time">Marked on: ' . $marked_time . '</div>
+                            <div class="rating">
+                                Score: ' . $score . '% <br>' . renderStars($score) . '
+                            </div>
+                            <div class="comments" style="position: relative;">
+                                <button class="read-more-btn" onclick="togglePopup(this)">read more..</button>
+                                <div class="popup-description" style="display:none;">' . nl2br(htmlspecialchars($description)) . '</div>
+                            </div>
                         </div>';
+                        
+
+
                     }
                 } else {
                     echo "<p>No marked homework available yet.</p>";
@@ -460,8 +518,11 @@
             </div>
         </div>
 
+
+
+
         <!--Quiz Page--> 
-        <div class="container tab-content" id="quiz">
+        <div class="container tab-content active" id="quiz">
             <div id="popup" class="popup">
                 <div class="popup-content">
                     <p>Achieve over 80% to advance to the next level.</p>
@@ -745,7 +806,7 @@
         </div>
         
         <!--Profile Page-->
-        <div class="container tab-content" id="profile">
+        <div class="container tab-content active" id="profile">
             <h1>Personal Profile</h1>
             <form action="../includes/change_Avatar.php" class="avatar_container" method="post" enctype="multipart/form-data">
             <input type="file" name="change_Avatar" id="change_Avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="this.form.submit()">
@@ -794,7 +855,7 @@
         </div>
 
         <!--Enroll Page-->                
-        <div class="container tab-content" id="exroll">
+        <div class="container tab-content active" id="exroll">
             <div class="enroll_box">
             <?php foreach ($class_result as $class): ?>
                 <form action="../includes/process_enroll_class.php" class="enroll_form" method="post">
@@ -1081,30 +1142,30 @@ $connect->close();
     }
 
     function closeAllSubMenus(){
-    Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
-        ul.classList.remove('show')
-        ul.previousElementSibling.classList.remove('rotate')
-    })
+        Array.from(sidebar.getElementsByClassName('show')).forEach(ul => {
+            ul.classList.remove('show')
+            ul.previousElementSibling.classList.remove('rotate')
+        })
+        }
+    
+    //comment popout
+    function togglePopup(button) {
+        const popup = button.nextElementSibling;
+        if (popup.style.display === "none" || popup.style.display === "") {
+            popup.style.display = "block";
+            button.textContent = "close";
+        } else {
+            popup.style.display = "none";
+            button.textContent = "read more....";
+        }
     }
 
-    //rating star
-    document.querySelectorAll('.rating').forEach(el => {
-        const rating = parseFloat(el.dataset.rating);
-        const starCount = rating / 2;
-        let starsHTML = '';
 
-        for (let i = 1; i <= 5; i++) {
-            if (i <= Math.floor(starCount)) {
-                starsHTML += '<i class="fas fa-star"></i>'; // full star
-            } else if (i - 0.5 <= starCount) {
-                starsHTML += '<i class="fas fa-star-half-alt"></i>'; // half star
-            } else {
-                starsHTML += '<i class="far fa-star"></i>'; // empty star
-            }
-        }
 
-        el.querySelector('.stars').innerHTML = starsHTML;
-    });
+
+
+
+
 
     //emoji popup
 

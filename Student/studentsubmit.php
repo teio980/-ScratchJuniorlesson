@@ -13,7 +13,7 @@ $class_id = $row['class_id'];
 $lesson_id = $row['lesson_id'];
 $expire_date = $row['expire_date'];
 
-$query2 = "SELECT title, description, thumbnail_name, thumbnail_path, lesson_file_name, file_path 
+$query2 = "SELECT title, description, thumbnail_name, file_name
            FROM lessons WHERE lesson_id = '$lesson_id'";
 $result2 = mysqli_query($connect, $query2);
 $lesson = mysqli_fetch_assoc($result2);
@@ -21,9 +21,8 @@ $lesson = mysqli_fetch_assoc($result2);
 $title = $lesson['title'];
 $description = $lesson['description'];
 $thumbnail_name = $lesson['thumbnail_name'];
-$thumbnail_path = $lesson['thumbnail_path'];
-$lesson_file_name = $lesson['lesson_file_name'];
-$lesson_file_path = $lesson['file_path'];
+$lesson_file_name = $lesson['file_name'];
+
 
 $query3 = "SELECT * FROM student_submit WHERE student_id = '$user_id' AND class_id = '$class_id' AND lesson_id = '$lesson_id'";
 $result3 = mysqli_query($connect, $query3);
