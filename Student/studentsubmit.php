@@ -7,14 +7,13 @@ $availability_id = $_GET['availability_id'];
 
 $query = "SELECT class_id, lesson_id, expire_date FROM class_work WHERE availability_id = '$availability_id'";
 $result = mysqli_query($connect, $query);
-
 $row = mysqli_fetch_assoc($result);
+
 $class_id = $row['class_id'];
 $lesson_id = $row['lesson_id'];
 $expire_date = $row['expire_date'];
 
-$query2 = "SELECT title, description, thumbnail_name, file_name
-           FROM lessons WHERE lesson_id = '$lesson_id'";
+$query2 = "SELECT title, description, thumbnail_name, file_name FROM lessons WHERE lesson_id = '$lesson_id'";
 $result2 = mysqli_query($connect, $query2);
 $lesson = mysqli_fetch_assoc($result2);
 
@@ -22,7 +21,6 @@ $title = $lesson['title'];
 $description = $lesson['description'];
 $thumbnail_name = $lesson['thumbnail_name'];
 $lesson_file_name = $lesson['file_name'];
-
 
 $query3 = "SELECT * FROM student_submit WHERE student_id = '$user_id' AND class_id = '$class_id' AND lesson_id = '$lesson_id'";
 $result3 = mysqli_query($connect, $query3);
@@ -37,12 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     if (strtolower($file_ext) !== 'sjr') {
         $uploadMessage = "Only .sjr files are allowed.";
     } else {
-        $target_dir = "uploads/";
-        $filepath = $target_dir . $filename;
-
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0755, true);
+        $student_dir = "uploads/" . $user_id . "/";
+        if (!is_dir($student_dir)) {
+            mkdir($student_dir, 0755, true);
         }
+
+        $filepath = $student_dir . $filename;
 
         $sql_count = "SELECT COUNT(*) AS total FROM student_submit";
         $result_count = mysqli_query($connect, $sql_count);
@@ -55,14 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     unlink($existing_submission['filepath']);
                 }
 
-                $update = "UPDATE student_submit 
-                           SET filename = '$filename', filepath = '$filepath', upload_time = NOW() 
+                $update = "UPDATE student_submit
+                           SET filename = '$filename', filepath = '$filepath', upload_time = NOW()
                            WHERE submit_id = '{$existing_submission['submit_id']}'";
                 mysqli_query($connect, $update);
                 header("Location: Main_page.php?msg=updated");
                 exit();
             } else {
-                $insert = "INSERT INTO student_submit 
+                $insert = "INSERT INTO student_submit
                            (submit_id, student_id, class_id, lesson_id, filename, filepath, upload_time)
                            VALUES ('$submit_id', '$user_id', '$class_id', '$lesson_id', '$filename', '$filepath', NOW())";
                 mysqli_query($connect, $insert);
@@ -91,7 +89,7 @@ if ($expire_time > $current_time) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Submit Assignment</title>
-  <link rel="stylesheet" href="../cssfile/student_submit.css"> 
+  <link rel="stylesheet" href="../cssfile/student_submit.css">
 </head>
 <body>
 
@@ -114,7 +112,6 @@ if ($expire_time > $current_time) {
     <a href="../phpfile/uploads_teacher/<?php echo urlencode($lesson_file_name); ?>" class="download-link" download>
         Download Lesson File
     </a>
-
 
     <?php if ($existing_submission): ?>
       <div class="current-submission">
