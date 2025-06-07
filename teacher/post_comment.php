@@ -4,12 +4,11 @@ require_once '../phpfile/connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $content_type = $_POST['content_type'] ?? '';
-    $content_id = $_POST['content_id'] ?? '';
+    $content_id = $_POST['lesson_id'] ?? '';
     $class_id = $_POST['class_id'] ?? '';
     $message = $_POST['message'] ?? '';
     $user_id = $_SESSION['user_id'] ?? '';
     
-    // 验证用户身份
     $user_type = '';
     $sql = "SELECT identity FROM (
             SELECT teacher_id AS id, identity FROM teacher WHERE teacher_id = ?
@@ -30,15 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $result->fetch_assoc();
     $sender_type = ($user['identity'] === 'teacher') ? 'teacher' : 'student';
     
-    // 生成评论ID
     $sql = "SELECT COUNT(*) FROM content_comments";
     $result = $connect->query($sql);
     $row = $result->fetch_row();
     $comment_id = 'CMT' . str_pad($row[0] + 1, 7, '0', STR_PAD_LEFT);
     
-    // 插入评论
     $insert_sql = "INSERT INTO content_comments 
-                  (comment_id, content_type, content_id, class_id, 
+                  (comment_id, content_type, lesson_id, class_id, 
                   sender_id, sender_type, message)
                   VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $connect->prepare($insert_sql);
