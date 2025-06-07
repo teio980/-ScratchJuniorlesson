@@ -513,19 +513,23 @@ main{
  .announcement-wrapper {
       display: flex;
       justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin: 0 50px;
     }
 
     .announcement-card {
-      margin: 25px 50px;
+      box-sizing: border-box;
       padding: 0 40px;
       background: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      padding: 16px;
+      max-width: 100%;
+      margin: 25px;
       width: 100%;
-      position: relative;
       overflow: hidden;
       border-left: 6px solid #9101df;
+      padding: 25px;
     }
 
 .circle-image {
