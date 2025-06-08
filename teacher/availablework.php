@@ -1,7 +1,8 @@
 <?php
-session_start();
-include '../phpfile/connect.php';
-include '../resheadAfterLogin.php';
+require_once '../includes/check_session_teacher.php';
+include '../phpfile/connect.php'; 
+include '../includes/connect_DB.php';
+include 'resheadteacher.php';
 
 $teacher_id = $_SESSION['user_id'];
 ?>
@@ -12,6 +13,8 @@ $teacher_id = $_SESSION['user_id'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assign Content to Classes</title>
+    <link rel="stylesheet" href="../cssfile/Tmain.css">
+    <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/availablework.css">
     <style>
         .section-container {
@@ -98,11 +101,9 @@ $teacher_id = $_SESSION['user_id'];
                     </select>
                 </div>
 
-                <button type="submit" name="share_material">Share to All My Classes</button>
+                <button type="submit" name="share_material">Share to Classes</button>
             </form>
         </div>
-
-        <button onclick="location.href='Main_page.php'" class="back-btn">Back to Dashboard</button>
     </div>
 
 <?php

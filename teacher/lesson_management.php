@@ -1,7 +1,8 @@
 <?php
-session_start();
+require_once '../includes/check_session_teacher.php';
 include '../phpfile/connect.php';
-include '../resheadAfterLogin.php';
+include '../includes/connect_DB.php';
+include 'resheadteacher.php';
 
 // 处理lesson删除
 if (isset($_GET['id'])) {
@@ -125,37 +126,9 @@ if (isset($_POST['update'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../cssfile/Tmain.css">
+    <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/lesson_management.css">
     <title>Content Management</title>
-    <style>
-        .tab-container {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #ddd;
-        }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background: #f1f1f1;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
-        }
-        .tab.active {
-            background: rgb(142, 60, 181);
-            color: white;
-        }
-        .content-section {
-            display: none;
-        }
-        .content-section.active {
-            display: block;
-        }
-        .file-info {
-            font-size: 0.8em;
-            color: #666;
-            margin-top: 5px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">

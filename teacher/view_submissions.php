@@ -1,6 +1,8 @@
 <?php
-session_start();
-include '../phpfile/connect.php';
+require_once '../includes/check_session_teacher.php';
+include '../phpfile/connect.php'; 
+include '../includes/connect_DB.php';
+include 'resheadteacher.php';
 
 $teacher_id = $_SESSION['user_id'];
 ?>
@@ -10,8 +12,8 @@ $teacher_id = $_SESSION['user_id'];
 <head>
     <meta charset="UTF-8">
     <title>Student Submissions</title>
-    <link rel="stylesheet" href="../cssfile/headeraf.css">
     <link rel="stylesheet" href="../cssfile/view_ssub.css">
+    <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <script src="../javascriptfile/download_all.js"></script>
     <script>
         function openRatingModal(submit_id, student_id, lesson_id) {
@@ -53,7 +55,18 @@ $teacher_id = $_SESSION['user_id'];
                             <input type="hidden" name="total_score" id="total_score" value="0">
                         </div>
                     `;
+
+                    if (data.feedback) {
+                        document.getElementById('feedback').value = data.feedback;
+                    }
                     
+                    if (data.existing_score) {
+                        document.getElementById('total_score').value = data.existing_score;
+                        document.getElementById('displayTotal').textContent = data.existing_score;
+                        document.getElementById('finalScoreDisplay').textContent = data.existing_score;
+                        document.getElementById('finalScoreContainer').style.display = 'block';
+                    }
+
                     // 设置隐藏字段
                     document.getElementById('submit_id').value = submit_id;
                     document.getElementById('student_id').value = student_id;
@@ -61,7 +74,11 @@ $teacher_id = $_SESSION['user_id'];
                     
                     // 显示模态框
                     modal.style.display = 'block';
-                });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to load grading criteria');
+                }); 
         }
 
         function calculateTotalScore(maxScore, inputElement) {
@@ -189,8 +206,6 @@ $teacher_id = $_SESSION['user_id'];
         </tbody>
     </table>
 
-    <button onclick="location.href='Main_page.php'">Back to Dashboard</button>
-
     <div id="ratingModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0, 0, 0, 0.5);">
         <div style="background-color:white; margin:10% auto; padding:20px; width:500px; border-radius:10px;">
             <h3>Rate Submission</h3>
@@ -207,6 +222,11 @@ $teacher_id = $_SESSION['user_id'];
                 <div id="finalScoreContainer" style="display:none; margin-top:15px;">
                     <strong>Final Score: </strong>
                     <span id="finalScoreDisplay">0</span>%
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <label for="feedback"><strong>Feedback/Comments:</strong></label><br>
+                    <textarea name="feedback" id="feedback" rows="4" style="width: 100%;"></textarea>
                 </div>
                 
                 <button type="submit">Save Score</button>
