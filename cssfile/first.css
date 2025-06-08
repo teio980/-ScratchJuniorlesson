@@ -53,7 +53,7 @@ body{
     width: 80%;
     margin: auto;
     text-align: center;
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center; 
@@ -75,6 +75,13 @@ body{
     margin: 5% 0;
     display: flex;
     justify-content: space-between;
+    position: relative;
+}
+
+.sj {
+  position: absolute;
+  z-index: 100;
+    bottom: 1%;
 }
 
 .course{
@@ -94,6 +101,20 @@ body{
 .course:hover{
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
     cursor: pointer;
+}
+
+.erase-line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 4px;
+  width: 0;              
+  background: var(--secondary-color); 
+  z-index: 10;
+}
+
+.scroll-spacer {
+  height: 100vh;
 }
 
 
