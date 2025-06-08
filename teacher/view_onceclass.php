@@ -3,39 +3,6 @@ session_start();
 include '../phpfile/connect.php';
 include '../resheadAfterLogin.php';
 
-// Update all student averages before displaying
-function updateAllStudentAverages($connect) {
-    // Get all students
-    $students_query = "SELECT student_id FROM student";
-    $students_result = mysqli_query($connect, $students_query);
-    
-    while ($student_row = mysqli_fetch_assoc($students_result)) {
-        $student_id = $student_row['student_id'];
-        
-        // Calculate the student's average from all their submitted lessons
-        $avg_query = "SELECT AVG(score) AS avg_score FROM student_submit WHERE student_id = ? AND score IS NOT NULL";
-        $stmt = $connect->prepare($avg_query);
-        $stmt->bind_param("s", $student_id);
-        $stmt->execute();
-        $avg_result = $stmt->get_result();
-        
-        if ($avg_row = $avg_result->fetch_assoc()) {
-            $average_score = min(round($avg_row['avg_score'], 2), 100);
-            
-            // Update student record
-            $update_query = "UPDATE student SET student_average = ? WHERE student_id = ?";
-            $update_stmt = $connect->prepare($update_query);
-            $update_stmt->bind_param("ds", $average_score, $student_id);
-            $update_stmt->execute();
-            $update_stmt->close();
-        }
-        $stmt->close();
-    }
-}
-
-// Update all student averages before displaying the page
-updateAllStudentAverages($connect);
-
 // Get the class code from URL
 $class_code = $_GET['class_id'] ?? '';
 
@@ -57,9 +24,9 @@ if ($class_row) {
     echo "<h2>Class: " . htmlspecialchars($class_name) . "</h2>";
     echo "<h3>Class Average Score: $class_average% ($class_pass_status)</h3>";
 
-    // Query all students in this class
+    // Query all students in this class with their averages from student_class
     $query = "
-        SELECT s.student_id, s.S_username, s.student_average
+        SELECT s.student_id, s.S_username, sc.average_score
         FROM student_class sc
         JOIN student s ON sc.student_id = s.student_id
         WHERE sc.class_id = '$class_id'
@@ -80,7 +47,7 @@ if ($class_row) {
         while ($row = mysqli_fetch_assoc($result)) {
             $student_id = $row['student_id'];
             $username = $row['S_username'];
-            $student_average = $row['student_average'];
+            $student_average = $row['average_score'];
             
             // Get quiz score (for reference only)
             $quiz_query = "

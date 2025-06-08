@@ -19,13 +19,23 @@ $teacher_id = $_SESSION['user_id'];
         function openRatingModal(submit_id, student_id, lesson_id) {
             // 获取评分标准
             fetch('../phpfile/get_lesson_criteria.php?lesson_id=' + lesson_id)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const modal = document.getElementById('ratingModal');
                     const form = modal.querySelector('form');
                     
                     // 清空现有评分项
                     form.querySelector('#criteriaContainer').innerHTML = '';
+                    
+                    // 检查是否有有效的评分标准数据
+                    if (!data || !data.grading_criteria) {
+                        throw new Error('Invalid grading criteria data');
+                    }
                     
                     // 添加动态评分项
                     let totalMaxScore = 0;
@@ -56,10 +66,12 @@ $teacher_id = $_SESSION['user_id'];
                         </div>
                     `;
 
+                    // 设置反馈内容（如果有）
                     if (data.feedback) {
                         document.getElementById('feedback').value = data.feedback;
                     }
                     
+                    // 设置已有分数（如果是编辑）
                     if (data.existing_score) {
                         document.getElementById('total_score').value = data.existing_score;
                         document.getElementById('displayTotal').textContent = data.existing_score;
@@ -77,7 +89,7 @@ $teacher_id = $_SESSION['user_id'];
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to load grading criteria');
+                    alert('Failed to load grading criteria. Please try again.');
                 }); 
         }
 
@@ -95,6 +107,8 @@ $teacher_id = $_SESSION['user_id'];
             
             document.getElementById('displayTotal').textContent = total;
             document.getElementById('total_score').value = finalScore;
+            document.getElementById('finalScoreDisplay').textContent = finalScore;
+            document.getElementById('finalScoreContainer').style.display = 'block';
         }
 
         function closeRatingModal() {
