@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="cssfile/first.css">
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <div class="stay">
         <div class="text">
             <h1>Welcome to ScratchJunior LK Scratch Kids</h1>
@@ -35,29 +38,23 @@
                 </div>
         </div>
     </div>
-    <script>
-const courses = document.querySelectorAll(".course");
-
-function checkScroll() {
-    const windowHeight = window.innerHeight;
-    
-    courses.forEach((course, index) => {
-        const rect = course.getBoundingClientRect();
-        
-        let step = (index + 1) * 0.1; 
-        let progress = (windowHeight - rect.top) / (windowHeight * step);
-
-        progress = Math.min(Math.max(progress, 0), 1); 
-
-        course.style.opacity = progress;
-        course.style.transform = `translateX(${(1 - progress) * -500}px)`; 
-    });
-}
-
-
-window.addEventListener("scroll", checkScroll);
-checkScroll(); 
-
-    </script>
+ 
 </body>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray(".course").forEach(course => {
+    gsap.from(course, {
+      scrollTrigger: {
+        trigger: course,
+        start: "top 90%",
+        end: "top 60%",
+        scrub: true
+      },
+      x: -200,
+      opacity: 0
+    });
+  });
+</script>
+
 </html>

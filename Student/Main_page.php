@@ -6,6 +6,51 @@
     $user_id = $_SESSION['user_id'];
     $user_name = $_SESSION['username'];
 
+    
+    if (isset($_POST['game_id'])) {
+        $game_id = $_POST['game_id'];
+
+        $query = "INSERT INTO student_game_progress (student_id, game_id, complete)
+                VALUES ('$user_id', '$game_id', 1)
+                ON DUPLICATE KEY UPDATE complete = 1";
+        mysqli_query($connect, $query) or die("Error: " . mysqli_error($connect));
+
+        $xpQuery = "UPDATE student_level SET experience = experience + 50 WHERE student_id = '$user_id'";
+        mysqli_query($connect, $xpQuery) or die("Error updating XP: " . mysqli_error($connect));
+
+        $xp_check_stmt = $pdo->prepare("SELECT experience, level FROM student_level WHERE student_id = ?");
+        $xp_check_stmt->execute([$user_id]);
+        
+        if ($xp_row = $xp_check_stmt->fetch(PDO::FETCH_ASSOC)) {
+            $current_xp = (int)$xp_row['experience'];
+            $current_level = (int)$xp_row['level'];
+        
+            $level = $current_level;
+            $xp = $current_xp;
+        
+            while (true) {
+                $xp_needed = 100 + ($level - 1) * 50;
+        
+                if ($xp >= $xp_needed) {
+                    $xp -= $xp_needed;
+                    $level++;
+                } else {
+                    break;
+                }
+            }
+        
+            if ($level != $current_level) {
+                $stmt_update_lvl = $pdo->prepare("UPDATE student_level SET experience = ?, level = ? WHERE student_id = ?");
+                $stmt_update_lvl->execute([$xp, $level, $user_id]);
+            }
+        }
+
+        header("Location: Main_page.php");
+        exit();
+    }
+
+
+
     $sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
     $result = mysqli_query($connect, $sql);
 
@@ -124,8 +169,8 @@
         </li>
         <li>
             <a href="#" class="sidebar-link">
-            <svg viewBox="0 0 800 800" width="24" height="24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><g><path d="M676.637,183.386c0.002-0.002,0.004-0.004,0.005-0.005L522.549,29.287c-3.619-3.62-8.62-5.86-14.145-5.86H137.5 c-11.046,0-20,8.954-20,20v713.146c0,11.046,8.954,20,20,20h525c11.046,0,20-8.954,20-20V197.522 C682.5,192.407,680.426,187.203,676.637,183.386z M642.5,736.573h-485V63.427h342.62l114.096,114.095l-85.812,0v-41.788 c0-11.046-8.954-20-20-20s-20,8.954-20,20v61.788c0,11.046,8.954,20,20,20c0,0,92.404,0,134.096,0V736.573z"></path><path d="M295.217,224.417l-39.854,39.855l-5.697-5.697c-7.811-7.811-20.473-7.811-28.283,0c-7.811,7.81-7.811,20.473,0,28.284 l19.84,19.84c3.75,3.751,8.838,5.858,14.142,5.858c5.305,0,10.392-2.107,14.143-5.858l53.996-53.999 c7.81-7.811,7.81-20.474-0.001-28.284C315.69,216.606,303.027,216.606,295.217,224.417z"></path><path d="M557.831,312.557h6.646c11.046,0,20-8.954,20-20s-8.954-20-20-20h-6.646c-11.046,0-20,8.954-20,20 S546.785,312.557,557.831,312.557z"></path><path d="M367.389,272.557c-11.046,0-20,8.954-20,20s8.954,20,20,20h129.609c11.046,0,20-8.954,20-20s-8.954-20-20-20H367.389z"></path><path d="M557.831,435.552h6.646c11.046,0,20-8.954,20-20s-8.954-20-20-20h-6.646c-11.046,0-20,8.954-20,20 S546.785,435.552,557.831,435.552z"></path><path d="M496.998,395.552H367.389c-11.046,0-20,8.954-20,20s8.954,20,20,20h129.609c11.046,0,20-8.954,20-20 S508.044,395.552,496.998,395.552z"></path><path d="M557.831,558.547h6.646c11.046,0,20-8.954,20-20s-8.954-20-20-20h-6.646c-11.046,0-20,8.954-20,20 S546.785,558.547,557.831,558.547z"></path><path d="M496.998,518.547H367.389c-11.046,0-20,8.954-20,20s8.954,20,20,20h129.609c11.046,0,20-8.954,20-20 S508.044,518.547,496.998,518.547z"></path><path d="M557.831,681.542h6.646c11.046,0,20-8.954,20-20s-8.954-20-20-20h-6.646c-11.046,0-20,8.954-20,20 S546.785,681.542,557.831,681.542z"></path><path d="M496.998,641.542H367.389c-11.046,0-20,8.954-20,20s8.954,20,20,20h129.609c11.046,0,20-8.954,20-20 S508.044,641.542,496.998,641.542z"></path><path d="M255.363,435.552c5.304,0,10.392-2.107,14.142-5.858l53.996-53.996c7.811-7.811,7.811-20.475,0-28.285 s-20.473-7.811-28.283,0l-39.854,39.855l-5.697-5.698c-7.81-7.81-20.474-7.812-28.284-0.001s-7.811,20.474-0.001,28.284 l19.84,19.841C244.972,433.444,250.059,435.552,255.363,435.552z"></path><path d="M234.239,511.547l-12.856,12.857c-7.81,7.811-7.81,20.474,0.001,28.284c3.905,3.905,9.023,5.857,14.142,5.857 s10.237-1.952,14.143-5.858l12.855-12.855l12.856,12.855c3.904,3.906,9.023,5.858,14.142,5.858s10.237-1.952,14.142-5.858 c7.811-7.811,7.811-20.473,0-28.283l-12.855-12.857l12.856-12.857c7.81-7.811,7.81-20.474-0.001-28.284 c-7.811-7.81-20.474-7.81-28.284,0.001l-12.856,12.856l-12.857-12.856c-7.811-7.811-20.473-7.811-28.283,0s-7.811,20.474,0,28.283 L234.239,511.547z"></path><path d="M295.217,593.4l-39.854,39.855l-5.697-5.697c-7.811-7.811-20.473-7.811-28.283,0c-7.811,7.81-7.811,20.473,0,28.283 l19.84,19.84c3.75,3.752,8.838,5.858,14.142,5.858c5.305,0,10.392-2.107,14.143-5.858l53.996-53.998 c7.81-7.811,7.81-20.474-0.001-28.284C315.69,585.59,303.027,585.59,295.217,593.4z"></pa</g></g></svg>
-            <span>Quiz</span>
+            <svg fill="#000000" viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M798.071 357.531c-16.527 24.259-51.62 24.259-68.147 0-9.185-13.476-9.185-32.01 0-45.486 16.527-24.259 51.62-24.259 68.147 0 9.185 13.476 9.185 32.01 0 45.486zm93.628 92.093c-16.527 24.259-51.62 24.259-68.147 0-9.185-13.476-9.185-32.01 0-45.486 16.527-24.259 51.62-24.259 68.147 0 9.185 13.476 9.185 32.01 0 45.486zm-189.305 0c-16.527 24.259-51.62 24.259-68.147 0-9.185-13.476-9.185-32.01 0-45.486 16.527-24.259 51.62-24.259 68.147 0 9.185 13.476 9.185 32.01 0 45.486zm95.677 95.164c-16.527 24.259-51.62 24.259-68.147 0-9.185-13.476-9.185-32.01 0-45.486 16.527-24.259 51.62-24.259 68.147 0 9.185 13.476 9.185 32.01 0 45.486zM360.192 428.417c0-53.017-42.983-96-96-96s-96 42.983-96 96 42.983 96 96 96 96-42.983 96-96zm40.96 0c0 75.638-61.322 136.96-136.96 136.96s-136.96-61.322-136.96-136.96 61.322-136.96 136.96-136.96 136.96 61.322 136.96 136.96z"/><path d="M983.038 727.533c-.352 61.995-50.737 112.151-112.843 112.151-39.998 0-76.347-20.949-96.661-54.546-5.852-9.679-18.443-12.782-28.122-6.929s-12.782 18.443-6.929 28.122c27.659 45.746 77.229 74.314 131.712 74.314 84.943 0 153.805-68.844 153.805-153.764l-1.254-19.506-40.634-281.277c-23.484-162.304-162.639-282.733-326.691-282.733H467.343c-11.311 0-20.48 9.169-20.48 20.48s9.169 20.48 20.48 20.48h188.078c143.699 0 265.584 105.483 286.153 247.638l40.355 278.923 1.109 16.649z"/><path d="M511.904 687.705c90.526 0 173.645 43.889 225.067 116.315 6.548 9.223 19.333 11.391 28.555 4.843s11.391-19.333 4.843-28.555c-59.025-83.133-154.528-133.562-258.465-133.562-11.311 0-20.48 9.169-20.48 20.48s9.169 20.48 20.48 20.48zM42.071 710.884l40.355-278.923c20.569-142.154 142.454-247.638 286.153-247.638h188.078c11.311 0 20.48-9.169 20.48-20.48s-9.169-20.48-20.48-20.48H368.579c-164.052 0-303.207 120.429-326.691 282.733L1.419 705.802.045 725.519C0 811.8 68.862 880.644 153.805 880.644c54.483 0 104.053-28.568 131.712-74.314 5.852-9.679 2.75-22.27-6.929-28.122s-22.27-2.75-28.122 6.929c-20.314 33.598-56.663 54.546-96.661 54.546-62.105 0-112.491-50.155-112.843-112.151l1.109-16.649z"/><path d="M512.096 646.745c-103.937 0-199.44 50.429-258.465 133.562-6.548 9.223-4.38 22.007 4.843 28.555s22.007 4.38 28.555-4.843c51.423-72.425 134.541-116.315 225.067-116.315 11.311 0 20.48-9.169 20.48-20.48s-9.169-20.48-20.48-20.48z"/></g></svg>
+            <span>Mini Games</span>
             </a>
         </li>
         <li>
@@ -148,8 +193,18 @@
             <span>Change Class</span>
             </a>
         </li>
-
         </ul>
+        
+        <div class="infocover">
+            <hr id="linenav">
+            <div class="user-info">
+                <img src="<?php echo $fullPath; ?>" alt="Avatar" class="Avatar">
+                <div class="namenav">
+                    <p><?php echo htmlspecialchars($user_name); ?></p>
+                </div>
+            </div>
+        </div>
+
     </nav>
     <main>
         <?php include 'resheadstudent.php'; ?>
@@ -518,9 +573,6 @@
             </div>
         </div>
 
-
-
-
         <!--Quiz Page--> 
         <div class="container tab-content active" id="quiz">
             <div id="popup" class="popup">
@@ -803,6 +855,72 @@
                 </div>        
             </div>
             <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
+
+            <?php
+                $query = "SELECT * FROM mini_games";
+                $result = mysqli_query($connect, $query);
+
+                if (!$result || mysqli_num_rows($result) == 0) {
+                    die("No games found.");
+                }
+
+                $games = [];
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $games[] = [
+                        'id' => $row['game_id'],
+                        'title' => htmlspecialchars($row['title']),
+                        'imagePath' => '../phpfile/uploads_mini_games/' . $row['image_name']
+                    ];
+                }
+
+                $completedGames = [];
+                $user_id_escaped = mysqli_real_escape_string($connect, $user_id);
+                $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id_escaped' AND complete = 1";
+                $completedResult = mysqli_query($connect, $completedQuery);
+                if ($completedResult) {
+                    while ($row = mysqli_fetch_assoc($completedResult)) {
+                        $completedGames[] = $row['game_id'];
+                    }
+                }
+
+
+
+            ?>
+            <script>
+                const completedGameIds = <?php echo json_encode($completedGames); ?>;
+            </script>
+
+
+            <div class="puzcover">
+                <div class="outer-box">
+                    <div class="container1">
+                        <div class="puzzle-section">
+                            <p class="label">Puzzle</p>
+                            <div class="puzzle-box">
+                                <button class="nav left" onclick="prevPuzzle()">&lt;</button>
+                                <div class="main-image" id="mainImage">
+                                    <img class="base" id="baseImage" src="" alt="Puzzle" draggable="false">
+                                    <div class="slot slot-0" id="slot0" ondragover="allowDrop(event)" ondrop="drop(event, 0)"></div>
+                                    <div class="slot slot-1" id="slot1" ondragover="allowDrop(event)" ondrop="drop(event, 1)"></div>
+                                    <div class="slot slot-2" id="slot2" ondragover="allowDrop(event)" ondrop="drop(event, 2)"></div>
+                                    <div class="slot slot-3" id="slot3" ondragover="allowDrop(event)" ondrop="drop(event, 3)"></div>
+                                </div>
+                                <button class="nav right" onclick="nextPuzzle()">&gt;</button>
+                            </div>
+                            <div class="dots">
+                                <?php for ($i = 0; $i < count($games); $i++): ?>
+                                    <span class="dot" id="dot<?= $i ?>"></span>
+                                <?php endfor; ?>
+                            </div>
+                            <form id="submitForm" method="POST" style="display: none;">
+                                <input type="hidden" name="game_id" id="hiddenGameId">
+                                <button type="button" class="submit" onclick="submitPuzzle()">Submit</button>
+                            </form>
+                        </div>
+                        <div class="pieces" id="piecesContainer"></div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!--Profile Page-->
@@ -1162,11 +1280,6 @@ $connect->close();
 
 
 
-
-
-
-
-
     //emoji popup
 
     const emojiIcon = document.getElementById('emoji-icon');
@@ -1211,6 +1324,137 @@ $connect->close();
             emojiPicker.style.display = 'none';  // Hide picker if click is outside
         }
     });
+
+    // Convert PHP games array to JavaScript
+    const puzzleImages = <?php echo json_encode(array_column($games, 'imagePath')); ?>;
+    const gameTitles = <?php echo json_encode(array_column($games, 'title')); ?>;
+    const gameIds = <?php echo json_encode(array_column($games, 'id')); ?>;
+    let currentPuzzle = 0;
+    let placed = [null, null, null, null];
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        const pieceIndex = parseInt(ev.target.dataset.index);
+        ev.dataTransfer.effectAllowed = 'move';
+        ev.dataTransfer.setData("text", pieceIndex);
+        const dragPreview = document.createElement('div');
+        dragPreview.style.width = '120px';
+        dragPreview.style.height = '67.5px';
+        dragPreview.style.overflow = 'hidden';
+        dragPreview.style.position = 'absolute';
+        dragPreview.style.pointerEvents = 'none';
+        dragPreview.style.top = '-9999px';
+        const img = document.createElement('img');
+        img.src = puzzleImages[currentPuzzle];
+        img.style.width = '240px';
+        img.style.height = '135px';
+        switch(pieceIndex) {
+            case 0: img.style.marginLeft = '0'; img.style.marginTop = '0'; break;
+            case 1: img.style.marginLeft = '-120px'; img.style.marginTop = '0'; break;
+            case 2: img.style.marginLeft = '0'; img.style.marginTop = '-67.5px'; break;
+            case 3: img.style.marginLeft = '-120px'; img.style.marginTop = '-67.5px'; break;
+        }
+        dragPreview.appendChild(img);
+        document.body.appendChild(dragPreview);
+        ev.dataTransfer.setDragImage(dragPreview, 60, 33.75);
+        setTimeout(() => document.body.removeChild(dragPreview), 0);
+    }
+
+    function drop(ev, slotIndex) {
+        ev.preventDefault();
+        const pieceIndex = ev.dataTransfer.getData("text");
+        if (slotIndex != pieceIndex || placed[slotIndex]) return;
+        const slot = document.getElementById(`slot${slotIndex}`);
+        slot.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = puzzleImages[currentPuzzle];
+        img.className = "piece piece-" + slotIndex;
+        slot.appendChild(img);
+        placed[slotIndex] = true;
+        const wrapper = document.getElementById(`piece-wrapper-${pieceIndex}`);
+        if (wrapper) wrapper.classList.add("hidden");
+        if (placed.every(Boolean)) {
+            document.getElementById("mainImage").classList.add("fully-colored");
+            document.querySelector('.label').textContent = gameTitles[currentPuzzle] + ' - Completed!';
+            document.getElementById("submitForm").style.display = "block";
+        }
+    }
+
+    function loadPuzzle(index) {
+        const gameId = gameIds[index];
+        const isCompleted = completedGameIds.includes(gameId);
+        document.getElementById("baseImage").src = puzzleImages[index];
+        document.getElementById("mainImage").classList.remove("fully-colored");
+        document.querySelector('.label').textContent = gameTitles[index];
+        for (let i = 0; i < 4; i++) {
+            const slot = document.getElementById(`slot${i}`);
+            slot.innerHTML = "";
+            placed[i] = null;
+            slot.ondragover = allowDrop;
+            slot.ondrop = (ev) => drop(ev, i);
+        }
+        const container = document.getElementById("piecesContainer");
+        container.innerHTML = "";
+        if (isCompleted) {
+            document.getElementById("mainImage").classList.add("fully-colored");
+            document.querySelector('.label').textContent = gameTitles[index] + ' - Completed!';
+            for (let i = 0; i < 4; i++) {
+                const slot = document.getElementById(`slot${i}`);
+                slot.innerHTML = "";
+                const img = document.createElement("img");
+                img.src = puzzleImages[index];
+                img.className = "piece piece-" + i;
+                slot.appendChild(img);
+                slot.ondragover = null;
+                slot.ondrop = null;
+            }
+            document.getElementById("submitForm").style.display = "none";
+        } else {
+            for (let i = 0; i < 4; i++) {
+                const wrapper = document.createElement("div");
+                wrapper.className = "piece-wrapper";
+                wrapper.id = `piece-wrapper-${i}`;
+                const piece = document.createElement("img");
+                piece.src = puzzleImages[index];
+                piece.className = `piece piece-${i}`;
+                piece.setAttribute("draggable", true);
+                piece.dataset.index = i;
+                piece.ondragstart = drag;
+                wrapper.appendChild(piece);
+                container.appendChild(wrapper);
+            }
+            document.getElementById("submitForm").style.display = "none";
+        }
+        document.querySelectorAll('.dot').forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    function nextPuzzle() {
+        currentPuzzle = (currentPuzzle + 1) % puzzleImages.length;
+        loadPuzzle(currentPuzzle);
+    }
+
+    function prevPuzzle() {
+        currentPuzzle = (currentPuzzle - 1 + puzzleImages.length) % puzzleImages.length;
+        loadPuzzle(currentPuzzle);
+    }
+
+    function submitPuzzle() {
+        if (placed.every(Boolean)) {
+            document.getElementById("hiddenGameId").value = gameIds[currentPuzzle];
+            document.getElementById("submitForm").submit();
+        } else {
+            alert("Please complete all pieces first.");
+        }
+    }
+
+    loadPuzzle(0);
+
+
 
 </script>
 

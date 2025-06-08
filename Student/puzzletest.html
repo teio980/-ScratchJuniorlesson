@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Puzzle Game</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #eaeaea;
+      font-family: Arial, sans-serif;
+    }
+
+    .outer-box {
+      background-color: #F8F8FF;
+      border-radius: 30px;
+      margin: 40px;
+      padding: 40px;
+      height: calc(100% - 80px);
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .puzzle-section {
+      text-align: center;
+    }
+
+    .label {
+      margin-bottom: 30px;
+      font-size: 36px;
+      color: #333;
+    }
+
+    .puzzle-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav {
+      background: transparent;
+      border: none;
+      font-size: 48px;
+      cursor: pointer;
+      padding: 0 20px;
+    }
+
+    .main-image {
+      width: 800px;
+      height: 450px;
+      overflow: hidden;
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .main-image img.base {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      filter: grayscale(100%);
+      transition: filter 0.3s ease;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .main-image.fully-colored img.base {
+      filter: none;
+    }
+
+    .slot {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      z-index: 1;
+      border: 3px solid white;
+      box-sizing: border-box;
+    }
+
+    .slot img {
+      width: 200%;
+      height: 200%;
+      object-fit: cover;
+      position: absolute;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .slot-0 { top: 0; left: 0; }
+    .slot-1 { top: 0; left: 50%; }
+    .slot-2 { top: 50%; left: 0; }
+    .slot-3 { top: 50%; left: 50%; }
+
+    .slot-0 img { top: 0; left: 0; }
+    .slot-1 img { top: 0; left: -100%; }
+    .slot-2 img { top: -100%; left: 0; }
+    .slot-3 img { top: -100%; left: -100%; }
+
+    .slot img.piece-0 {
+      clip-path: inset(0 50% 50% 0);
+    }
+
+    .slot img.piece-1 {
+      clip-path: inset(0 0 50% 50%);
+    }
+
+    .slot img.piece-2 {
+      clip-path: inset(50% 50% 0 0);
+    }
+
+    .slot img.piece-3 {
+      clip-path: inset(50% 0 0 50%);
+    }
+
+    .dots {
+      margin-top: 25px;
+    }
+
+    .dot {
+      height: 16px;
+      width: 16px;
+      margin: 0 8px;
+      background-color: #ccc;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.active {
+      background-color: #000;
+    }
+
+    .pieces {
+      display: grid;
+      grid-template-rows: repeat(4, 1fr);
+      gap: 30px;
+    }
+
+    .piece-wrapper {
+      width: 240px;
+      height: 135px;
+      overflow: hidden;
+      border-radius: 12px;
+      cursor: grab;
+      position: relative;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .piece-wrapper img {
+      width: 480px;
+      height: 270px;
+      object-fit: cover;
+      position: absolute;
+      user-select: none;
+      pointer-events: auto;
+    }
+
+    .piece-0 { top: 0; left: 0; }
+    .piece-1 { top: 0; left: -240px; }
+    .piece-2 { top: -135px; left: 0; }
+    .piece-3 { top: -135px; left: -240px; }
+
+    .submit {
+      margin-top: 40px;
+      padding: 20px 40px;
+      font-size: 24px;
+      border: none;
+      background-color: #9100e6;
+      color: white;
+      border-radius: 40px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .slot.highlight {
+      outline: 4px dashed #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="outer-box">
+    <div class="container">
+      <div class="puzzle-section">
+        <p class="label">Puzzle</p>
+        <div class="puzzle-box">
+          <button class="nav left" onclick="prevPuzzle()">&lt;</button>
+          <div class="main-image" id="mainImage">
+            <img class="base" id="baseImage" src="" alt="Puzzle" draggable="false">
+            <div class="slot slot-0" id="slot0" ondragover="allowDrop(event)" ondrop="drop(event, 0)"></div>
+            <div class="slot slot-1" id="slot1" ondragover="allowDrop(event)" ondrop="drop(event, 1)"></div>
+            <div class="slot slot-2" id="slot2" ondragover="allowDrop(event)" ondrop="drop(event, 2)"></div>
+            <div class="slot slot-3" id="slot3" ondragover="allowDrop(event)" ondrop="drop(event, 3)"></div>
+          </div>
+          <button class="nav right" onclick="nextPuzzle()">&gt;</button>
+        </div>
+        <div class="dots">
+          <span class="dot" id="dot0"></span>
+          <span class="dot" id="dot1"></span>
+          <span class="dot" id="dot2"></span>
+        </div>
+        <button class="submit" onclick="submitPuzzle()">Submit</button>
+      </div>
+      <div class="pieces" id="piecesContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    const puzzleImages = [
+      "../phpfile/uploads_mini_games/684518b944d12.png",
+      "../phpfile/uploads_mini_games/684518c95d0e7.png",
+      "../phpfile/uploads_mini_games/684518b944d12.png"
+    ];
+
+    let currentPuzzle = 0;
+    let placed = [null, null, null, null];
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      const pieceIndex = parseInt(ev.target.dataset.index);
+      ev.dataTransfer.effectAllowed = 'move';
+      ev.dataTransfer.setData("text", pieceIndex);
+      
+      const dragPreview = document.createElement('div');
+      dragPreview.style.width = '120px';
+      dragPreview.style.height = '67.5px';
+      dragPreview.style.overflow = 'hidden';
+      dragPreview.style.position = 'absolute';
+      dragPreview.style.pointerEvents = 'none';
+      dragPreview.style.top = '-9999px';
+      
+      const img = document.createElement('img');
+      img.src = puzzleImages[currentPuzzle];
+      img.style.width = '240px';
+      img.style.height = '135px';
+      
+      switch(pieceIndex) {
+        case 0: img.style.marginLeft = '0'; img.style.marginTop = '0'; break;
+        case 1: img.style.marginLeft = '-120px'; img.style.marginTop = '0'; break;
+        case 2: img.style.marginLeft = '0'; img.style.marginTop = '-67.5px'; break;
+        case 3: img.style.marginLeft = '-120px'; img.style.marginTop = '-67.5px'; break;
+      }
+      
+      dragPreview.appendChild(img);
+      document.body.appendChild(dragPreview);
+      ev.dataTransfer.setDragImage(dragPreview, 60, 33.75);
+      
+      setTimeout(() => document.body.removeChild(dragPreview), 0);
+    }
+
+    function drop(ev, slotIndex) {
+      ev.preventDefault();
+      const pieceIndex = ev.dataTransfer.getData("text");
+
+      if (slotIndex != pieceIndex || placed[slotIndex]) return;
+
+      const slot = document.getElementById(`slot${slotIndex}`);
+      slot.innerHTML = "";
+
+      const img = document.createElement("img");
+      img.src = puzzleImages[currentPuzzle];
+      img.className = "piece piece-" + slotIndex;
+      slot.appendChild(img);
+
+      placed[slotIndex] = true;
+
+      const wrapper = document.getElementById(`piece-wrapper-${pieceIndex}`);
+      if (wrapper) wrapper.classList.add("hidden");
+    }
+
+    function loadPuzzle(index) {
+      const img = puzzleImages[index];
+      document.getElementById("baseImage").src = img;
+      document.getElementById("mainImage").classList.remove("fully-colored");
+      for (let i = 0; i < 4; i++) {
+        const slot = document.getElementById(`slot${i}`);
+        slot.innerHTML = "";
+        placed[i] = null;
+      }
+      const container = document.getElementById("piecesContainer");
+      container.innerHTML = "";
+      for (let i = 0; i < 4; i++) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "piece-wrapper";
+        wrapper.id = `piece-wrapper-${i}`;
+        const piece = document.createElement("img");
+        piece.src = img;
+        piece.className = `piece piece-${i}`;
+        piece.setAttribute("draggable", true);
+        piece.dataset.index = i;
+        piece.ondragstart = drag;
+        wrapper.appendChild(piece);
+        container.appendChild(wrapper);
+      }
+      for (let i = 0; i < 3; i++) {
+        document.getElementById(`dot${i}`).classList.remove("active");
+      }
+      document.getElementById(`dot${index}`).classList.add("active");
+    }
+
+    function nextPuzzle() {
+      currentPuzzle = (currentPuzzle + 1) % puzzleImages.length;
+      loadPuzzle(currentPuzzle);
+    }
+
+    function prevPuzzle() {
+      currentPuzzle = (currentPuzzle - 1 + puzzleImages.length) % puzzleImages.length;
+      loadPuzzle(currentPuzzle);
+    }
+
+    function submitPuzzle() {
+      if (placed.every(Boolean)) {
+        alert("Puzzle completed!");
+      } else {
+        alert("Complete all pieces first.");
+      }
+    }
+
+    loadPuzzle(0);
+  </script>
+</body>
+</html>
