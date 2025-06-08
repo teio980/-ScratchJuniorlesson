@@ -53,7 +53,7 @@ body{
     width: 80%;
     margin: auto;
     text-align: center;
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center; 
@@ -75,35 +75,22 @@ body{
     margin: 5% 0;
     display: flex;
     justify-content: space-between;
+    position: relative;
+}
+
+.sj {
+  position: absolute;
+  z-index: 100;
+    bottom: 1%;
 }
 
 .course{
-    flex-basis: 31%;
     background-color: var(--third-color);
     border-radius: 10px;
     margin-bottom: 5%;
+    margin: 20px;
     padding: 20px 10px;
     box-sizing: border-box;
-}
-
-
-.course{
-    transition: transform 0.4s ease-out, opacity 0.1s ease-out;
-    opacity: 0;
-    transform: translateX(-100px);
-}
-
-
-.course.show {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-
-.course.hide {
-    opacity: 0;
-    transform: perspective(600px) rotateY(-90deg) translateX(50px);
-    transition: transform 0.3s ease-in, opacity 0.1s ease-in; /* Faster Flip */
 }
 
 .course p{
@@ -114,6 +101,20 @@ body{
 .course:hover{
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.2);
     cursor: pointer;
+}
+
+.erase-line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 4px;
+  width: 0;              
+  background: var(--secondary-color); 
+  z-index: 10;
+}
+
+.scroll-spacer {
+  height: 100vh;
 }
 
 

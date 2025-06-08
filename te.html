@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GSAP SJ 动画测试</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    .courselist {
+      position: relative;
+      height: 100vh;
+      background: #eef;
+    }
+    .sj {
+      position: absolute;
+      top: 100px;
+      left: 0;
+      width: 150px;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .scroll-space {
+      height: 2000px;
+      background: linear-gradient(white, gray);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="courselist">
+    <img src="https://via.placeholder.com/150" class="sj" />
+  </div>
+
+  <div class="scroll-space"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".courselist",
+        start: "top top",
+        end: "+=1000",
+        scrub: true
+      }
+    });
+
+    tl.fromTo(".sj",
+      { x: 0, y: 0, scale: 1, opacity: 0 },
+      { x: 1100, opacity: 1, scale: 1, duration: 1 }
+    ).to(".sj", {
+      x: 0,
+      y: -50,
+      scale: 0.4,
+      duration: 1
+    });
+  </script>
+
+</body>
+</html>
