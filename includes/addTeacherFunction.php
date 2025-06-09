@@ -1,6 +1,7 @@
 <?php
 include 'connect_DB.php';
-
+date_default_timezone_set('Asia/Singapore');
+$now = new DateTime();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {  
     try {
         $username = $_POST["U_Username"];  
@@ -45,13 +46,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if($identity == 'student'){
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $insertSql = "INSERT INTO student (S_Username, S_Password , S_Mail, identity) VALUES (:name, :password , :email , :identity)";
+            $insertSql = "INSERT INTO student (S_Username, S_Password, S_Mail, identity,S_Register_Time) 
+                      VALUES (:name, :password, :email, :identity, :time)";
             $insertStmt = $pdo->prepare($insertSql);
 
             $insertStmt->bindParam(':name', $username);
             $insertStmt->bindParam(':email', $email);
             $insertStmt->bindParam(':password', $hashedPassword);
             $insertStmt->bindParam(':identity', $identity);
+            $insertStmt->bindParam(':time', $now->format('Y-m-d H:i:s'));
             
             if ($insertStmt->execute()) {
             $last_id = $pdo->lastInsertId();

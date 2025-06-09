@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'connect_DB.php';
+date_default_timezone_set('Asia/Singapore');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_id = $_POST['S_ID'];

@@ -30,7 +30,10 @@ $unreadMessage = $getMassageUnreadStmt->fetchAll();
         <li><a href="admin_profile.php">Personal Profile</a></li>
         </ul>
     </div>
-    <canvas id="passChart" width="350" height="350" ></canvas>
+    <div class="chart_container">
+    <canvas id="passChart" width="450" height="350" ></canvas>
+    <canvas id="userChart" width="700" height="350"></canvas>
+    </div>
     <?php foreach ($unreadMessage as $message): ?>
     <div class="notification_container">
         <h2>Change Class Request</h2>
@@ -79,5 +82,56 @@ fetch("../includes/passing_rate.php")
       }
     });
   });
+
+fetch("../includes/new_user.php")
+    .then(response => response.json())
+    .then(data => {
+        const labels = data.map(item => item.month);
+        const counts = data.map(item => item.count);
+
+        const ctx = document.getElementById('userChart').getContext('2d');
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'New Users Registered',
+                    data: counts,
+                    borderColor: 'blue',
+                    backgroundColor: 'lightblue',
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {
+              responsive: false,
+              maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Users'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                if (Number.isInteger(value)) {
+                                    return value;
+                                }
+                            },
+                        }
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Error loading data:', error));
 </script>
 </html>

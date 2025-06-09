@@ -2,6 +2,8 @@
 session_start();
 include 'header_Admin.php';
 include '../includes/connect_DB.php';
+date_default_timezone_set('Asia/Singapore');
+
 
 $rejectionErrors = [];
 
@@ -9,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
     $success = 1;
     $selectedIds = $_POST['selected_classes'];
     $action = '';
+    $now = new DateTime();
     
     if (isset($_POST['approved_btn'])) {
         $action = 'approved';
@@ -22,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
     $getClassIdSql = "SELECT class_id FROM class WHERE class_code = :C_CODE";
     $getClassIdStmt = $pdo->prepare($getClassIdSql);
 
-    $updateClassSql = "UPDATE student_class SET class_id = :new_C_ID WHERE student_id = :S_ID AND class_id = :Old_C_ID";
+    $updateClassSql = "UPDATE student_class SET class_id = :new_C_ID, enroll_date = :date_now WHERE student_id = :S_ID AND class_id = :Old_C_ID";
     $updateClassStmt = $pdo->prepare($updateClassSql);
 
     $updateCurCapacitySql = "UPDATE class SET current_capacity = current_capacity + 1 WHERE class_id = :C_ID AND max_capacity > current_capacity;";
@@ -53,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
                 
                 $updateClassStmt->execute([
                     ':new_C_ID' => $new_class_id,
+                    ':date_now'=>$now->format('Y-m-d H:i:s'),
                     ':S_ID' => $studentId,
                     ':Old_C_ID' => $old_class_id
                 ]);
