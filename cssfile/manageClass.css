@@ -185,7 +185,7 @@ tr:nth-child(even) {
     font-size: 18px;
 }
 
-.print-button{
+.print_button{
     background-color: rgb(171, 199, 46);
     color: white;
     border: none;
@@ -196,6 +196,21 @@ tr:nth-child(even) {
     margin-top: 5px;
 }
 
-.print-button:hover{
+.print_button:hover{
     background-color: rgba(61, 255, 47, 0.595);
+}
+
+.pdf_button{
+    background-color: rgb(46, 166, 199);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.pdf_button:hover{
+    background-color: rgb(46, 110, 199);
 }

@@ -25,12 +25,12 @@ $unreadMessage = $getMassageUnreadStmt->fetchAll();
         <ul class="adminMenu">
         <li><a href="manageUser.php">Manage User</a></li>
         <li><a href="manageClass.php">Manage Class</a></li>
-        <li><a href="viewClassPerformance.php">View Class</a></li>
+        <li><a href="viewClassPerformance.php">View Class Perforamance</a></li>
         <li><a href="manageChangeClass.php">Change Class Requests</a></li>
         <li><a href="admin_profile.php">Personal Profile</a></li>
         </ul>
     </div>
-    <canvas id="passChart" width="300" height="300" ></canvas>
+    <canvas id="passChart" width="350" height="350" ></canvas>
     <?php foreach ($unreadMessage as $message): ?>
     <div class="notification_container">
         <h2>Change Class Request</h2>
@@ -46,7 +46,7 @@ fetch("../includes/passing_rate.php")
     new Chart(ctx, {
       type: "pie",
       data: {
-        labels: ["pass", "fail"],
+        labels: ["pass(=>40%)", "fail(<40%)"],
         datasets: [{
           data: [data.passed_students, data.total_students - data.passed_students],
           backgroundColor: ["#4CAF50", "#F44336"]
