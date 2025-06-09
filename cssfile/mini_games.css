@@ -17,19 +17,6 @@
     height: auto;
     border-radius: 5px;
 }
-.difficulty {
-    margin-top: 10px;
-    font-weight: bold;
-}
-.difficulty.easy {
-    color: green;
-}
-.difficulty.medium {
-    color: orange;
-}
-.difficulty.hard {
-    color: red;
-}
 .upload-form {
     margin-top: 30px;
     padding: 20px;
@@ -111,7 +98,7 @@
     word-break: break-all;
 }
 
-/* 调整预览样式 */
+/* Adjust preview styles */
 #imagePreviewContainer {
     margin-top: 10px;
     border: 1px solid #ddd;
@@ -126,12 +113,12 @@
     display: block;
 }
 
-/* 调整表单样式 */
+/* Adjust form styles */
 .upload-form div {
     margin-bottom: 15px;
 }
 
-/* 响应式调整 */
+/* Responsive adjustments */
 @media (max-width: 768px) {
     .modal-content {
         width: 90%;

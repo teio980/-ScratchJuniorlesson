@@ -64,10 +64,9 @@ function confirmDelete(gameId) {
     }
 }
 
-function openEditModal(gameId, title, difficulty) {
+function openEditModal(gameId, title) {
     document.getElementById('modalGameId').value = gameId;
     document.getElementById('editTitle').value = title;
-    document.getElementById('editDifficulty').value = difficulty;
     document.getElementById('editModal').style.display = 'block';
 }
 
