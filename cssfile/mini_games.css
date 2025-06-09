@@ -104,3 +104,40 @@
     background-color: #f2dede;
     color: #a94442;
 }
+.file-name-display {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #666;
+    word-break: break-all;
+}
+
+/* 调整预览样式 */
+#imagePreviewContainer {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 4px;
+    background: #f9f9f9;
+}
+
+#imagePreview {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 调整表单样式 */
+.upload-form div {
+    margin-bottom: 15px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 90%;
+    }
+    
+    .game-card {
+        width: 100%;
+    }
+}

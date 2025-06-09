@@ -164,6 +164,13 @@ if (isset($_GET['deleted'])) {
                     <label for="image">Image:</label>
                     <input type="file" id="image" name="image" accept="image/*">
                     <small id="imageHelp">Leave blank to keep existing image when editing</small>
+                <div>
+                    <label for="image">Image (16:9 aspect ratio required):</label>
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <div id="fileNameDisplay" class="file-name-display"></div>
+                    <div id="imagePreviewContainer" style="display:none; margin-top:10px;">
+                        <img id="imagePreview" src="#" alt="Preview" style="max-width:100%;">
+                    </div>
                 </div>
                 <button type="submit" id="submitBtn">Upload Mini Game</button>
             </form>
