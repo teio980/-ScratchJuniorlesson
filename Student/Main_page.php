@@ -198,7 +198,7 @@
         <div class="infocover">
             <hr id="linenav">
             <div class="user-info">
-                <img src="<?php echo $fullPath; ?>" alt="Avatar" class="Avatar">
+                <img src="<?php echo $fullPath; ?>" alt="Avatar" class="avatarnav">
                 <div class="namenav">
                     <p><?php echo htmlspecialchars($user_name); ?></p>
                 </div>
