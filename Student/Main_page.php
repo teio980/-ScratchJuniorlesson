@@ -6,49 +6,52 @@
     $user_id = $_SESSION['user_id'];
     $user_name = $_SESSION['username'];
 
+    $check_sql = "SELECT * FROM student_level WHERE student_id = '$user_id'";
+    $check_result = mysqli_query($connect, $check_sql);
     
-    if (isset($_POST['game_id'])) {
-        $game_id = $_POST['game_id'];
-
-        $query = "INSERT INTO student_game_progress (student_id, game_id, complete)
-                VALUES ('$user_id', '$game_id', 1)
-                ON DUPLICATE KEY UPDATE complete = 1";
-        mysqli_query($connect, $query) or die("Error: " . mysqli_error($connect));
-
-        $xpQuery = "UPDATE student_level SET experience = experience + 50 WHERE student_id = '$user_id'";
-        mysqli_query($connect, $xpQuery) or die("Error updating XP: " . mysqli_error($connect));
-
-        $xp_check_stmt = $pdo->prepare("SELECT experience, level FROM student_level WHERE student_id = ?");
-        $xp_check_stmt->execute([$user_id]);
-        
-        if ($xp_row = $xp_check_stmt->fetch(PDO::FETCH_ASSOC)) {
-            $current_xp = (int)$xp_row['experience'];
-            $current_level = (int)$xp_row['level'];
-        
-            $level = $current_level;
-            $xp = $current_xp;
-        
-            while (true) {
-                $xp_needed = 100 + ($level - 1) * 50;
-        
-                if ($xp >= $xp_needed) {
-                    $xp -= $xp_needed;
-                    $level++;
-                } else {
-                    break;
-                }
-            }
-        
-            if ($level != $current_level) {
-                $stmt_update_lvl = $pdo->prepare("UPDATE student_level SET experience = ?, level = ? WHERE student_id = ?");
-                $stmt_update_lvl->execute([$xp, $level, $user_id]);
-            }
-        }
-
-        header("Location: Main_page.php");
-        exit();
+    if (mysqli_num_rows($check_result) == 0) {
+        $insert_sql = "INSERT INTO student_level (student_id, level, experience) VALUES ('$user_id', 1, 0)";
+        mysqli_query($connect, $insert_sql);
     }
 
+    
+    if (isset($_POST['game_id'])) {
+    $game_id = $_POST['game_id'];
+
+    $query = "INSERT INTO student_game_progress (student_id, game_id, complete)
+              VALUES ('$user_id', '$game_id', 1)
+              ON DUPLICATE KEY UPDATE complete = 1";
+    mysqli_query($connect, $query);
+
+    $update_xp_sql = "UPDATE student_level SET experience = experience + 50 WHERE student_id = '$user_id'";
+    mysqli_query($connect, $update_xp_sql);
+
+    $level_sql = "SELECT level, experience FROM student_level WHERE student_id = '$user_id'";
+    $level_result = mysqli_query($connect, $level_sql);
+    $level_row = mysqli_fetch_assoc($level_result);
+
+    $xp = (int)$level_row['experience'];
+    $level = (int)$level_row['level'];
+    $current_level = $level;
+
+    while (true) {
+        $xp_needed = 100 + ($level - 1) * 50;
+        if ($xp >= $xp_needed) {
+            $xp -= $xp_needed;
+            $level++;
+        } else {
+            break;
+        }
+    }
+
+    if ($level != $current_level) {
+        $update_level_sql = "UPDATE student_level SET level = '$level', experience = '$xp' WHERE student_id = '$user_id'";
+        mysqli_query($connect, $update_level_sql);
+    }
+
+    header("Location: Main_page.php");
+    exit();
+}
 
 
     $sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
@@ -745,8 +748,7 @@
                         </div>
                     ";
                 }
-            ?>
-            <?php
+
                 $result = $connect->query("SELECT level FROM student_level WHERE student_id = '$user_id'");
                 $row = $result->fetch_assoc();
                 $user_level = $row ? $row['level'] : 1;
@@ -856,70 +858,70 @@
             </div>
             <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
 
-<?php
-    $games = []; 
-    $completedGames = [];
+                <?php
+                    $games = []; 
+                    $completedGames = [];
 
-    $query = "SELECT * FROM mini_games";
-    $result = mysqli_query($connect, $query);
+                    $query = "SELECT * FROM mini_games";
+                    $result = mysqli_query($connect, $query);
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $games[] = [
-                'id' => $row['game_id'],
-                'title' => htmlspecialchars($row['title']),
-                'imagePath' => '../phpfile/uploads_mini_games/' . $row['image_name']
-            ];
-        }
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            $games[] = [
+                                'id' => $row['game_id'],
+                                'title' => htmlspecialchars($row['title']),
+                                'imagePath' => '../phpfile/uploads_mini_games/' . $row['image_name']
+                            ];
+                        }
 
-        $user_id_escaped = mysqli_real_escape_string($connect, $user_id);
-        $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id_escaped' AND complete = 1";
-        $completedResult = mysqli_query($connect, $completedQuery);
-        if ($completedResult) {
-            while ($row = mysqli_fetch_assoc($completedResult)) {
-                $completedGames[] = $row['game_id'];
-            }
-        }
-?>
-    <script>
-        const completedGameIds = <?php echo json_encode($completedGames); ?>;
-    </script>
+                        $user_id_escaped = mysqli_real_escape_string($connect, $user_id);
+                        $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id_escaped' AND complete = 1";
+                        $completedResult = mysqli_query($connect, $completedQuery);
+                        if ($completedResult) {
+                            while ($row = mysqli_fetch_assoc($completedResult)) {
+                                $completedGames[] = $row['game_id'];
+                            }
+                        }
+                ?>
+                <script>
+                    const completedGameIds = <?php echo json_encode($completedGames); ?>;
+                </script>
 
-    <div class="puzcover">
-        <div class="outer-box">
-            <div class="container1">
-                <div class="puzzle-section">
-                    <p class="label">Puzzle</p>
-                    <div class="puzzle-box">
-                        <button class="nav left" onclick="prevPuzzle()">&lt;</button>
-                        <div class="main-image" id="mainImage">
-                            <img class="base" id="baseImage" src="" alt="Puzzle" draggable="false">
-                            <div class="slot slot-0" id="slot0" ondragover="allowDrop(event)" ondrop="drop(event, 0)"></div>
-                            <div class="slot slot-1" id="slot1" ondragover="allowDrop(event)" ondrop="drop(event, 1)"></div>
-                            <div class="slot slot-2" id="slot2" ondragover="allowDrop(event)" ondrop="drop(event, 2)"></div>
-                            <div class="slot slot-3" id="slot3" ondragover="allowDrop(event)" ondrop="drop(event, 3)"></div>
+                <div class="puzcover">
+                    <div class="outer-box">
+                        <div class="container1">
+                            <div class="puzzle-section">
+                                <p class="label">Puzzle</p>
+                                <div class="puzzle-box">
+                                    <button class="nav left" onclick="prevPuzzle()">&lt;</button>
+                                    <div class="main-image" id="mainImage">
+                                        <img class="base" id="baseImage" src="" alt="Puzzle" draggable="false">
+                                        <div class="slot slot-0" id="slot0" ondragover="allowDrop(event)" ondrop="drop(event, 0)"></div>
+                                        <div class="slot slot-1" id="slot1" ondragover="allowDrop(event)" ondrop="drop(event, 1)"></div>
+                                        <div class="slot slot-2" id="slot2" ondragover="allowDrop(event)" ondrop="drop(event, 2)"></div>
+                                        <div class="slot slot-3" id="slot3" ondragover="allowDrop(event)" ondrop="drop(event, 3)"></div>
+                                    </div>
+                                    <button class="nav right" onclick="nextPuzzle()">&gt;</button>
+                                </div>
+                                <div class="dots">
+                                    <?php for ($i = 0; $i < count($games); $i++): ?>
+                                        <span class="dot" id="dot<?= $i ?>"></span>
+                                    <?php endfor; ?>
+                                </div>
+                                <form id="submitForm" method="POST" style="display: none;">
+                                    <input type="hidden" name="game_id" id="hiddenGameId">
+                                    <button type="button" class="submit" onclick="submitPuzzle()">Submit</button>
+                                </form>
+                            </div>
+                            <div class="pieces" id="piecesContainer"></div>
                         </div>
-                        <button class="nav right" onclick="nextPuzzle()">&gt;</button>
                     </div>
-                    <div class="dots">
-                        <?php for ($i = 0; $i < count($games); $i++): ?>
-                            <span class="dot" id="dot<?= $i ?>"></span>
-                        <?php endfor; ?>
-                    </div>
-                    <form id="submitForm" method="POST" style="display: none;">
-                        <input type="hidden" name="game_id" id="hiddenGameId">
-                        <button type="button" class="submit" onclick="submitPuzzle()">Submit</button>
-                    </form>
                 </div>
-                <div class="pieces" id="piecesContainer"></div>
-            </div>
-        </div>
-    </div>
-<?php
-    } else {
-        echo "<p>No puzzle found.</p>";
-    }
-?>
+            <?php
+                } else {
+                    echo "<p>No puzzle found.</p>";
+                }
+            ?>
 
         </div>
         
