@@ -160,11 +160,6 @@ if (isset($_GET['deleted'])) {
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" required>
                 </div>
-                <div>
-                    <label for="image">Image:</label>
-                    <input type="file" id="image" name="image" accept="image/*">
-                    <small id="imageHelp">Leave blank to keep existing image when editing</small>
-                <div>
                     <label for="image">Image (16:9 aspect ratio required):</label>
                     <input type="file" id="image" name="image" accept="image/*" required>
                     <div id="fileNameDisplay" class="file-name-display"></div>
