@@ -51,7 +51,7 @@
 
     header("Location: Main_page.php");
     exit();
-}
+    }
 
 
     $sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
@@ -261,7 +261,7 @@
                             $materials_result = mysqli_query($connect, $query);
                             if (mysqli_num_rows($materials_result) > 0) {
                                 while ($material = mysqli_fetch_assoc($materials_result)) {
-                                    $file_path = "../phpfile/uploads_teacher/" . htmlspecialchars($material['file_name']);
+                                    $file_path = "../phpfile/uploads_teacher/" .$material['file_name'];
                                     $upload_date = date("M d, h:i A", strtotime($material['create_time']));
                                     echo "<tr>";
                                     echo "<td><input type='checkbox' /></td>";
@@ -271,7 +271,6 @@
                                     echo "<td>" . htmlspecialchars($material['description']) . "</td>";
                                     echo "<td>$upload_date</td>";
                                     echo "<td><a class='download-btn' href='$file_path' download>Download</a></td>";
-                                    echo "<td class='ellipsis'>⋮</td>";
                                     echo "</tr>";
                                 }
                             } else {
@@ -343,9 +342,8 @@
                     $sql_comments = "
                         SELECT c.message, c.created_at, t.T_Username
                         FROM content_comments c
-                        JOIN teacher t ON c.sender_id = t.Teacher_ID
+                        JOIN teacher t ON c.sender_id = t.teacher_id
                         WHERE c.availability_id = '$availability_id'
-                        AND c.sender_type = 'teacher'
                     ";
                     $result_comments = mysqli_query($connect, $sql_comments);
                     if ($result_comments && mysqli_num_rows($result_comments) > 0) {
@@ -362,7 +360,7 @@
 
                     $reply_section = '';
                     if (!empty($comment_html)) {
-                        $reply_section = '<div class="reply-section">' . $comment_html . '</div>';
+                        $reply_section = '<div class="reply-section">' . $comment_html . ' </div>';
                     }
 
                     $pending_cards .= '
@@ -371,7 +369,7 @@
                         <div class="author-time">Due: ' . $expire_date . '</div>
                         <div class="message-title">' . $lesson_title . '</div>
                         <div class="button-wrapper">' . $button_html . '</div>
-                        ' . $reply_section . '
+                        ' . $reply_section .'
                     </div>';
                 }
             }
