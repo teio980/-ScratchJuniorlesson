@@ -9,7 +9,7 @@ if (isset($_GET['id'])) {
     $lesson_id = $_GET['id'];
     
     // 获取文件信息
-    $sql = "SELECT lesson_file_name, thumbnail_name FROM lessons WHERE lesson_id = ?";
+    $sql = "SELECT file_name, thumbnail_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $lesson_id);
     $stmt->execute();
@@ -23,7 +23,7 @@ if (isset($_GET['id'])) {
     
     if ($delete_stmt->execute()) {
         // 删除文件
-        $lesson_file_path = "../phpfile/uploads/lesson/" . $lesson['lesson_file_name'];
+        $lesson_file_path = "../phpfile/uploads/lesson/" . $lesson['file_name'];
         $thumbnail_path = "../phpfile/uploads/thumbnail/" . $lesson['thumbnail_name'];
         
         if (file_exists($lesson_file_path)) unlink($lesson_file_path);
@@ -65,50 +65,62 @@ if (isset($_GET['delete_material'])) {
     exit();
 }
 
-// 处理lesson更新
+// 处理lesson更新部分修改
 if (isset($_POST['update'])) {
     $lesson_id = $_POST['lesson_id'];
     $title = $_POST['title'];
     $description = $_POST['description'];
     
     // 获取当前文件信息
-    $sql = "SELECT lesson_file_name, thumbnail_name FROM lessons WHERE lesson_id = ?";
+    $sql = "SELECT file_name, thumbnail_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $lesson_id);
     $stmt->execute();
     $result = $stmt->get_result();
     $lesson = $result->fetch_assoc();
     
-    $lesson_file_name = $lesson['lesson_file_name'];
-    $thumbnail_name = $lesson['thumbnail_name'];
+    $old_file_name = $lesson['file_name'];
+    $old_thumbnail_name = $lesson['thumbnail_name'];
+    $new_file_name = $old_file_name;
+    $new_thumbnail_name = $old_thumbnail_name;
     
     // 处理文件更新
     if (!empty($_FILES['lesson_file']['name'])) {
-        $old_file = "../phpfile/uploads/lesson/" . $lesson_file_name;
-        if (file_exists($old_file)) unlink($old_file);
+        // 删除旧文件
+        $old_file_path = "../phpfile/uploads/lesson/" . $old_file_name;
+        if (file_exists($old_file_path)) {
+            unlink($old_file_path);
+        }
         
-        $lesson_file_name = time() . '_' . basename($_FILES['lesson_file']['name']);
-        move_uploaded_file($_FILES['lesson_file']['tmp_name'], "../phpfile/uploads/lesson/" . $lesson_file_name);
+        // 生成新文件名
+        $original_filename = basename($_FILES['lesson_file']['name']);
+        $new_file_name = generateUniqueFilename("../phpfile/uploads/lesson/", $original_filename);
+        move_uploaded_file($_FILES['lesson_file']['tmp_name'], "../phpfile/uploads/lesson/" . $new_file_name);
     }
     
     if (!empty($_FILES['thumbnail']['name'])) {
-        $old_thumb = "../phpfile/uploads/thumbnail/" . $thumbnail_name;
-        if (file_exists($old_thumb)) unlink($old_thumb);
+        // 删除旧缩略图
+        $old_thumb_path = "../phpfile/uploads/thumbnail/" . $old_thumbnail_name;
+        if (file_exists($old_thumb_path)) {
+            unlink($old_thumb_path);
+        }
         
-        $thumbnail_name = time() . '_' . basename($_FILES['thumbnail']['name']);
-        move_uploaded_file($_FILES['thumbnail']['tmp_name'], "../phpfile/uploads/thumbnail/" . $thumbnail_name);
+        // 生成新缩略图文件名
+        $original_thumbnail = basename($_FILES['thumbnail']['name']);
+        $new_thumbnail_name = generateUniqueFilename("../phpfile/uploads/thumbnail/", $original_thumbnail);
+        move_uploaded_file($_FILES['thumbnail']['tmp_name'], "../phpfile/uploads/thumbnail/" . $new_thumbnail_name);
     }
     
     // 更新数据库
     $update_sql = "UPDATE lessons SET 
                   title = ?, 
                   description = ?, 
-                  lesson_file_name = ?, 
+                  file_name = ?, 
                   thumbnail_name = ? 
                   WHERE lesson_id = ?";
                   
     $stmt = $connect->prepare($update_sql);
-    $stmt->bind_param("sssss", $title, $description, $lesson_file_name, $thumbnail_name, $lesson_id);
+    $stmt->bind_param("sssss", $title, $description, $new_file_name, $new_thumbnail_name, $lesson_id);
     
     if ($stmt->execute()) {
         $_SESSION['success'] = "Lesson updated successfully!";
@@ -117,6 +129,21 @@ if (isset($_POST['update'])) {
     }
     header("Location: lesson_management.php");
     exit();
+}
+
+// 添加这个函数到文件顶部或某个包含文件中
+function generateUniqueFilename($directory, $filename) {
+    $counter = 1;
+    $fileinfo = pathinfo($filename);
+    $name = $fileinfo['filename'];
+    $extension = isset($fileinfo['extension']) ? '.' . $fileinfo['extension'] : '';
+    
+    while (file_exists($directory . $filename)) {
+        $filename = $name . '(' . $counter . ')' . $extension;
+        $counter++;
+    }
+    
+    return $filename;
 }
 ?>
 
@@ -194,7 +221,7 @@ if (isset($_POST['update'])) {
         </div>
         
         <!-- Materials Section -->
-        <div id="materials" class="content-section">
+        <div id="materials" class="content-section <?php echo (isset($_GET['tab']) && $_GET['tab']) == 'materials' ? 'active' : ''; ?>">
             <div class="lesson-cards-container">
                 <div class="add-lesson-card" onclick="location.href='upload_teacher_material.php'">
                     <div class="add-lesson-icon">+</div>
@@ -204,8 +231,8 @@ if (isset($_POST['update'])) {
                 <?php
                 $teacher_id = $_SESSION['user_id'];
                 $sql = "SELECT * FROM teacher_materials 
-                       WHERE teacher_id = ? 
-                       ORDER BY create_time DESC";
+                    WHERE teacher_id = ? 
+                    ORDER BY create_time DESC";
                 $stmt = $connect->prepare($sql);
                 $stmt->bind_param("s", $teacher_id);
                 $stmt->execute();
@@ -224,17 +251,16 @@ if (isset($_POST['update'])) {
                     </div>
                     
                     <div class="lesson-actions">
-                        <a href="../phpfile/upload_teacher_material/<?= $row['file_name'] ?>" 
-                           class="edit-btn" download>Download</a>
+                        <a href="edit_material.php?id=<?= $row['material_id'] ?>" 
+                        class="edit-btn">Edit</a>
                         <a href="lesson_management.php?delete_material=<?= $row['material_id'] ?>" 
-                           class="delete-btn" 
-                           onclick="return confirm('Delete this material?')">Delete</a>
+                        class="delete-btn" 
+                        onclick="return confirm('Delete this material?')">Delete</a>
                     </div>
                 </div>
                 <?php endwhile; ?>
             </div>
         </div>
-    </div>
 
     <?php if (isset($_GET['edit_id'])):
         $edit_id = $_GET['edit_id'];
@@ -284,6 +310,12 @@ if (isset($_POST['update'])) {
     <?php endif; ?>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('tab')) {
+                switchTab(urlParams.get('tab'));
+            }
+        });
         // 选项卡切换
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(tab => {

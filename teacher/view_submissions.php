@@ -14,107 +14,6 @@ $teacher_id = $_SESSION['user_id'];
     <title>Student Submissions</title>
     <link rel="stylesheet" href="../cssfile/view_ssub.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
-    <script src="../javascriptfile/download_all.js"></script>
-    <script>
-        function openRatingModal(submit_id, student_id, lesson_id) {
-            // 获取评分标准
-            fetch('../phpfile/get_lesson_criteria.php?lesson_id=' + lesson_id)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const modal = document.getElementById('ratingModal');
-                    const form = modal.querySelector('form');
-                    
-                    // 清空现有评分项
-                    form.querySelector('#criteriaContainer').innerHTML = '';
-                    
-                    // 检查是否有有效的评分标准数据
-                    if (!data || !data.grading_criteria) {
-                        throw new Error('Invalid grading criteria data');
-                    }
-                    
-                    // 添加动态评分项
-                    let totalMaxScore = 0;
-                    const criteria = data.grading_criteria.split('|');
-                    
-                    criteria.forEach((item, index) => {
-                        const [name, maxScore] = item.split(':');
-                        totalMaxScore += parseInt(maxScore);
-                        
-                        const div = document.createElement('div');
-                        div.className = 'criteria-item';
-                        div.innerHTML = `
-                            <label for="criteria_${index}">${name} (0-${maxScore}):</label><br>
-                            <input type="number" name="criteria[]" id="criteria_${index}" 
-                                   min="0" max="${maxScore}" value="0" 
-                                   onchange="calculateTotalScore(${maxScore}, this)">
-                            <span class="max-score">/ ${maxScore}</span><br><br>
-                        `;
-                        form.querySelector('#criteriaContainer').appendChild(div);
-                    });
-                    
-                    // 添加总分显示
-                    form.querySelector('#criteriaContainer').innerHTML += `
-                        <div class="total-score">
-                            <strong>Total Score: </strong>
-                            <span id="displayTotal">0</span> / ${totalMaxScore}
-                            <input type="hidden" name="total_score" id="total_score" value="0">
-                        </div>
-                    `;
-
-                    // 设置反馈内容（如果有）
-                    if (data.feedback) {
-                        document.getElementById('feedback').value = data.feedback;
-                    }
-                    
-                    // 设置已有分数（如果是编辑）
-                    if (data.existing_score) {
-                        document.getElementById('total_score').value = data.existing_score;
-                        document.getElementById('displayTotal').textContent = data.existing_score;
-                        document.getElementById('finalScoreDisplay').textContent = data.existing_score;
-                        document.getElementById('finalScoreContainer').style.display = 'block';
-                    }
-
-                    // 设置隐藏字段
-                    document.getElementById('submit_id').value = submit_id;
-                    document.getElementById('student_id').value = student_id;
-                    document.getElementById('lesson_id').value = lesson_id;
-                    
-                    // 显示模态框
-                    modal.style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to load grading criteria. Please try again.');
-                }); 
-        }
-
-        function calculateTotalScore(maxScore, inputElement) {
-            const inputs = document.querySelectorAll('input[name="criteria[]"]');
-            let total = 0;
-            inputs.forEach(input => {
-                total += parseInt(input.value) || 0;
-            });
-            
-            // 计算百分比分数（最高100分）
-            const totalMaxScore = document.querySelector('.total-score').textContent.split('/')[1].trim();
-            const percentageScore = Math.round((total / parseInt(totalMaxScore)) * 100);
-            const finalScore = Math.min(percentageScore, 100); // 确保不超过100%
-            
-            document.getElementById('displayTotal').textContent = total;
-            document.getElementById('total_score').value = finalScore;
-            document.getElementById('finalScoreDisplay').textContent = finalScore;
-            document.getElementById('finalScoreContainer').style.display = 'block';
-        }
-
-        function closeRatingModal() {
-            document.getElementById('ratingModal').style.display = 'none';
-        }
-    </script>
 </head>
 <body>
     <h2>View Class Submissions</h2>
@@ -137,7 +36,6 @@ $teacher_id = $_SESSION['user_id'];
         </thead>
         <tbody>
         <?php
-        // 获取老师负责的所有班级
         $class_query = "SELECT tc.class_id, c.class_name 
                        FROM teacher_class tc
                        JOIN class c ON tc.class_id = c.class_id
@@ -155,12 +53,11 @@ $teacher_id = $_SESSION['user_id'];
             $class_id_list = implode(",", $class_ids);
 
             $query = "
-                SELECT ss.*, s.S_username, s.student_id, ss.lesson_id, cw.expire_date, 
+                SELECT ss.*, s.S_username, s.student_id, ss.lesson_id, 
                        sc.class_id, l.grading_criteria
                 FROM student_submit ss
                 JOIN student s ON ss.student_id = s.student_id
                 JOIN student_class sc ON s.student_id = sc.student_id
-                JOIN class_work cw ON ss.lesson_id = cw.lesson_id
                 JOIN lessons l ON ss.lesson_id = l.lesson_id
                 WHERE sc.class_id IN ($class_id_list)
                 ORDER BY sc.class_id, ss.upload_time DESC
@@ -170,8 +67,6 @@ $teacher_id = $_SESSION['user_id'];
 
             if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $current_time = date('Y-m-d H:i:s');
-                    $is_within_deadline = $current_time <= $row['expire_date'];
                     $class_name = $class_names[$row['class_id']] ?? $row['class_id'];
         ?>
             <tr>
@@ -187,13 +82,9 @@ $teacher_id = $_SESSION['user_id'];
                 </td>
 
                 <td>
-                    <?php if ($is_within_deadline): ?>
-                        <button onclick="openRatingModal('<?= $row['submit_id'] ?>', '<?= $row['student_id'] ?>', '<?= $row['lesson_id'] ?>')">
-                            <?= $row['score'] !== null ? 'Edit' : 'Rate' ?>
-                        </button>
-                    <?php else: ?>
-                        <span>Rating closed</span>
-                    <?php endif; ?>
+                    <button onclick="openRatingModal('<?= $row['submit_id'] ?>', '<?= $row['student_id'] ?>', '<?= $row['lesson_id'] ?>')">
+                        <?= $row['score'] !== null ? 'Edit' : 'Rate' ?>
+                    </button>
                 </td>
 
                 <td><?= $row['score'] !== null ? $row['score'] . '%' : 'Not graded' ?></td>
@@ -230,7 +121,6 @@ $teacher_id = $_SESSION['user_id'];
                 <input type="hidden" name="teacher_id" value="<?= $teacher_id ?>">
                 
                 <div id="criteriaContainer">
-                    <!-- 动态生成的评分标准将显示在这里 -->
                 </div>
                 
                 <div id="finalScoreContainer" style="display:none; margin-top:15px;">
@@ -248,30 +138,8 @@ $teacher_id = $_SESSION['user_id'];
             </form>
         </div>
     </div>
-
-    <script>
-        // 计算总分并显示百分比
-        function calculateTotalScore(maxScore, inputElement) {
-            const inputs = document.querySelectorAll('input[name="criteria[]"]');
-            let total = 0;
-            inputs.forEach(input => {
-                total += parseInt(input.value) || 0;
-            });
-            
-            const totalMaxElement = document.querySelector('.total-score');
-            if (totalMaxElement) {
-                const totalMaxScore = parseInt(totalMaxElement.textContent.split('/')[1].trim());
-                const percentageScore = Math.round((total / totalMaxScore) * 100);
-                const finalScore = Math.min(percentageScore, 100);
-                
-                document.getElementById('displayTotal').textContent = total;
-                document.getElementById('total_score').value = finalScore;
-                
-                // 显示最终分数
-                document.getElementById('finalScoreDisplay').textContent = finalScore;
-                document.getElementById('finalScoreContainer').style.display = 'block';
-            }
-        }
-    </script>
+    
+    <script src="../javascriptfile/download_all.js"></script>
+    <script src="../javascriptfile/view_submissions.js"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 <?php
-session_start();
+require_once '../includes/check_session_teacher.php';
 include '../phpfile/connect.php';
+include '../includes/connect_DB.php';
+include 'resheadteacher.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo "You need to be logged in as a teacher to upload materials.";
@@ -11,8 +13,8 @@ $teacher_id = $_SESSION['user_id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $class_id = $_POST['class_id'];
-    $material_title = $_POST['material_title'];
-    $material_description = $_POST['material_description'];
+    $material_title = htmlspecialchars($_POST['material_title']);
+    $material_description = htmlspecialchars($_POST['material_description']);
     $file = $_FILES['material_file'];
 
     $target_dir = "../phpfile/upload_teacher_material/";
@@ -37,11 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if (move_uploaded_file($file["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO teacher_materials (material_id, class_id, title, description, file_name) 
-                    VALUES ('$material_id', '$class_id', '$material_title', '$material_description', '$file_name')";
+            $sql = "INSERT INTO teacher_materials (material_id, teacher_id, class_id, title, description, file_name) 
+                    VALUES ('$material_id', '$teacher_id', '$class_id', '$material_title', '$material_description', '$file_name')";
 
             if (mysqli_query($connect, $sql)) {
-                echo "<script>alert('Material uploaded successfully.'); window.location.href='upload_teacher_material.php';</script>";
+                echo "<script>alert('Material uploaded successfully.'); window.location.href='lesson_management.php?tab=materials';</script>";
             } else {
                 echo "Database error: " . mysqli_error($connect);
             }
@@ -58,6 +60,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../cssfile/Tmain.css">
+    <link rel="stylesheet" href="../cssfile/resheadteacher.css">
+    <link rel="stylesheet" href="../cssfile/upload_material.css">
     <title>Upload Teacher Material</title>
 </head>
 <body>
