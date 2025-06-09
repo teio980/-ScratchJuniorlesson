@@ -857,70 +857,70 @@
             <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
 
            <?php
-    $games = [];
-    $completedGames = [];
+                $games = [];
+                $completedGames = [];
 
-    $query = "SELECT * FROM mini_games";
-    $result = mysqli_query($connect, $query);
+                $query = "SELECT * FROM mini_games";
+                $result = mysqli_query($connect, $query);
 
-    if (mysqli_num_rows($result) == 0) {
-        echo "<p>No puzzle found.</p>";
-    } else {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $games[] = [
-                'id' => $row['game_id'],
-                'title' => htmlspecialchars($row['title']),
-                'imagePath' => '../phpfile/uploads_mini_games/' . $row['image_name']
-            ];
-        }
+                if (mysqli_num_rows($result) == 0) {
+                    echo "<p>No puzzle found.</p>";
+                } else {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $games[] = [
+                            'id' => $row['game_id'],
+                            'title' => htmlspecialchars($row['title']),
+                            'imagePath' => '../phpfile/uploads_mini_games/' . $row['image_name']
+                        ];
+                    }
 
-        $user_id_escaped = mysqli_real_escape_string($connect, $user_id);
-        $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id_escaped' AND complete = 1";
-        $completedResult = mysqli_query($connect, $completedQuery);
-        if ($completedResult) {
-            while ($row = mysqli_fetch_assoc($completedResult)) {
-                $completedGames[] = $row['game_id'];
-            }
-        }
-    }
-?>
+                    $user_id_escaped = mysqli_real_escape_string($connect, $user_id);
+                    $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id_escaped' AND complete = 1";
+                    $completedResult = mysqli_query($connect, $completedQuery);
+                    if ($completedResult) {
+                        while ($row = mysqli_fetch_assoc($completedResult)) {
+                            $completedGames[] = $row['game_id'];
+                        }
+                    }
+                }
+            ?>
 
-<?php if (count($games) > 0): ?>
-    <script>
-        const completedGameIds = <?php echo json_encode($completedGames); ?>;
-    </script>
+            <?php if (count($games) > 0): ?>
+                <script>
+                    const completedGameIds = <?php echo json_encode($completedGames); ?>;
+                </script>
 
-    <div class="puzcover">
-        <div class="outer-box">
-            <div class="container1">
-                <div class="puzzle-section">
-                    <p class="label">Puzzle</p>
-                    <div class="puzzle-box">
-                        <button class="nav left" onclick="prevPuzzle()">&lt;</button>
-                        <div class="main-image" id="mainImage">
-                            <img class="base" id="baseImage" src="" alt="Puzzle" draggable="false">
-                            <div class="slot slot-0" id="slot0" ondragover="allowDrop(event)" ondrop="drop(event, 0)"></div>
-                            <div class="slot slot-1" id="slot1" ondragover="allowDrop(event)" ondrop="drop(event, 1)"></div>
-                            <div class="slot slot-2" id="slot2" ondragover="allowDrop(event)" ondrop="drop(event, 2)"></div>
-                            <div class="slot slot-3" id="slot3" ondragover="allowDrop(event)" ondrop="drop(event, 3)"></div>
+                <div class="puzcover">
+                    <div class="outer-box">
+                        <div class="container1">
+                            <div class="puzzle-section">
+                                <p class="label">Puzzle</p>
+                                <div class="puzzle-box">
+                                    <button class="nav left" onclick="prevPuzzle()">&lt;</button>
+                                    <div class="main-image" id="mainImage">
+                                        <img class="base" id="baseImage" src="" alt="Puzzle" draggable="false">
+                                        <div class="slot slot-0" id="slot0" ondragover="allowDrop(event)" ondrop="drop(event, 0)"></div>
+                                        <div class="slot slot-1" id="slot1" ondragover="allowDrop(event)" ondrop="drop(event, 1)"></div>
+                                        <div class="slot slot-2" id="slot2" ondragover="allowDrop(event)" ondrop="drop(event, 2)"></div>
+                                        <div class="slot slot-3" id="slot3" ondragover="allowDrop(event)" ondrop="drop(event, 3)"></div>
+                                    </div>
+                                    <button class="nav right" onclick="nextPuzzle()">&gt;</button>
+                                </div>
+                                <div class="dots">
+                                    <?php for ($i = 0; $i < count($games); $i++): ?>
+                                        <span class="dot" id="dot<?= $i ?>"></span>
+                                    <?php endfor; ?>
+                                </div>
+                                <form id="submitForm" method="POST" style="display: none;">
+                                    <input type="hidden" name="game_id" id="hiddenGameId">
+                                    <button type="button" class="submit" onclick="submitPuzzle()">Submit</button>
+                                </form>
+                            </div>
+                            <div class="pieces" id="piecesContainer"></div>
                         </div>
-                        <button class="nav right" onclick="nextPuzzle()">&gt;</button>
                     </div>
-                    <div class="dots">
-                        <?php for ($i = 0; $i < count($games); $i++): ?>
-                            <span class="dot" id="dot<?= $i ?>"></span>
-                        <?php endfor; ?>
-                    </div>
-                    <form id="submitForm" method="POST" style="display: none;">
-                        <input type="hidden" name="game_id" id="hiddenGameId">
-                        <button type="button" class="submit" onclick="submitPuzzle()">Submit</button>
-                    </form>
                 </div>
-                <div class="pieces" id="piecesContainer"></div>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
+            <?php endif; ?>
 
         
         <!--Profile Page-->

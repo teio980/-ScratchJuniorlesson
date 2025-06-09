@@ -205,8 +205,9 @@ main{
 #linenav{
   border: 1px solid var(--background); margin: 10px 0;
 }
+
 .infocover{
-  margin-top: 220px;
+  margin-top: 210px;
 }
 
 .user-info {
@@ -217,8 +218,8 @@ main{
 }
 
 .avatarnav {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     margin-right: 20px;
 }
