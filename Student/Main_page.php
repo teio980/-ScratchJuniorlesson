@@ -856,8 +856,8 @@
             </div>
             <button class="btfour"><a href="ranking.php?difficult=">View Ranking</a></button>
 
-           <?php
-                $games = [];
+            <?php
+                $games = []; // Always define to avoid undefined variable later
                 $completedGames = [];
 
                 $query = "SELECT * FROM mini_games";
@@ -885,43 +885,41 @@
                 }
             ?>
 
-            <?php if (count($games) > 0): ?>
-                <script>
-                    const completedGameIds = <?php echo json_encode($completedGames); ?>;
-                </script>
+            <script>
+                const completedGameIds = <?php echo json_encode($completedGames); ?>;
+            </script>
 
-                <div class="puzcover">
-                    <div class="outer-box">
-                        <div class="container1">
-                            <div class="puzzle-section">
-                                <p class="label">Puzzle</p>
-                                <div class="puzzle-box">
-                                    <button class="nav left" onclick="prevPuzzle()">&lt;</button>
-                                    <div class="main-image" id="mainImage">
-                                        <img class="base" id="baseImage" src="" alt="Puzzle" draggable="false">
-                                        <div class="slot slot-0" id="slot0" ondragover="allowDrop(event)" ondrop="drop(event, 0)"></div>
-                                        <div class="slot slot-1" id="slot1" ondragover="allowDrop(event)" ondrop="drop(event, 1)"></div>
-                                        <div class="slot slot-2" id="slot2" ondragover="allowDrop(event)" ondrop="drop(event, 2)"></div>
-                                        <div class="slot slot-3" id="slot3" ondragover="allowDrop(event)" ondrop="drop(event, 3)"></div>
-                                    </div>
-                                    <button class="nav right" onclick="nextPuzzle()">&gt;</button>
+            <div class="puzcover">
+                <div class="outer-box">
+                    <div class="container1">
+                        <div class="puzzle-section">
+                            <p class="label">Puzzle</p>
+                            <div class="puzzle-box">
+                                <button class="nav left" onclick="prevPuzzle()">&lt;</button>
+                                <div class="main-image" id="mainImage">
+                                    <img class="base" id="baseImage" src="" alt="Puzzle" draggable="false">
+                                    <div class="slot slot-0" id="slot0" ondragover="allowDrop(event)" ondrop="drop(event, 0)"></div>
+                                    <div class="slot slot-1" id="slot1" ondragover="allowDrop(event)" ondrop="drop(event, 1)"></div>
+                                    <div class="slot slot-2" id="slot2" ondragover="allowDrop(event)" ondrop="drop(event, 2)"></div>
+                                    <div class="slot slot-3" id="slot3" ondragover="allowDrop(event)" ondrop="drop(event, 3)"></div>
                                 </div>
-                                <div class="dots">
-                                    <?php for ($i = 0; $i < count($games); $i++): ?>
-                                        <span class="dot" id="dot<?= $i ?>"></span>
-                                    <?php endfor; ?>
-                                </div>
-                                <form id="submitForm" method="POST" style="display: none;">
-                                    <input type="hidden" name="game_id" id="hiddenGameId">
-                                    <button type="button" class="submit" onclick="submitPuzzle()">Submit</button>
-                                </form>
+                                <button class="nav right" onclick="nextPuzzle()">&gt;</button>
                             </div>
-                            <div class="pieces" id="piecesContainer"></div>
+                            <div class="dots">
+                                <?php for ($i = 0; $i < count($games); $i++): ?>
+                                    <span class="dot" id="dot<?= $i ?>"></span>
+                                <?php endfor; ?>
+                            </div>
+                            <form id="submitForm" method="POST" style="display: none;">
+                                <input type="hidden" name="game_id" id="hiddenGameId">
+                                <button type="button" class="submit" onclick="submitPuzzle()">Submit</button>
+                            </form>
                         </div>
+                        <div class="pieces" id="piecesContainer"></div>
                     </div>
                 </div>
-            <?php endif; ?>
-
+            </div>
+        </div>
         
         <!--Profile Page-->
         <div class="container tab-content active" id="profile">
