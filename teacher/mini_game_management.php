@@ -160,6 +160,7 @@ if (isset($_GET['deleted'])) {
                     <label for="title">Title:</label>
                     <input type="text" id="title" name="title" required>
                 </div>
+                <div>
                     <label for="image">Image (16:9 aspect ratio required):</label>
                     <input type="file" id="image" name="image" accept="image/*" required>
                     <div id="fileNameDisplay" class="file-name-display"></div>
@@ -181,8 +182,7 @@ if (isset($_GET['deleted'])) {
                         </button>
                         <button class="edit-btn" onclick="openEditModal(
                             '<?php echo $game['game_id']; ?>',
-                            '<?php echo htmlspecialchars($game['title'], ENT_QUOTES); ?>',
-                            '<?php echo $game['difficulty']; ?>'
+                            '<?php echo htmlspecialchars($game['title'], ENT_QUOTES); ?>'
                         )">
                             <i class="fas fa-edit"></i>
                         </button>
