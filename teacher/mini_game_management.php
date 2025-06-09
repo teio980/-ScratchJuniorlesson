@@ -11,8 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'edit' && isset($_POST['game_id'])) {
         $game_id = $_POST['game_id'];
         $title = $_POST['title'];
-        $difficulty = $_POST['difficulty'];
-        
         $get_old_image = "SELECT image_name FROM mini_games WHERE game_id = ?";
         $stmt = $connect->prepare($get_old_image);
         $stmt->bind_param("s", $game_id);
@@ -37,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        $update_query = "UPDATE mini_games SET title = ?, image_name = ?, difficulty = ? WHERE game_id = ?";
+        $update_query = "UPDATE mini_games SET title = ?, image_name = ? WHERE game_id = ?";
         $stmt = $connect->prepare($update_query);
-        $stmt->bind_param("ssss", $title, $fileName, $difficulty, $game_id);
+        $stmt->bind_param("sss", $title, $fileName, $game_id);
         
         if ($stmt->execute()) {
             $success_message = "Mini Game updated successfully!";
@@ -50,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         $title = $_POST['title'];
-        $difficulty = $_POST['difficulty'];
         
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = '../phpfile/uploads_mini_games/';
@@ -69,10 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $next_id = ($max_id ? $max_id + 1 : 1);
                 $game_id = 'G' . str_pad($next_id, 6, '0', STR_PAD_LEFT);
                 
-                $insert_query = "INSERT INTO mini_games (game_id, teacher_id, title, image_name, difficulty) 
-                                VALUES (?, ?, ?, ?, ?)";
+                $insert_query = "INSERT INTO mini_games (game_id, teacher_id, title, image_name) 
+                                VALUES (?, ?, ?, ?)";
                 $stmt = $connect->prepare($insert_query);
-                $stmt->bind_param("sssss", $game_id, $teacher_id, $title, $fileName, $difficulty);
+                $stmt->bind_param("ssss", $game_id, $teacher_id, $title, $fileName);
                 
                 if ($stmt->execute()) {
                     $success_message = "Mini Game uploaded successfully!";
@@ -164,14 +161,6 @@ if (isset($_GET['deleted'])) {
                     <input type="text" id="title" name="title" required>
                 </div>
                 <div>
-                    <label for="difficulty">Difficulty:</label>
-                    <select id="difficulty" name="difficulty" required>
-                        <option value="easy">Easy</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="hard">Hard</option>
-                    </select>
-                </div>
-                <div>
                     <label for="image">Image:</label>
                     <input type="file" id="image" name="image" accept="image/*">
                     <small id="imageHelp">Leave blank to keep existing image when editing</small>
@@ -198,16 +187,6 @@ if (isset($_GET['deleted'])) {
                         <img src="../phpfile/uploads_mini_games/<?php echo htmlspecialchars($game['image_name']); ?>" 
                              alt="<?php echo htmlspecialchars($game['title']); ?>">
                         <h3><?php echo htmlspecialchars($game['title']); ?></h3>
-                        <div class="difficulty <?php echo htmlspecialchars($game['difficulty']); ?>">
-                            <?php 
-                            $difficultyText = [
-                                'easy' => 'Easy',
-                                'medium' => 'Medium',
-                                'hard' => 'Hard'
-                            ];
-                            echo $difficultyText[$game['difficulty']]; 
-                            ?>
-                        </div>
                         <small>Uploaded: <?php echo date('Y-m-d', strtotime($game['create_time'])); ?></small>
                     </div>
                 <?php endwhile; ?>
@@ -227,14 +206,6 @@ if (isset($_GET['deleted'])) {
                 <div>
                     <label for="editTitle">Title:</label>
                     <input type="text" id="editTitle" name="title" required>
-                </div>
-                <div>
-                    <label for="editDifficulty">Difficulty:</label>
-                    <select id="editDifficulty" name="difficulty" required>
-                        <option value="easy">Easy (3x3)</option>
-                        <option value="medium">Medium (4x4)</option>
-                        <option value="hard">Hard (5x5)</option>
-                    </select>
                 </div>
                 <div>
                     <label for="editImage">New Image (optional):</label>

@@ -37,7 +37,6 @@
                 <h3>Submission Checking</h2>
                 <p>Students can submit their projects for review and feedback.</p>
             </div>
-            <div class="erase-line"></div>
         </div>
     </div>
     <div class="scroll-spacer"></div>
@@ -45,61 +44,50 @@
 </body>
 <script>
   gsap.registerPlugin(ScrollTrigger);
-
-
-// Initial fade in and move right animation with scrub (optional)
+gsap.utils.toArray(".course").forEach(course => {
+  gsap.from(course, {
+    scrollTrigger: {
+      trigger: course,
+      start: "top 90%",
+      end: "top 60%",
+      scrub: true
+    },
+    x: -200,
+    opacity: 0
+  });
+});
 gsap.fromTo(".sj",
   {
-    x: 500,
+    x: 300,
     opacity: 0
   },
   {
     scrollTrigger: {
       trigger: ".sj",
       start: "top 90%",
-      // We can remove scrub here to make it auto-play or keep it if you want gradual fade-in
       end: "top 40%",
       scrub: true
     },
-    x: 1100,
+    x: 1280,
     opacity: 1
   }
 );
 
-const pinAndAnimate = gsap.timeline({
-  scrollTrigger: {
-    trigger: ".service",
-    start: "bottom bottom", // 当.service底部到达视窗底部时触发
-    end: "+=100%", // 持续40%视窗高度的滚动距离
-    scrub: 1,
-    pin: true, // 固定.service容器
-    anticipatePin: 1,
-
+ScrollTrigger.create({
+  trigger: ".service",
+  start: "bottom 40%",
+  end: "bottom top",
+  onEnter: () => {
+    gsap.to(".service", { opacity: 0, duration: 1, ease: "power1.out" });
+  },
+  onLeaveBack: () => {
+    gsap.to(".service", { opacity: 1, duration: 1, ease: "power1.out" });
   }
 });
 
-// 在固定期间执行的动画
-pinAndAnimate.to(".sj", {
-  x: 0,
-  y: -300,
-  scale: 0.5,
-  rotation: 360,
-  ease: "power1.out"
-}, 0);
 
 
-    gsap.utils.toArray(".course").forEach(course => {
-      gsap.from(course, {
-        scrollTrigger: {
-          trigger: course,
-          start: "top 90%",
-          end: "top 60%",
-          scrub: true
-        },
-        x: -200,
-        opacity: 0
-      });
-    });
+
 </script>
 
 </html>

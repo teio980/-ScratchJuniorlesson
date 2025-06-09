@@ -103,15 +103,6 @@ body{
     cursor: pointer;
 }
 
-.erase-line {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 4px;
-  width: 0;              
-  background: var(--secondary-color); 
-  z-index: 10;
-}
 
 .scroll-spacer {
   height: 100vh;
