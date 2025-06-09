@@ -1,43 +1,64 @@
-html, body {
+html, body, .fullpage{
     height: 100%;
-}
-
-h1{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 0px;
 }
 
-.abt_body {
-    background-color: #F6F1E9;
-    width: 100%;
-    height: 100%;
+.scroll_container{
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-.abt_flexbox {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 100%;
+.scroll_container > :nth-child(odd),
+.scroll_container > :nth-child(even) {
+    height: 100vh;
     width: 100%;
+    font-size: 30px;
 }
 
-.abt_box {
-    background-color: aqua;
-    padding: 20px; 
-    border: 1px solid black;
+.scroll_container > :nth-child(even){
+    flex-direction: row-reverse;
+}
+
+.scroll_container > :nth-child(even) img{
+    margin-right: 35px;
+}
+
+.scroll_container > .intro_box:nth-of-type(1) {
+    background-image: url('../img_logo/water.jpeg');
+    color: rgb(230, 230, 93);
+}
+
+.scroll_container > .intro_box:nth-of-type(2) {
+    background-image: url('../img_logo/beach.jpg');
+    color: lightgreen;
+}
+
+.scroll_container > .intro_box:nth-of-type(3) {
+    background-image: url('../img_logo/path.jpg');
+    color: lightyellow;
+}
+
+.intro_box {
     display: flex;
-    flex-direction: column;
     align-items: center; 
+    gap: 50px;
+    width: 100%;
+    height: calc(100vh + 53px);;
+    overflow: hidden;
 }
 
-.abt_image {
-    width: 240px;
-    height: 325px;
+.intro_image img {
+    height: 525px;
+    width: 400px;
+    margin: 3%;
+    padding: 1%;
+    border-radius: 25px;
+    opacity: 92%;
 }
 
-.abt_imgdesc {
-    text-align: center; 
-    margin-top: 10px; 
+.intro_content{
+    margin: 3%;
+    padding: 1%;
+    backdrop-filter: blur(1px);
 }
