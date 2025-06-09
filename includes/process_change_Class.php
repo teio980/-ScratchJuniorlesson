@@ -8,17 +8,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $newClass = $_POST['class_option'];
     $reason = $_POST['changeClassReason'];
 
-    $check_S_Progress_Sql = "SELECT SC.average_score 
+    $check_S_Progress_Sql = "SELECT SC.enroll_date 
                             FROM student_class AS SC
                             JOIN class AS C ON C.class_id = SC.class_id
                             WHERE SC.student_id = :S_ID
                             AND C.class_code = :C_CODE";
     $check_S_Progress_Stmt = $pdo->prepare($check_S_Progress_Sql);
-    $check_S_Progress_Stmt->bindParam("S_ID",$student_id);
-    $check_S_Progress_Stmt->bindParam("C_CODE",$oldClass);
+    $check_S_Progress_Stmt->bindParam(":S_ID",$student_id);
+    $check_S_Progress_Stmt->bindParam(":C_CODE",$oldClass);
     $check_S_Progress_Stmt->execute();
-    $haveMarked = $check_S_Progress_Stmt->fetch(PDO::FETCH_ASSOC);
-    if($haveMarked['average_score'] === null){
+    $prevEnrollDate = $check_S_Progress_Stmt->fetch(PDO::FETCH_ASSOC);
+
+    $db_date = new DateTime($prevEnrollDate['enroll_date']);
+    $now = new DateTime(); 
+    $db_plus_one_month = clone($db_date);
+    $db_plus_one_month->add(new DateInterval('P1M'));
+    if ($now <= $db_plus_one_month) {
         $insert_SCC_Sql = "INSERT INTO student_change_class(student_change_class_reason,student_original_class,student_prefer_class,student_id)
                        VALUES (:reason, :oldClass, :newClass, :S_ID)";
         $insert_SCC_Stmt = $pdo->prepare($insert_SCC_Sql);
@@ -47,10 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }else{
-        $_SESSION['message'] = "You can't change this class at now.";
-            $_SESSION['message_type'] = 'error';
-            header("Location: ../Student/Main_page.php");
-            exit();
+        $_SESSION['message'] = 'You cannot change the class now.';
+        $_SESSION['message_type'] = 'error';
+        header("Location: ../Student/Main_page.php");
+        exit();
     }
 }
 
