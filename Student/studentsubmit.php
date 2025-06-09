@@ -106,7 +106,7 @@ if ($expire_time > $current_time) {
     </div>
 
     <div class="thumbnail">
-      <img src="<?php echo '../phpfile/uploads/thumbnail/' . htmlspecialchars($thumbnail_name); ?>" alt="Lesson Thumbnail">
+      <img src="<?php echo '../phpfile/teacher/upload/thumbnail/' . htmlspecialchars($thumbnail_name); ?>" alt="Lesson Thumbnail">
     </div>
 
     <a href="../phpfile/uploads_teacher/<?php echo urlencode($lesson_file_name); ?>" class="download-link" download>

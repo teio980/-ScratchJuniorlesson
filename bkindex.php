@@ -68,7 +68,7 @@ gsap.fromTo(".sj",
       end: "top 40%",
       scrub: true
     },
-    x: 1280,
+    x: 1100,
     opacity: 1
   }
 );
