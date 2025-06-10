@@ -53,6 +53,32 @@
     exit();
     }
 
+    //comment
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_comment'])) {
+        $message = trim($_POST['message']);
+        $availability_id = mysqli_real_escape_string($connect, $_POST['availability_id']);
+        $sender_id = mysqli_real_escape_string($connect, $user_id);
+        $sender_type = 'student';
+        $created_at = date('Y-m-d H:i:s');
+
+        if (!empty($message)) {
+            $sql_count = "SELECT COUNT(*) FROM content_comments";
+            $result_count = mysqli_query($connect, $sql_count);
+            $row_count = mysqli_fetch_row($result_count);
+            $comment_id = 'CMT' . str_pad($row_count[0] + 1, 7, '0', STR_PAD_LEFT);
+
+            $message_safe = mysqli_real_escape_string($connect, $message);
+            $sql_insert = "
+                INSERT INTO content_comments (comment_id, availability_id, sender_id, sender_type, message, created_at)
+                VALUES ('$comment_id', '$availability_id', '$sender_id', '$sender_type', '$message_safe', '$created_at')
+            ";
+            mysqli_query($connect, $sql_insert);
+            
+            header("Location: Main_page.php");
+            exit;
+        }
+    }
+
 
     $sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
     $result = mysqli_query($connect, $sql);
@@ -340,15 +366,21 @@
 
                     $comment_html = '';
                     $sql_comments = "
-                        SELECT c.message, c.created_at, t.T_Username
+                        SELECT 
+                            c.message, 
+                            c.created_at, 
+                            c.sender_type, 
+                            COALESCE(t.T_Username, s.S_Username) AS username
                         FROM content_comments c
-                        JOIN teacher t ON c.sender_id = t.teacher_id
+                        LEFT JOIN teacher t ON c.sender_type = 'teacher' AND c.sender_id = t.teacher_id
+                        LEFT JOIN student s ON c.sender_type = 'student' AND c.sender_id = s.student_id
                         WHERE c.availability_id = '$availability_id'
                     ";
+
                     $result_comments = mysqli_query($connect, $sql_comments);
                     if ($result_comments && mysqli_num_rows($result_comments) > 0) {
                         while ($comment = mysqli_fetch_assoc($result_comments)) {
-                            $username = htmlspecialchars($comment['T_Username']);
+                            $username = htmlspecialchars($comment['username']);
                             $message = htmlspecialchars($comment['message']);
                             $created_at = htmlspecialchars($comment['created_at']);
 
@@ -364,13 +396,16 @@
                     }
 
                     $send_message_html = '
-                        <div class="send-message-section">
+                        <form class="send-message-section" method="post">
                             <div class="message-input-wrapper">
-                                <textarea class="message-input" placeholder="Write your message here..."></textarea>
-                                <button class="send-button" title="Send">➤</button>
+                                <textarea name="message" class="message-input" placeholder="Write a message to your teacher..." required></textarea>
+                                <input type="hidden" name="availability_id" value="' . $availability_id . '">
+                                <button type="submit" name="send_comment" class="send-button" title="Send">➤</button>
                             </div>
-                        </div>
+                        </form>
                     ';
+
+
 
                     $pending_cards .= '
                         <div class="announcement-card">
@@ -390,7 +425,6 @@
                 <div class="section-divider"><span class="section-title">Not Yet Submitted</span></div>
                 <div class="announcement-wrapper">' . $pending_cards . '</div>';
             }
-            
 
 
              // ========== Submitted Section ==========

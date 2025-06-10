@@ -574,8 +574,8 @@ main{
 
     .author-time {
       color: #555;
-      font-size: 14px;
-      margin-bottom: 10px;
+      font-size: 14px 0 10px 0;
+      margin: 14px 0;
       font-weight: bold;
     }
 
