@@ -24,7 +24,6 @@
         <p>Learn, Practice, and Improve with ScratchJunior</p>
 
         <div class="courselist">
-            <img src="img_logo/spng.png" class="sj">
             <div class="course">
                 <h3>ScratchJunior Lessons</h2>
                 <p>Step-by-step tutorials to <br>help young learners brunderstand ScratchJunior in a fun way.</p>
@@ -39,11 +38,76 @@
             </div>
         </div>
     </div>
-    <div class="scroll-spacer"></div>
+
+    <div class="audience-section">
+    <div class="audience-wrapper">
+      <h2>Who Is This For?</h2>
+      <div class="audience-grid">
+        <div class="audience-box">
+          <div class="audience-icon">👩‍🏫</div>
+          <div class="audience-title">Teachers</div>
+          <p class="audience-desc">Simple tools for teachers to manage lessons, track progress, and guide young coders with confidence.</p>
+        </div>
+        <div class="audience-box">
+          <div class="audience-icon">🧒</div>
+          <div class="audience-title">Kids</div>
+          <p class="audience-desc">Designed for early learners aged 5–8 to explore, create, and learn through fun ScratchJr projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="container">
+      <h1>Make every step ScratchJr-centric</h1>
+      <p class="subtitle">A playful, structured system designed for early coders</p>
+
+      <div class="grid">
+        <div class="box">
+          <div class="icon">🎧</div>
+          <div class="title">Student Support</div>
+          <div class="description">We provide guidance for every young learner exploring ScratchJr's creative features.</div>
+        </div>
+
+        <div class="box">
+          <div class="icon">📊</div>
+          <div class="title">Progress Tracking</div>
+          <div class="description">Track lesson completion, animation skills, and interactive project milestones.</div>
+        </div>
+
+        <div class="box">
+          <div class="icon">🧭</div>
+          <div class="title">Onboarding</div>
+          <div class="description">Easily get started with tutorials designed for children and educators new to coding.</div>
+        </div>
+
+        <div class="box">
+          <div class="icon">📚</div>
+          <div class="title">Interactive Lessons</div>
+          <div class="description">Step-by-step ScratchJr lessons</div>
+        </div>
+
+        <div class="box">
+          <div class="icon">❤️</div>
+          <div class="title">Quality Lessons</div>
+          <div class="description">Carefully crafted lessons with step-by-step guidance and playful logic-building.</div>
+        </div>
+
+        <div class="box">
+          <div class="icon">🎮</div>
+          <div class="title">Mini Games Fun</div>
+          <div class="description">Enjoy a variety of engaging mini games, including puzzles and quizzes. Perfect for all ages!</div>
+        </div>
+      </div>
+    </div>
+
+    
  
 </body>
 <script>
-  gsap.registerPlugin(ScrollTrigger);
+
+
+gsap.registerPlugin(ScrollTrigger);
+
 gsap.utils.toArray(".course").forEach(course => {
   gsap.from(course, {
     scrollTrigger: {
@@ -56,22 +120,7 @@ gsap.utils.toArray(".course").forEach(course => {
     opacity: 0
   });
 });
-gsap.fromTo(".sj",
-  {
-    x: 300,
-    opacity: 0
-  },
-  {
-    scrollTrigger: {
-      trigger: ".sj",
-      start: "top 90%",
-      end: "top 40%",
-      scrub: true
-    },
-    x: 1100,
-    opacity: 1
-  }
-);
+
 
 ScrollTrigger.create({
   trigger: ".service",
@@ -85,7 +134,37 @@ ScrollTrigger.create({
   }
 });
 
+ gsap.to(".container", {
+    opacity: 1,
+    duration: 0.5,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: ".container",
+      start: "top 80%", 
+    }
+  });
 
+  function randomJump() {
+  const boxes = gsap.utils.toArray(".box");
+  const randomBox = boxes[Math.floor(Math.random() * boxes.length)];
+
+gsap.fromTo(randomBox, 
+  { 
+    y: 0, 
+  }, 
+  { 
+    y: -20, 
+    boxShadow: "0px 10px 20px rgba(145, 1, 223, 0.6)", 
+    duration: 0.4, 
+    ease: "power1.out",
+    yoyo: true,
+    repeat: 1 
+  }
+);
+
+}
+
+setInterval(randomJump, Math.floor(Math.random() * 1000) + 1000);
 
 
 </script>

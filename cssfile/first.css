@@ -78,11 +78,7 @@ body{
     position: relative;
 }
 
-.sj {
-  position: absolute;
-  z-index: 100;
-    bottom: 1%;
-}
+
 
 .course{
     background-color: var(--third-color);
@@ -107,6 +103,61 @@ body{
 .scroll-spacer {
   height: 100vh;
 }
+
+/*third*/
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 60px 20px;
+      text-align: center;
+      height: 100vh;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .box {
+      padding: 30px 20px;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      background-color: #fafafa;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 0.95rem;
+      color: var(--color-subtext);
+    }
+
+
+
 
 
 @media (max-width: 800px){
@@ -138,7 +189,40 @@ body{
     .course p{
         font-size: 15px;
     }
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
+
+    @media (max-width: 600px) {
+              .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 40px 15px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 0.95rem;
+      }
+
+      .icon {
+        font-size: 36px;
+      }
+
+      .title {
+        font-size: 1rem;
+      }
+
+      .description {
+        font-size: 0.9rem;
+      }
+    }
 
 @media (max-width: 400px){
     .text h1{
