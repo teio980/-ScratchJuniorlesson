@@ -54,15 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                 }
 
                 $update = "UPDATE student_submit
-                           SET filename = '$filename', filepath = '$filepath', upload_time = NOW()
+                           SET filename = '$filename', upload_time = NOW()
                            WHERE submit_id = '{$existing_submission['submit_id']}'";
                 mysqli_query($connect, $update);
                 header("Location: Main_page.php?msg=updated");
                 exit();
             } else {
                 $insert = "INSERT INTO student_submit
-                           (submit_id, student_id, class_id, lesson_id, filename, filepath, upload_time)
-                           VALUES ('$submit_id', '$user_id', '$class_id', '$lesson_id', '$filename', '$filepath', NOW())";
+                           (submit_id, student_id, class_id, lesson_id, filename, upload_time)
+                           VALUES ('$submit_id', '$user_id', '$class_id', '$lesson_id', '$filename', NOW())";
                 mysqli_query($connect, $insert);
                 header("Location: Main_page.php?msg=submitted");
                 exit();
@@ -117,7 +117,9 @@ if ($expire_time > $current_time) {
       <div class="current-submission">
         <strong>Current Submission:</strong>
         <p>Filename: <?php echo htmlspecialchars($existing_submission['filename']); ?></p>
-        <a href="<?php echo htmlspecialchars($existing_submission['filepath']); ?>" target="_blank">View Submitted File</a>
+        <a href="uploads/<?php echo $user_id; ?>/<?php echo htmlspecialchars($existing_submission['filename']); ?>" target="_blank">
+            View Submitted File
+        </a>
         <p>You can re-upload to update your submission below.</p>
       </div>
     <?php endif; ?>

@@ -3,106 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ScratchJr LMS – Target Audience</title>
+  <title>Looping Scroll Boxes</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
     body {
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
       margin: 0;
       padding: 0;
-      background-color: #ffffff;
-      color: #111111;
     }
 
-    .audience-section {
-      background-color: #9101df;
-      height: 100vh;
+    .integration-section {
       display: flex;
+      flex-direction: column;
       justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-      box-sizing: border-box;
-    }
-
-    .audience-wrapper {
-      background-color: #ffffff;
-      border-radius: 20px;
-      padding: 60px 40px;
-      max-width: 1200px;
-      width: 100%;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
       text-align: center;
+      height: 100vh;
     }
 
-
-    .audience-wrapper h2 {
-      font-size: 2rem;
+    .integration-section h2 {
+      font-size: 28px;
       margin-bottom: 40px;
-      color: #222222;
     }
 
-    .audience-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 30px;
+    .scroll-row {
+      overflow: hidden;
+      white-space: nowrap;
+      margin: 20px 0;
+      position: relative;
+      height: 140px;
     }
 
-    .audience-box {
-      background-color: #f9f9f9;
-      border-radius: 16px;
-      padding: 30px 20px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.04);
-      transition: transform 0.3s ease;
-      border: 1px solid #eeeeee;
+    .integration-strip {
+      display: flex;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
     }
 
-    .audience-box:hover {
-      transform: translateY(-5px);
+    .integration-box {
+      background: #f0f0f0;
+      border-radius: 12px;
+      width: 140px;
+      height: 120px;
+      margin: 0 10px;
+      text-align: center;
+      padding: 20px 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      font-size: 16px;
+      flex-shrink: 0;
     }
 
-    .audience-icon {
-      font-size: 50px;
-      margin-bottom: 15px;
-    }
-
-    .audience-title {
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #333333;
-    }
-
-    .audience-desc {
-      font-size: 1rem;
-      color: #555555;
-      line-height: 1.5;
-    }
-
-    @media (max-width: 600px) {
-      .audience-wrapper {
-        padding: 30px 20px;
-      }
-
-      .audience-wrapper h2 {
-        font-size: 1.6rem;
-      }
-
-      .audience-icon {
-        font-size: 40px;
-      }
-
-      .audience-title {
-        font-size: 1.1rem;
-      }
-
-      .audience-desc {
-        font-size: 0.95rem;
-      }
+    .integration-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  
+<section class="integration-section">
+  <h2>Features</h2>
+
+  <div class="scroll-row">
+    <div class="integration-strip row1">
+      <div class="integration-box"><span class="integration-icon">📚</span>Lessons</div>
+      <div class="integration-box"><span class="integration-icon">🧠</span>Progress</div>
+      <div class="integration-box"><span class="integration-icon">🧒</span>Profiles</div>
+      <div class="integration-box"><span class="integration-icon">🧪</span>Quizzes</div>
+      <div class="integration-box"><span class="integration-icon">👩‍🏫</span>Teacher Tools</div>
+      <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
+      <div class="integration-box"><span class="integration-icon">📚</span>Lessons</div>
+      <div class="integration-box"><span class="integration-icon">🧠</span>Progress</div>
+      <div class="integration-box"><span class="integration-icon">🧒</span>Profiles</div>
+      <div class="integration-box"><span class="integration-icon">🧪</span>Quizzes</div>
+      <div class="integration-box"><span class="integration-icon">👩‍🏫</span>Teacher Tools</div>
+      <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
+    </div>
+  </div>
+
+  <div class="scroll-row">
+    <div class="integration-strip row2">
+      <div class="integration-box"><span class="integration-icon">⚙️</span>Admin</div>
+      <div class="integration-box"><span class="integration-icon">🎮</span>Games</div>
+      <div class="integration-box"><span class="integration-icon">🏆</span>Achievements</div>
+      <div class="integration-box"><span class="integration-icon">📈</span>Reports</div>
+      <div class="integration-box"><span class="integration-icon">📖</span>Guides</div>
+      <div class="integration-box"><span class="integration-icon">⚙️</span>Admin</div>
+      <div class="integration-box"><span class="integration-icon">🎮</span>Games</div>
+      <div class="integration-box"><span class="integration-icon">🏆</span>Achievements</div>
+      <div class="integration-box"><span class="integration-icon">📈</span>Reports</div>
+      <div class="integration-box"><span class="integration-icon">📖</span>Guides</div>
+      <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function animateMarquee(stripSelector, speed = 1, direction = 'left') {
+    const strip = document.querySelector(stripSelector);
+    const boxes = Array.from(strip.children);
+    const container = strip.parentElement;
+    const boxWidth = boxes[0].offsetWidth + 20;
+
+    boxes.forEach((box, i) => {
+      box.style.position = 'absolute';
+      box.style.left = `${i * boxWidth}px`;
+    });
+
+    gsap.ticker.add(() => {
+      boxes.forEach((box) => {
+        const currentX = parseFloat(box.style.left);
+        const delta = direction === 'left' ? -speed : speed;
+        let newX = currentX + delta;
+
+        if (direction === 'left' && newX < -boxWidth) {
+          const maxX = Math.max(...boxes.map(b => parseFloat(b.style.left)));
+          newX = maxX + boxWidth;
+        }
+
+        if (direction === 'right' && newX > container.offsetWidth) {
+          const minX = Math.min(...boxes.map(b => parseFloat(b.style.left)));
+          newX = minX - boxWidth;
+        }
+
+        box.style.left = `${newX}px`;
+      });
+    });
+  }
+
+  animateMarquee('.row1', 0.5, 'left');
+  animateMarquee('.row2', 0.5, 'right');
+</script>
 
 </body>
 </html>

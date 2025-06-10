@@ -19,6 +19,7 @@
             <a href="#" class="learnmore">Learn more</a>
         </div>
     </div>
+    
     <div class="service">
         <h1>What we Offer</h1>
         <p>Learn, Practice, and Improve with ScratchJunior</p>
@@ -39,23 +40,60 @@
         </div>
     </div>
 
-    <div class="audience-section">
-    <div class="audience-wrapper">
-      <h2>Who Is This For?</h2>
-      <div class="audience-grid">
-        <div class="audience-box">
-          <div class="audience-icon">👩‍🏫</div>
-          <div class="audience-title">Teachers</div>
-          <p class="audience-desc">Simple tools for teachers to manage lessons, track progress, and guide young coders with confidence.</p>
+    <section class="integration-section">
+      <h2>Features</h2>
+
+      <div class="scroll-row">
+        <div class="integration-strip row1">
+          <div class="integration-box"><span class="integration-icon">📚</span>Lessons</div>
+          <div class="integration-box"><span class="integration-icon">🧠</span>Progress</div>
+          <div class="integration-box"><span class="integration-icon">🧒</span>Profiles</div>
+          <div class="integration-box"><span class="integration-icon">🧪</span>Quizzes</div>
+          <div class="integration-box"><span class="integration-icon">👩‍🏫</span>Teacher Tools</div>
+          <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
+          <div class="integration-box"><span class="integration-icon">📚</span>Lessons</div>
+          <div class="integration-box"><span class="integration-icon">🧠</span>Progress</div>
+          <div class="integration-box"><span class="integration-icon">🧒</span>Profiles</div>
+          <div class="integration-box"><span class="integration-icon">🧪</span>Quizzes</div>
+          <div class="integration-box"><span class="integration-icon">👩‍🏫</span>Teacher Tools</div>
+          <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
         </div>
-        <div class="audience-box">
-          <div class="audience-icon">🧒</div>
-          <div class="audience-title">Kids</div>
-          <p class="audience-desc">Designed for early learners aged 5–8 to explore, create, and learn through fun ScratchJr projects.</p>
+      </div>
+
+      <div class="scroll-row">
+        <div class="integration-strip row2">
+          <div class="integration-box"><span class="integration-icon">⚙️</span>Admin</div>
+          <div class="integration-box"><span class="integration-icon">🎮</span>Games</div>
+          <div class="integration-box"><span class="integration-icon">🏆</span>Achievements</div>
+          <div class="integration-box"><span class="integration-icon">📈</span>Reports</div>
+          <div class="integration-box"><span class="integration-icon">📖</span>Guides</div>
+          <div class="integration-box"><span class="integration-icon">⚙️</span>Admin</div>
+          <div class="integration-box"><span class="integration-icon">🎮</span>Games</div>
+          <div class="integration-box"><span class="integration-icon">🏆</span>Achievements</div>
+          <div class="integration-box"><span class="integration-icon">📈</span>Reports</div>
+          <div class="integration-box"><span class="integration-icon">📖</span>Guides</div>
+          <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="audience-section">
+      <div class="audience-wrapper">
+        <h2>Who Is This For?</h2>
+        <div class="audience-grid">
+          <div class="audience-box">
+            <div class="audience-icon">👩‍🏫</div>
+            <div class="audience-title">Teachers</div>
+            <p class="audience-desc">Simple tools for teachers to manage lessons, track progress, and guide young coders with confidence.</p>
+          </div>
+          <div class="audience-box">
+            <div class="audience-icon">🧒</div>
+            <div class="audience-title">Kids</div>
+            <p class="audience-desc">Designed for early learners aged 5–8 to explore, create, and learn through fun ScratchJr projects.</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
     <div class="container">
       <h1>Make every step ScratchJr-centric</h1>
@@ -98,9 +136,7 @@
           <div class="description">Enjoy a variety of engaging mini games, including puzzles and quizzes. Perfect for all ages!</div>
         </div>
       </div>
-    </div>
-
-    
+    </div>  
  
 </body>
 <script>
@@ -164,7 +200,54 @@ gsap.fromTo(randomBox,
 
 }
 
-setInterval(randomJump, Math.floor(Math.random() * 1000) + 1000);
+setInterval(randomJump, Math.floor(Math.random() * 1500) + 1000);
+
+gsap.to(".audience-wrapper", {
+  opacity: 1,
+  y: 0,
+  duration: 0.6,
+  ease: "power2.out",
+  scrollTrigger: {
+    trigger: ".audience-wrapper",
+    start: "top 80%", 
+  }
+});
+
+//animate left right
+ function animateMarquee(stripSelector, speed = 1, direction = 'left') {
+    const strip = document.querySelector(stripSelector);
+    const boxes = Array.from(strip.children);
+    const container = strip.parentElement;
+    const boxWidth = boxes[0].offsetWidth + 20;
+
+    boxes.forEach((box, i) => {
+      box.style.position = 'absolute';
+      box.style.left = `${i * boxWidth}px`;
+    });
+
+    gsap.ticker.add(() => {
+      boxes.forEach((box) => {
+        const currentX = parseFloat(box.style.left);
+        const delta = direction === 'left' ? -speed : speed;
+        let newX = currentX + delta;
+
+        if (direction === 'left' && newX < -boxWidth) {
+          const maxX = Math.max(...boxes.map(b => parseFloat(b.style.left)));
+          newX = maxX + boxWidth;
+        }
+
+        if (direction === 'right' && newX > container.offsetWidth) {
+          const minX = Math.min(...boxes.map(b => parseFloat(b.style.left)));
+          newX = minX - boxWidth;
+        }
+
+        box.style.left = `${newX}px`;
+      });
+    });
+  }
+
+  animateMarquee('.row1', 0.5, 'left');
+  animateMarquee('.row2', 0.5, 'right');
 
 
 </script>
