@@ -873,7 +873,7 @@
                         }
 
                         $user_id_escaped = mysqli_real_escape_string($connect, $user_id);
-                        $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id_escaped' AND complete = 1";
+                        $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id_escaped'";
                         $completedResult = mysqli_query($connect, $completedQuery);
                         if ($completedResult) {
                             while ($row = mysqli_fetch_assoc($completedResult)) {
