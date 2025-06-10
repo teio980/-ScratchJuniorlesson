@@ -1,0 +1,115 @@
+/* class_progress.css */
+.class-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.class-header {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.class-title {
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.class-average {
+    display: inline-block;
+    padding: 5px 15px;
+    background: #3498db;
+    color: white;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.class-description {
+    color: #7f8c8d;
+    margin-top: 10px;
+}
+
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.students-table th {
+    background: #34495e;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.students-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.students-table tr:hover {
+    background: #f8f9fa;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    flex-grow: 1;
+    background: #ecf0f1;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #2ecc71;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    min-width: 80px;
+    text-align: center;
+    font-weight: bold;
+    color: #34495e;
+}
+
+.quiz-details {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.pass-status {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.pass-true {
+    background: #2ecc71;
+    color: white;
+}
+
+.pass-false {
+    background: #e74c3c;
+    color: white;
+}
+
+.average-score {
+    font-weight: bold;
+    color: #2c3e50;
+}
