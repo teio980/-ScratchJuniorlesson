@@ -230,7 +230,7 @@ body{
       transition: opacity 0.5s ease;
     }
 
-    h1 {
+    .container h1 {
       font-size: 2.2rem;
       margin-bottom: 10px;
     }
@@ -269,6 +269,48 @@ body{
     .description {
       font-size: 0.95rem;
       color: var(--color-subtext);
+    }
+
+    /*lst*/
+
+    .lst{
+      min-height: 90vh;
+      padding: 40px 20px;
+    }
+
+    .hero {
+      background: #9101df;
+      color: white;
+      padding: 60px 20px;
+      text-align: center;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .content {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .content h2 {
+      color: #9101df;
+      margin-bottom: 16px;
+    }
+
+    .content p {
+      line-height: 1.6;
+      font-size: 16px;
     }
 
 

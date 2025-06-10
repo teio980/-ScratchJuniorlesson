@@ -3,140 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Looping Scroll Boxes</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <title>ScratchJr Learning Platform</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #fff;
       margin: 0;
       padding: 0;
+      background: #fff;
+      color: #333;
     }
 
-    .integration-section {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    .hero {
+      background: #9101df;
+      color: white;
+      padding: 60px 20px;
       text-align: center;
-      height: 100vh;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
     }
 
-    .integration-section h2 {
-      font-size: 28px;
-      margin-bottom: 40px;
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
     }
 
-    .scroll-row {
-      overflow: hidden;
-      white-space: nowrap;
-      margin: 20px 0;
-      position: relative;
-      height: 140px;
+    .hero p {
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    .integration-strip {
-      display: flex;
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
+    .content {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: auto;
     }
 
-    .integration-box {
-      background: #f0f0f0;
-      border-radius: 12px;
-      width: 140px;
-      height: 120px;
-      margin: 0 10px;
-      text-align: center;
-      padding: 20px 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .content h2 {
+      color: #9101df;
+      margin-bottom: 16px;
+    }
+
+    .content p {
+      line-height: 1.6;
       font-size: 16px;
-      flex-shrink: 0;
     }
 
-    .integration-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-      display: block;
-    }
   </style>
 </head>
 <body>
 
-<section class="integration-section">
-  <h2>Features</h2>
+  <section class="hero">
+    <h1>My ScratchJr Learning Website</h1>
+    <p>A creative and fun platform where kids can learn programming by building interactive stories and games using ScratchJr.</p>
+  </section>
 
-  <div class="scroll-row">
-    <div class="integration-strip row1">
-      <div class="integration-box"><span class="integration-icon">📚</span>Lessons</div>
-      <div class="integration-box"><span class="integration-icon">🧠</span>Progress</div>
-      <div class="integration-box"><span class="integration-icon">🧒</span>Profiles</div>
-      <div class="integration-box"><span class="integration-icon">🧪</span>Quizzes</div>
-      <div class="integration-box"><span class="integration-icon">👩‍🏫</span>Teacher Tools</div>
-      <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
-      <div class="integration-box"><span class="integration-icon">📚</span>Lessons</div>
-      <div class="integration-box"><span class="integration-icon">🧠</span>Progress</div>
-      <div class="integration-box"><span class="integration-icon">🧒</span>Profiles</div>
-      <div class="integration-box"><span class="integration-icon">🧪</span>Quizzes</div>
-      <div class="integration-box"><span class="integration-icon">👩‍🏫</span>Teacher Tools</div>
-      <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
-    </div>
-  </div>
+  <section class="content">
+    <h2>Why I Built This</h2>
+    <p>I created this website to help children aged 5 to 7 get started with coding using ScratchJr. It offers simple lessons, interactive exercises, and colorful visuals to make learning fun and accessible.</p>
 
-  <div class="scroll-row">
-    <div class="integration-strip row2">
-      <div class="integration-box"><span class="integration-icon">⚙️</span>Admin</div>
-      <div class="integration-box"><span class="integration-icon">🎮</span>Games</div>
-      <div class="integration-box"><span class="integration-icon">🏆</span>Achievements</div>
-      <div class="integration-box"><span class="integration-icon">📈</span>Reports</div>
-      <div class="integration-box"><span class="integration-icon">📖</span>Guides</div>
-      <div class="integration-box"><span class="integration-icon">⚙️</span>Admin</div>
-      <div class="integration-box"><span class="integration-icon">🎮</span>Games</div>
-      <div class="integration-box"><span class="integration-icon">🏆</span>Achievements</div>
-      <div class="integration-box"><span class="integration-icon">📈</span>Reports</div>
-      <div class="integration-box"><span class="integration-icon">📖</span>Guides</div>
-      <div class="integration-box"><span class="integration-icon">💬</span>Feedback</div>
-    </div>
-  </div>
-</section>
+    <h2>Features</h2>
+    <p>
+      - Easy-to-follow lessons for beginners<br>
+      - Fun quizzes to test understanding<br>
+      - Progress tracking and student profiles<br>
+      - Works in your browser – no install needed
+    </p>
+  </section>
 
-<script>
-  function animateMarquee(stripSelector, speed = 1, direction = 'left') {
-    const strip = document.querySelector(stripSelector);
-    const boxes = Array.from(strip.children);
-    const container = strip.parentElement;
-    const boxWidth = boxes[0].offsetWidth + 20;
-
-    boxes.forEach((box, i) => {
-      box.style.position = 'absolute';
-      box.style.left = `${i * boxWidth}px`;
-    });
-
-    gsap.ticker.add(() => {
-      boxes.forEach((box) => {
-        const currentX = parseFloat(box.style.left);
-        const delta = direction === 'left' ? -speed : speed;
-        let newX = currentX + delta;
-
-        if (direction === 'left' && newX < -boxWidth) {
-          const maxX = Math.max(...boxes.map(b => parseFloat(b.style.left)));
-          newX = maxX + boxWidth;
-        }
-
-        if (direction === 'right' && newX > container.offsetWidth) {
-          const minX = Math.min(...boxes.map(b => parseFloat(b.style.left)));
-          newX = minX - boxWidth;
-        }
-
-        box.style.left = `${newX}px`;
-      });
-    });
-  }
-
-  animateMarquee('.row1', 0.5, 'left');
-  animateMarquee('.row2', 0.5, 'right');
-</script>
 
 </body>
 </html>

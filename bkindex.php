@@ -19,7 +19,7 @@
             <a href="#" class="learnmore">Learn more</a>
         </div>
     </div>
-    
+
     <div class="service">
         <h1>What we Offer</h1>
         <p>Learn, Practice, and Improve with ScratchJunior</p>
@@ -138,6 +138,25 @@
       </div>
     </div>  
  
+    <div class="lst">
+      <section class="hero">
+      <h1>My ScratchJr Learning Website</h1>
+      <p>A creative and fun platform where kids can learn programming by building interactive stories and games using ScratchJr.</p>
+    </section>
+
+    <section class="content">
+      <h2>Why We Built</h2>
+      <p>We created this website to help children aged 5 to 7 get started with coding using ScratchJr. It offers simple lessons, interactive exercises, and colorful visuals to make learning fun and accessible.</p>
+
+      <h2>Features</h2>
+      <p>
+        - Easy-to-follow lessons for beginners<br>
+        - Fun quizzes to test understanding<br>
+        - Progress tracking and student profiles<br>
+        - Works in your browser – no install needed
+      </p>
+    </section>
+    </div>
 </body>
 <script>
 
