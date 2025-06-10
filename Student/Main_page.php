@@ -261,7 +261,7 @@
                             $materials_result = mysqli_query($connect, $query);
                             if (mysqli_num_rows($materials_result) > 0) {
                                 while ($material = mysqli_fetch_assoc($materials_result)) {
-                                    $file_path = "../phpfile/uploads_teacher/" .$material['file_name'];
+                                    $file_path = "../phpfile/upload_teacher_material/" .$material['file_name'];
                                     $upload_date = date("M d, h:i A", strtotime($material['create_time']));
                                     echo "<tr>";
                                     echo "<td><input type='checkbox' /></td>";
@@ -363,14 +363,25 @@
                         $reply_section = '<div class="reply-section">' . $comment_html . ' </div>';
                     }
 
+                    $send_message_html = '
+                        <div class="send-message-section">
+                            <div class="message-input-wrapper">
+                                <textarea class="message-input" placeholder="Write your message here..."></textarea>
+                                <button class="send-button" title="Send">➤</button>
+                            </div>
+                        </div>
+                    ';
+
                     $pending_cards .= '
-                    <div class="announcement-card">
-                        <div class="circle-image"></div>
-                        <div class="author-time">Due: ' . $expire_date . '</div>
-                        <div class="message-title">' . $lesson_title . '</div>
-                        <div class="button-wrapper">' . $button_html . '</div>
-                        ' . $reply_section .'
-                    </div>';
+                        <div class="announcement-card">
+                            <div class="circle-image"></div>
+                            <div class="author-time">Due: ' . $expire_date . '</div>
+                            <div class="message-title">' . $lesson_title . '</div>
+                            <div class="button-wrapper">' . $button_html . '</div>
+                            ' . $reply_section . '
+                            ' . $send_message_html . '
+                        </div>';
+
                 }
             }
 
@@ -379,7 +390,7 @@
                 <div class="section-divider"><span class="section-title">Not Yet Submitted</span></div>
                 <div class="announcement-wrapper">' . $pending_cards . '</div>';
             }
-
+            
 
 
              // ========== Submitted Section ==========

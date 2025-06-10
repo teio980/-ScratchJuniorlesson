@@ -4,7 +4,7 @@ require_once '../phpfile/connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $content_type = $_POST['content_type'] ?? '';
-    $availability_id = $_POST['availability_id'] ?? ''; // 改为使用availability_id
+    $availability_id = $_POST['availability_id'] ?? '';
     $message = $_POST['message'] ?? '';
     $user_id = $_SESSION['user_id'] ?? '';
     
