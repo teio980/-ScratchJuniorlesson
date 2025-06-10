@@ -20,6 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     }
 }
-header("Location: manageUser.php");
-exit;
+echo "<script>
+    alert('Users Deleted Successful!');
+    window.location.href = 'manageUser.php';
+    </script>";
+    exit();
 ?>

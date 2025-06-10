@@ -1,7 +1,6 @@
 <?php 
 include '../includes/connect_DB.php';
 include 'header_Admin.php';
-session_start();
 
 if (isset($_GET['query'])) {
     $_SESSION['search_query'] = $_GET['query'];
@@ -41,52 +40,19 @@ if ($records_per_page === 'ALL') {
 }
 
 if (!empty($keywords)) {
-    $getClassPerformanceSql = "SELECT 
-                                    c.class_id,
-                                    c.class_code,
-                                    c.class_name,
-                                    c.class_average,
-                                    t.teacher_id,
-                                    t.T_Username,
-                                    t.T_Mail,
-                                    s.student_id,
-                                    s.S_Username,
-                                    sc.average_score
-    FROM class c
-    LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
-    LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
-    INNER JOIN student_class sc ON c.class_id = sc.class_id
-    INNER JOIN student s ON sc.student_id = s.student_id
-    WHERE class_code LIKE :keywords 
-    ";
-    $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
-    $getClassPerformanceStmt->bindValue(':keywords', '%' . $keywords . '%');
-    $getClassPerformanceStmt->execute();
-    $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
+    $get_T_Materials_Sql = "SELECT * FROM teacher_materials WHERE title LIKE :keywords ";
+    $get_T_Materials_Stmt = $pdo->prepare($get_T_Materials_Sql);
+    $get_T_Materials_Stmt->bindValue(':keywords', '%' . $keywords . '%');
+    $get_T_Materials_Stmt->execute();
+    $T_Materials = $get_T_Materials_Stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $getClassPerformanceSql = "SELECT 
-                                    c.class_id,
-                                    c.class_code,
-                                    c.class_name,
-                                    c.class_average,
-                                    t.teacher_id,
-                                    t.T_Username,
-                                    t.T_Mail,
-                                    s.student_id,
-                                    s.S_Username,
-                                    sc.average_score
-                                FROM class c
-                                LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
-                                LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
-                                INNER JOIN student_class sc ON c.class_id = sc.class_id
-                                INNER JOIN student s ON sc.student_id = s.student_id
-                                ";
-    $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
-    $getClassPerformanceStmt->execute();
-    $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
+    $get_T_Materials_Sql = "SELECT * FROM teacher_materials WHERE title";
+    $get_T_Materials_Stmt = $pdo->prepare($get_T_Materials_Sql);
+    $get_T_Materials_Stmt->execute();
+    $T_Materials = $get_T_Materials_Stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$total_items = count($ClassPerformanceDetail);
+$total_items = count($T_Materials);
 
 if ($records_per_page === 'ALL') {
     $total_pages = 1;
@@ -111,7 +77,7 @@ if ($page > $total_pages && $total_pages > 0) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link rel="stylesheet" href="../cssfile/manageClass.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <title>Class Performance</title>
+    <title>Student Submit</title>
 </head>
 <body>
     <div class="search-container">
@@ -119,18 +85,18 @@ if ($page > $total_pages && $total_pages > 0) {
             <?php if (isset($_GET['limit'])): ?>
                 <input type="hidden" name="limit" value="<?php echo htmlspecialchars($_GET['limit']); ?>">
             <?php endif; ?>
-            <input type="text" name="query" id="searchInput" placeholder="Search Class Code..."  value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>">
+            <input type="text" name="query" id="searchInput" placeholder="Search Tittle..." value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>">
             <button type="submit" class="search-button">
                 <span class="material-symbols-outlined">search</span>
             </button>
         </form>
-        <a href="viewClassPerformance.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
+        <a href="teaching_materials.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
     </div>
 
     <div class="records-per-page">
         <form method="get" action="">
             <?php if (!empty($_SESSION['search_query'])): ?>
-            <input type="hidden" name="query"value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>">
+            <input type="hidden" name="query" value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>">
             <?php endif; ?>
             <input type="hidden" name="page" value="1">
             <label for="limit">Records per page:</label>
@@ -148,59 +114,48 @@ if ($page > $total_pages && $total_pages > 0) {
         <table>
             <thead>
                 <tr>
-                    <th>Class ID</th>
-                    <th>Class Code</th>
-                    <th>Class Name</th>
-                    <th>Class Average Mark</th>
+                    <th>Material ID</th>
                     <th>Teacher ID</th>
-                    <th>Teacher Username</th>
-                    <th>Teacher Email</th>
-                    <th>Student ID</th>
-                    <th>Student Username</th>
-                    <th>Student Average Mark</th>
+                    <th>Class ID</th>
+                    <th>Material Tittle</th>
+                    <th>Material Description</th>
+                    <th>Filename</th>
+                    <th>Upload Time</th>
                 </tr>
             </thead>
             <tbody>
+            <?php if (!empty($T_Materials)): ?>
                 <?php 
                 if ($records_per_page === 'ALL') {
-                    foreach ($ClassPerformanceDetail as $row): ?>
+                    foreach ($T_Materials as $row): ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['class_id']) ?></td>
-                            <td><?= htmlspecialchars($row['class_code']) ?></td>
-                            <td><?= htmlspecialchars($row['class_name']) ?></td>
-                            <td><?= htmlspecialchars($row['class_average']) ?></td>
+                            <td><?= htmlspecialchars($row['material_id']) ?></td>
                             <td><?= htmlspecialchars($row['teacher_id']) ?></td>
-                            <td><?= htmlspecialchars($row['T_Username']) ?></td>
-                            <td>
-                                <a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=<?= urlencode($row['T_Mail']) ?>">
-                                    <?= htmlspecialchars($row['T_Mail']) ?>
-                                </a>
-                            </td>
-                            <td><?= htmlspecialchars($row['student_id']) ?></td>
-                            <td><?= htmlspecialchars($row['S_Username']) ?></td>
-                            <td><?= htmlspecialchars($row['average_score']) ?></td>
+                            <td><?= htmlspecialchars($row['class_id']) ?></td>
+                            <td><?= htmlspecialchars($row['title']) ?></td>
+                            <td><?= htmlspecialchars($row['description']) ?></td>
+                            <td><?= htmlspecialchars($row['file_name']) ?></td>
+                            <td><?= htmlspecialchars($row['create_time']) ?></td>
                         </tr>
                     <?php endforeach;
                 } else {
-                    for ($i = $start; $i < $start + $records_per_page && $i < count($ClassPerformanceDetail); $i++): ?>
+                    for ($i = $start; $i < $start + $records_per_page && $i < count($T_Materials); $i++): ?>
                         <tr>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_id']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_code']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_name']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_average']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['teacher_id']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['T_Username']) ?></td>
-                            <td>
-                                <a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=<?= urlencode($ClassPerformanceDetail[$i]['T_Mail']) ?>">
-                                    <?= htmlspecialchars($ClassPerformanceDetail[$i]['T_Mail']) ?>
-                                </a>
-                            </td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['student_id']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['S_Username']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['average_score']) ?></td>
+                            <td><?= htmlspecialchars($T_Materials[$i]['material_id']) ?></td>
+                            <td><?= htmlspecialchars($T_Materials[$i]['teacher_id']) ?></td>
+                            <td><?= htmlspecialchars($T_Materials[$i]['class_id']) ?></td>
+                            <td><?= htmlspecialchars($T_Materials[$i]['title']) ?></td>
+                            <td><?= htmlspecialchars($T_Materials[$i]['description']) ?></td>
+                            <td><?= htmlspecialchars($T_Materials[$i]['file_name']) ?></td>
+                            <td><?= htmlspecialchars($T_Materials[$i]['create_time']) ?></td>
                         </tr>
                     <?php endfor;
                 } ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7">Not Have Any Teaching Materials Now.</td>
+                </tr>
+            <?php endif; ?>
             </tbody>
         </table>
         <button onclick="printTable()" class="print_button">Print Table</button>
@@ -244,7 +199,7 @@ function printTable() {
     printWindow.document.write('<html><head><title>Print Table</title>');
     printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } table, th, td { border: 1px solid black; padding: 8px; text-align: left; }</style>');
     printWindow.document.write('</head><body>');
-    printWindow.document.write('<h1 style="text-align:center;">Class Performance Table</h1>');
+    printWindow.document.write('<h1 style="text-align:center;">Teaching Materials Table</h1>');
     printWindow.document.write(printContent);
     printWindow.document.write('</body></html>');
     printWindow.document.close();
@@ -254,7 +209,7 @@ function saveAsPDF() {
     const element = document.querySelector('table');
     const opt = {
         margin: 10,
-        filename: 'class_performance.pdf',
+        filename: 'teaching_materials.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
             scale: 2,

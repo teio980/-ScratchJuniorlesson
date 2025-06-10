@@ -23,11 +23,22 @@ $unreadMessage = $getMassageUnreadStmt->fetchAll();
 <body>
     <div class="menu_container">
         <ul class="adminMenu">
-        <li><a href="manageUser.php">Manage User</a></li>
-        <li><a href="manageClass.php">Manage Class</a></li>
-        <li><a href="viewClassPerformance.php">View Class Perforamance</a></li>
+        <li><a href="manageUser.php">User</a></li>
+        <li><a href="manageClass.php">Class</a></li>
+        <li><a href="viewClassPerformance.php">Class Perforamance</a></li>
         <li><a href="manageChangeClass.php">Change Class Requests</a></li>
+        <li><a href="teacher_comments.php">Teacher Comments</a></li>
+        <li><a href="student_livechat.php">Student Chat</a></li>
+        <li><a href="teaching_materials.php">Teaching Materials</a></li>
+        <li><a href="quiz.php">Quiz</a></li>
+        <li><a href="lessons.php">Task</a></li>
+        <li><a href="task_purview.php">Task Purview</a></li>
+        <li><a href="puzzle.php">Puzzle</a></li>
+        <li><a href="student_quiz_progress.php">Student Quiz Progress</a></li>
+        <li><a href="student_puzzle_progress.php">Student Puzzle Progress</a></li>
+        <li><a href="student_submission.php">Student Submission</a></li>
         <li><a href="admin_profile.php">Personal Profile</a></li>
+        <li></li>
         </ul>
     </div>
     <div class="chart_container">

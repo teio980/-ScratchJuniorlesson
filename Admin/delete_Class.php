@@ -11,6 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-header("Location: manageClass.php");
-exit;
+echo "<script>
+            alert('Class Deleted Successful!');
+            window.location.href = 'manageClass.php';
+            </script>";
+            exit();
 ?>

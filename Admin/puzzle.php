@@ -2,8 +2,7 @@
 session_start();
 include 'header_Admin.php';
 include '../includes/connect_DB.php';
-$identity = $_SESSION['identity'];
-$users = [];
+$dataset = [];
 
 if (isset($_GET['query'])) {
     $_SESSION['search_query'] = $_GET['query'];
@@ -17,6 +16,7 @@ if (isset($_GET['clear_search'])) {
 
 $keywords = $_SESSION['search_query'];
 
+// Pagination settings
 if (isset($_GET['limit'])) {
     if ($_GET['limit'] == 'ALL') {
         $records_per_page = 'ALL';
@@ -42,46 +42,21 @@ if ($records_per_page === 'ALL') {
     $start = ($page - 1) * $records_per_page;
 }
 
-if (!empty($keywords))  {
-    if($identity == "superadmin"){
-        $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student WHERE S_Username LIKE :keywords
-                UNION ALL
-                SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords
-                UNION ALL
-                SELECT identity , admin_id AS U_ID , A_Username AS U_Username, A_Mail AS U_Mail FROM admin WHERE A_Username LIKE :keywords AND identity != 'superadmin'
-                ORDER BY U_Username ASC"; 
-    }else{
-       $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student WHERE S_Username LIKE :keywords
-            UNION ALL
-            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher WHERE T_Username LIKE :keywords
-            ORDER BY U_Username ASC"; 
-    }
+if (!empty($keywords)) {
     
+    $sql = "SELECT * FROM mini_games WHERE title like :keywords";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':keywords', '%' . $keywords . '%');
     $stmt->execute();
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    if($identity == "superadmin"){
-        $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student
-                UNION ALL
-                SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher
-                UNION ALL
-                SELECT identity , admin_id AS U_ID , A_Username AS U_Username, A_Mail AS U_Mail FROM admin WHERE identity != 'superadmin'
-                ORDER BY U_Username ASC"; 
-    }else{
-       $sql = "SELECT identity , student_id AS U_ID , S_Username AS U_Username, S_Mail AS U_Mail FROM student 
-            UNION ALL
-            SELECT identity , teacher_id AS U_ID , T_Username AS U_Username, T_Mail AS U_Mail FROM teacher
-            ORDER BY U_Username ASC";
-    }
-    
+}
+else {
+    $sql = "SELECT * FROM mini_games"; 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-    $users = $stmt->fetchAll();
 }
 
-$total_items = count($users);
+$dataset = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$total_items = count($dataset);
 
 if ($records_per_page === 'ALL') {
     $total_pages = 1;
@@ -107,7 +82,7 @@ if ($page > $total_pages && $total_pages > 0) {
     <link rel="stylesheet" href="../cssfile/manageUser.css">
     <link rel="stylesheet" href="../cssfile/manageClass.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <title>Manage Users</title>
+    <title>Puzzle</title>
 </head>
 <body>
     <div class="search-container">
@@ -115,12 +90,12 @@ if ($page > $total_pages && $total_pages > 0) {
             <?php if (isset($_GET['limit'])): ?>
                 <input type="hidden" name="limit" value="<?php echo htmlspecialchars($_GET['limit']); ?>">
             <?php endif; ?>
-            <input type="text" name="query" id="searchInput" placeholder="Search Student ID..." value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>">
+            <input type="text" name="query" id="searchInput" placeholder="Search Tittle..."  value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>" required>
             <button type="submit" class="search-button" name="search">
                 <span class="material-symbols-outlined">search</span>
             </button>
         </form>
-        <a href="manageUser.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
+        <a href="puzzle.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
     </div>
     
     <div class="records-per-page">
@@ -140,58 +115,51 @@ if ($page > $total_pages && $total_pages > 0) {
         </form>
     </div>
     
-    <form method="post" action="delete_users.php" name="ManageMainForm" id="ManageMainForm">
+    <form method="post" action="" name="ManageMainForm" id="ManageMainForm">
         <table>
             <thead>
                 <tr>
-                    <th>Select</th>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>E-mail</th>
-                    <th>Identity</th>
+                    <th>Puzzle ID</th>
+                    <th>Upload From</th>
+                    <th>Tittle</th>
+                    <th>Image Name</th>
+                    <th>Upload At</th>
                 </tr>
             </thead>
             <tbody>
-            <?php if (!empty($users)): ?>
+            <?php if (!empty($dataset)): ?>
                 <?php if ($records_per_page === 'ALL'): ?>
-                    <?php foreach ($users as $user): ?>
+                    <?php foreach ($dataset as $data): ?>
                         <tr>   
-                            <td><input type="checkbox" name="selected_users[]" value="<?php echo $user['U_ID'] . '|' . $user['identity']?>"></td>
-                            <td><?php echo htmlspecialchars($user['U_ID']) ?></td>
-                            <td><?php echo htmlspecialchars($user['U_Username']) ?></td>
-                            <td><?php echo htmlspecialchars($user['U_Mail']) ?></td>
-                            <td><?php echo htmlspecialchars($user['identity']) ?></td>
+                            <td><?php echo htmlspecialchars($data['game_id']) ?></td>
+                            <td><?php echo htmlspecialchars($data['teacher_id']) ?></td>
+                            <td><?php echo htmlspecialchars($data['title']) ?></td>
+                            <td><?php echo htmlspecialchars($data['image_name']) ?></td>
+                            <td><?php echo htmlspecialchars($data['create_time']) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <?php for ($i = $start; $i < $start + $records_per_page && $i < count($users); $i++): ?>
+                    <?php for ($i = $start; $i < $start + $records_per_page && $i < count($dataset); $i++): ?>
                         <tr>   
-                            <td><input type="checkbox" name="selected_users[]" value="<?php echo $users[$i]['U_ID'] . '|' . $users[$i]['identity']?>"></td>
-                            <td><?php echo htmlspecialchars($users[$i]['U_ID']) ?></td>
-                            <td><?php echo htmlspecialchars($users[$i]['U_Username']) ?></td>
-                            <td><?php echo htmlspecialchars($users[$i]['U_Mail']) ?></td>
-                            <td><?php echo htmlspecialchars($users[$i]['identity']) ?></td>
+                            <td><?php echo htmlspecialchars($dataset[$i]['game_id']) ?></td>
+                            <td><?php echo htmlspecialchars($dataset[$i]['teacher_id']) ?></td>
+                            <td><?php echo htmlspecialchars($dataset[$i]['title']) ?></td>
+                            <td><?php echo htmlspecialchars($dataset[$i]['image_name']) ?></td>
+                            <td><?php echo htmlspecialchars($dataset[$i]['create_time']) ?></td>
                         </tr>
                     <?php endfor; ?>
                 <?php endif; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="5">No User Record.</td>
+                    <td colspan="5">Do Not Have Puzzle at Now.</td>
                 </tr>
             <?php endif; ?>
             </tbody>
         </table> 
-        <div class="action-buttons">
-            <a href="addUser.php" style="text-decoration: none;">
-                <button type="button" class="add_btn">Add</button>
-            </a>
-            <button type="button" onclick="showEditForm()" class="edit_btn">Edit</button>
-            <button type="submit" class="delete_btn" onclick="return confirmDelete()">Delete</button>
-            <button onclick="printTable()" class="print_button">Print Table</button>
-            <button onclick="saveAsPDF()" class="pdf_button">Save as PDF</button>
-        </div>
+        <button onclick="printTable()" class="print_button">Print Table</button>
+        <button onclick="saveAsPDF()" class="pdf_button">Save as PDF</button>
     </form>
-
+    
     <?php if ($records_per_page !== 'ALL' && $total_pages > 1): ?>
     <div class="pagination">
         <?php
@@ -221,46 +189,15 @@ if ($page > $total_pages && $total_pages > 0) {
         ?>
     </div>
     <?php endif; ?>
-
-    <div id="editFormModal" class="editFormModal">
-        <div class="modalContent">
-            <div class="modalHeader">
-                <h2>Edit User</h2>
-                <span class="close" onclick="closeModal()">&times;</span>
-            </div>
-            <div class="editFormContent">
-                <form id="editForm" method="post" action="update_users.php">
-                    <input type="hidden" id="editUserId" name="UserID">
-                    <input type="hidden" id="editIdentity" name="Identity">
-
-                <div class="form-group">
-                    <label for="U_Username">Username (6-12 Characters):</label>
-                    <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">
-                </div>
-
-                <div class="form-group">
-                    <label for="U_Email">Email:</label>
-                    <input type="email" id="U_Email" name="U_Email" placeholder="e.g.: abc123@gmail.com" required>
-                </div>
-
-                <button type="submit" class="save_btn">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
     
     <script>
-    function confirmDelete() {
-        return confirm("Are you sure you want to delete the selected users?");
-    }
-    
     function printTable() {
         const printContent = document.querySelector('table').outerHTML;
         const printWindow = window.open('', '', 'height=600,width=800');
         printWindow.document.write('<html><head><title>Print Table</title>');
         printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } table, th, td { border: 1px solid black; padding: 8px; text-align: left; }</style>');
         printWindow.document.write('</head><body>');
-        printWindow.document.write('<h1 style="text-align:center;">User Management Table</h1>');
+        printWindow.document.write('<h1 style="text-align:center;">Task Table</h1>');
         printWindow.document.write(printContent);
         printWindow.document.write('</body></html>');
         printWindow.document.close();
@@ -271,7 +208,7 @@ if ($page > $total_pages && $total_pages > 0) {
         const element = document.querySelector('table');
         const opt = {
             margin: 10,
-            filename: 'user_management.pdf',
+            filename: 'Task.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { 
                 scale: 2,
@@ -305,6 +242,5 @@ if ($page > $total_pages && $total_pages > 0) {
             });
     }
     </script>
-    <script src="manageUser.js"></script>
 </body>
 </html>

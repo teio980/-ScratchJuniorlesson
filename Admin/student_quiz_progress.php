@@ -1,7 +1,6 @@
 <?php 
 include '../includes/connect_DB.php';
 include 'header_Admin.php';
-session_start();
 
 if (isset($_GET['query'])) {
     $_SESSION['search_query'] = $_GET['query'];
@@ -41,52 +40,20 @@ if ($records_per_page === 'ALL') {
 }
 
 if (!empty($keywords)) {
-    $getClassPerformanceSql = "SELECT 
-                                    c.class_id,
-                                    c.class_code,
-                                    c.class_name,
-                                    c.class_average,
-                                    t.teacher_id,
-                                    t.T_Username,
-                                    t.T_Mail,
-                                    s.student_id,
-                                    s.S_Username,
-                                    sc.average_score
-    FROM class c
-    LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
-    LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
-    INNER JOIN student_class sc ON c.class_id = sc.class_id
-    INNER JOIN student s ON sc.student_id = s.student_id
-    WHERE class_code LIKE :keywords 
-    ";
-    $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
-    $getClassPerformanceStmt->bindValue(':keywords', '%' . $keywords . '%');
-    $getClassPerformanceStmt->execute();
-    $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $Sql = "SELECT * FROM student_answers WHERE student_id LIKE :keywords ";
+    $Stmt = $pdo->prepare($Sql);
+    $Stmt->bindValue(':keywords', '%' . $keywords . '%');
+    $Stmt->execute();
+    $S_Quiz_Progress = $Stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $getClassPerformanceSql = "SELECT 
-                                    c.class_id,
-                                    c.class_code,
-                                    c.class_name,
-                                    c.class_average,
-                                    t.teacher_id,
-                                    t.T_Username,
-                                    t.T_Mail,
-                                    s.student_id,
-                                    s.S_Username,
-                                    sc.average_score
-                                FROM class c
-                                LEFT JOIN teacher_class tc ON c.class_id = tc.class_id
-                                LEFT JOIN teacher t ON tc.teacher_id = t.teacher_id
-                                INNER JOIN student_class sc ON c.class_id = sc.class_id
-                                INNER JOIN student s ON sc.student_id = s.student_id
-                                ";
-    $getClassPerformanceStmt = $pdo->prepare($getClassPerformanceSql);
-    $getClassPerformanceStmt->execute();
-    $ClassPerformanceDetail = $getClassPerformanceStmt->fetchAll(PDO::FETCH_ASSOC);
+    $Sql = "SELECT * FROM student_answers";
+    $Stmt = $pdo->prepare($Sql);
+    $Stmt->execute();
+    $S_Quiz_Progress = $Stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$total_items = count($ClassPerformanceDetail);
+$total_items = count($S_Quiz_Progress);
 
 if ($records_per_page === 'ALL') {
     $total_pages = 1;
@@ -111,7 +78,7 @@ if ($page > $total_pages && $total_pages > 0) {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <link rel="stylesheet" href="../cssfile/manageClass.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <title>Class Performance</title>
+    <title>Student Quiz Progress</title>
 </head>
 <body>
     <div class="search-container">
@@ -119,18 +86,18 @@ if ($page > $total_pages && $total_pages > 0) {
             <?php if (isset($_GET['limit'])): ?>
                 <input type="hidden" name="limit" value="<?php echo htmlspecialchars($_GET['limit']); ?>">
             <?php endif; ?>
-            <input type="text" name="query" id="searchInput" placeholder="Search Class Code..."  value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>">
+            <input type="text" name="query" id="searchInput" placeholder="Search Student ID..."  value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>" required>
             <button type="submit" class="search-button">
                 <span class="material-symbols-outlined">search</span>
             </button>
         </form>
-        <a href="viewClassPerformance.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
+        <a href="student_quiz_progress.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
     </div>
 
     <div class="records-per-page">
         <form method="get" action="">
             <?php if (!empty($_SESSION['search_query'])): ?>
-            <input type="hidden" name="query"value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>">
+            <input type="hidden" name="query" value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>">
             <?php endif; ?>
             <input type="hidden" name="page" value="1">
             <label for="limit">Records per page:</label>
@@ -148,56 +115,48 @@ if ($page > $total_pages && $total_pages > 0) {
         <table>
             <thead>
                 <tr>
-                    <th>Class ID</th>
-                    <th>Class Code</th>
-                    <th>Class Name</th>
-                    <th>Class Average Mark</th>
-                    <th>Teacher ID</th>
-                    <th>Teacher Username</th>
-                    <th>Teacher Email</th>
+                    <th>Quiz Progress ID</th>
+                    <th>Quiz ID</th>
                     <th>Student ID</th>
-                    <th>Student Username</th>
-                    <th>Student Average Mark</th>
+                    <th>Student Answer</th>
+                    <th>Correct OR Wrong</th>
+                    <th>Difficulty</th>
                 </tr>
             </thead>
             <tbody>
                 <?php 
                 if ($records_per_page === 'ALL') {
-                    foreach ($ClassPerformanceDetail as $row): ?>
+                    foreach ($S_Quiz_Progress as $row): ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['class_id']) ?></td>
-                            <td><?= htmlspecialchars($row['class_code']) ?></td>
-                            <td><?= htmlspecialchars($row['class_name']) ?></td>
-                            <td><?= htmlspecialchars($row['class_average']) ?></td>
-                            <td><?= htmlspecialchars($row['teacher_id']) ?></td>
-                            <td><?= htmlspecialchars($row['T_Username']) ?></td>
-                            <td>
-                                <a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=<?= urlencode($row['T_Mail']) ?>">
-                                    <?= htmlspecialchars($row['T_Mail']) ?>
-                                </a>
-                            </td>
+                            <td><?= htmlspecialchars($row['student_question_id']) ?></td>
+                            <td><?= htmlspecialchars($row['question_id']) ?></td>
                             <td><?= htmlspecialchars($row['student_id']) ?></td>
-                            <td><?= htmlspecialchars($row['S_Username']) ?></td>
-                            <td><?= htmlspecialchars($row['average_score']) ?></td>
+                            <td><?= htmlspecialchars($row['student_answer']) ?></td>
+                            <?php
+                            if ($row['is_correct'] == 1){
+                                echo "<td><div style='color:green;font-weight: bold;background-color: lightgreen;border-radius: 20px;'>Correct</div></td>";
+                            }else{
+                                echo "<td><div style='color:red;font-weight: bold;background-color: indianred;border-radius: 20px;'>Wrong</div></td>";
+                            }
+                            ?>
+                            <td><?= htmlspecialchars($row['difficult']) ?></td>
                         </tr>
                     <?php endforeach;
                 } else {
-                    for ($i = $start; $i < $start + $records_per_page && $i < count($ClassPerformanceDetail); $i++): ?>
+                    for ($i = $start; $i < $start + $records_per_page && $i < count($S_Quiz_Progress); $i++): ?>
                         <tr>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_id']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_code']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_name']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['class_average']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['teacher_id']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['T_Username']) ?></td>
-                            <td>
-                                <a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=<?= urlencode($ClassPerformanceDetail[$i]['T_Mail']) ?>">
-                                    <?= htmlspecialchars($ClassPerformanceDetail[$i]['T_Mail']) ?>
-                                </a>
-                            </td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['student_id']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['S_Username']) ?></td>
-                            <td><?= htmlspecialchars($ClassPerformanceDetail[$i]['average_score']) ?></td>
+                            <td><?= htmlspecialchars($S_Quiz_Progress[$i]['student_question_id']) ?></td>
+                            <td><?= htmlspecialchars($S_Quiz_Progress[$i]['question_id']) ?></td>
+                            <td><?= htmlspecialchars($S_Quiz_Progress[$i]['student_id']) ?></td>
+                            <td><?= htmlspecialchars($S_Quiz_Progress[$i]['student_answer']) ?></td>
+                            <?php
+                            if ($S_Quiz_Progress[$i]['is_correct'] == 1){
+                                echo "<td><div style='color:green;font-weight: bold;background-color: lightgreen;border-radius: 20px;'>Correct</div></td>";
+                            }else{
+                                echo "<td><div style='color:red;font-weight: bold;background-color: indianred;border-radius: 20px;'>Wrong</div></td>";
+                            }
+                            ?>
+                            <td><?= htmlspecialchars($S_Quiz_Progress[$i]['difficult']) ?></td>
                         </tr>
                     <?php endfor;
                 } ?>
@@ -244,7 +203,7 @@ function printTable() {
     printWindow.document.write('<html><head><title>Print Table</title>');
     printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } table, th, td { border: 1px solid black; padding: 8px; text-align: left; }</style>');
     printWindow.document.write('</head><body>');
-    printWindow.document.write('<h1 style="text-align:center;">Class Performance Table</h1>');
+    printWindow.document.write('<h1 style="text-align:center;">Student Puzzle Progress Table</h1>');
     printWindow.document.write(printContent);
     printWindow.document.write('</body></html>');
     printWindow.document.close();
@@ -254,7 +213,7 @@ function saveAsPDF() {
     const element = document.querySelector('table');
     const opt = {
         margin: 10,
-        filename: 'class_performance.pdf',
+        filename: 'student_puzzle_progress.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
             scale: 2,
