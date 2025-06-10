@@ -78,7 +78,7 @@ $teacher_id = $_SESSION['user_id'];
                 <td><?= $class_name ?></td>
                 
                 <td>
-                    <a href="../Student/<?= $row['filepath'] ?>" download>Download</a>
+                    <a href="../Student/uploads/<?= $row['student_id'] ?>/<?= $row['filename'] ?>" download>Download</a>
                 </td>
 
                 <td>
