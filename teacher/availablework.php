@@ -13,7 +13,7 @@ $teacher_id = $_SESSION['user_id'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assign Lesson to Class</title>
-    <link rel="stylesheet" href="../cssfile/Tearchermain.css">
+    <link rel="stylesheet" href="../cssfile/Teachermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/availablework.css">
 </head>

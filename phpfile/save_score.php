@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connect.php';
-include '../includes/connect_DB.php'; // 确保包含数据库连接文件
+include '../includes/connect_DB.php';
 
 $teacher_id = $_SESSION['user_id'];
 $submit_id = $_POST['submit_id'];
@@ -10,7 +10,6 @@ $lesson_id = $_POST['lesson_id'];
 $score = $_POST['total_score'];
 $feedback = $_POST['feedback'] ?? ''; 
 
-// 1. 检查教师是否有权限评分此提交
 $check_query = "
     SELECT 1 
     FROM student_submit ss
@@ -28,7 +27,6 @@ if (mysqli_num_rows($check_result) == 0) {
     die("You are not authorized to grade this submission.");
 }
 
-// 2. 获取班级ID
 $class_query = "SELECT class_id FROM student_submit WHERE submit_id = ?";
 $class_stmt = mysqli_prepare($connect, $class_query);
 mysqli_stmt_bind_param($class_stmt, "s", $submit_id);
@@ -37,7 +35,6 @@ $class_result = mysqli_stmt_get_result($class_stmt);
 $class_row = mysqli_fetch_assoc($class_result);
 $class_id = $class_row['class_id'];
 
-// 3. 更新分数和反馈
 $update_query = "
     UPDATE student_submit 
     SET score = ?, 
@@ -49,7 +46,6 @@ $stmt = mysqli_prepare($connect, $update_query);
 mysqli_stmt_bind_param($stmt, "dss", $score, $feedback, $submit_id);
 
 if (mysqli_stmt_execute($stmt)) {
-    // 4. 计算并更新该学生在当前班级的平均分
     $average_query = "
         UPDATE student_class sc
         SET average_score = (

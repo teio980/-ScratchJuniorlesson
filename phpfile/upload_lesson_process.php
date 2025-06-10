@@ -13,8 +13,8 @@ if ($result = mysqli_query($connect, $sql)) {
 }
 
 // Upload directory paths
-$upload_dir_file = 'teacher/upload/file/';
-$upload_dir_thumbnail = 'teacher/upload/thumbnail/';
+$upload_dir_file = '../phpfile/uploads/lesson/';
+$upload_dir_thumbnail = '../phpfile/uploads/thumbnail/';
 
 // Create directories if they don't exist
 if (!is_dir($upload_dir_file)) {
@@ -27,13 +27,13 @@ if (!is_dir($upload_dir_thumbnail)) {
 // Process thumbnail upload
 $thumbnail_name = '';
 if (isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == UPLOAD_ERR_OK) {
-    $thumbnail_ext = pathinfo($_FILES['thumbnail_image']['name'], PATHINFO_EXTENSION);
     $original_thumbnail = basename($_FILES['thumbnail_image']['name']);
-    $thumbnail_name = $original_thumbnail;
+    $thumbnail_ext = pathinfo($original_thumbnail, PATHINFO_EXTENSION);
+    $thumbnail_name = generateUniqueFilename($upload_dir_thumbnail, $original_thumbnail);
     $thumbnail_path = $upload_dir_thumbnail . $thumbnail_name;
     
     $allowed_image_extensions = ['jpg', 'jpeg', 'png'];
-    $image_extension = strtolower(pathinfo($original_thumbnail, PATHINFO_EXTENSION));
+    $image_extension = strtolower($thumbnail_ext);
     
     if (!in_array($image_extension, $allowed_image_extensions)) {
         die("Error: Only JPG, JPEG, and PNG images are allowed.");
@@ -47,13 +47,13 @@ if (isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == 
 // Process lesson file upload
 $file_name = '';
 if (isset($_FILES['lesson_file']) && $_FILES['lesson_file']['error'] == UPLOAD_ERR_OK) {
-    $file_ext = pathinfo($_FILES['lesson_file']['name'], PATHINFO_EXTENSION);
     $original_filename = basename($_FILES['lesson_file']['name']);
-    $file_name = $original_filename;
+    $file_ext = pathinfo($original_filename, PATHINFO_EXTENSION);
+    $file_name = generateUniqueFilename($upload_dir_file, $original_filename);
     $file_path = $upload_dir_file . $file_name;
     
     $allowed_extensions = ['pdf', 'doc', 'docx'];
-    $file_extension = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
+    $file_extension = strtolower($file_ext);
     
     if (!in_array($file_extension, $allowed_extensions)) {
         die("Error: Only PDF, DOC, and DOCX files are allowed.");
@@ -75,10 +75,25 @@ $sql_insert = "INSERT INTO lessons (lesson_id, title, description, category, gra
 VALUES ('$lesson_id', '$title', '$description', '$category', '$grading_criteria', '$file_name', '$thumbnail_name')";
 
 if (mysqli_query($connect, $sql_insert)) {
-    header("Location: ../teacher/lesson_management.php?success=1");
+    header("Location: ../teacher/lesson_management.php?success=1&tab=lessons");
     exit();
 } else {
     die("Error: " . mysqli_error($connect));
+}
+
+// 生成唯一文件名函数
+function generateUniqueFilename($directory, $filename) {
+    $counter = 1;
+    $fileinfo = pathinfo($filename);
+    $name = $fileinfo['filename'];
+    $extension = isset($fileinfo['extension']) ? '.' . $fileinfo['extension'] : '';
+    
+    while (file_exists($directory . $filename)) {
+        $filename = $name . '(' . $counter . ')' . $extension;
+        $counter++;
+    }
+    
+    return $filename;
 }
 
 mysqli_close($connect);

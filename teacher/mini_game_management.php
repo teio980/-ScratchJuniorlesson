@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'edit' && isset($_POST['game_id'])) {
         $game_id = $_POST['game_id'];
         $title = $_POST['title'];
+        
         $get_old_image = "SELECT image_name FROM mini_games WHERE game_id = ?";
         $stmt = $connect->prepare($get_old_image);
         $stmt->bind_param("s", $game_id);
@@ -134,7 +135,7 @@ if (isset($_GET['deleted'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini Game Management</title>
-    <link rel="stylesheet" href="../cssfile/Tmain.css">
+    <link rel="stylesheet" href="../cssfile/Teachermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/mini_games.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

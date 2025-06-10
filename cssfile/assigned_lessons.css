@@ -149,3 +149,14 @@
         gap: 5px;
     }
 }
+
+.delete-comment {
+    color: #ff0000;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.delete-comment:hover {
+    text-decoration: underline;
+}

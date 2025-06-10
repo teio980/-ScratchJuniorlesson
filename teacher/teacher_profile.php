@@ -1,29 +1,32 @@
 <?php
-    session_start();
-    include '../includes/connect_DB.php';
-    $userID = $_SESSION["user_id"];
-    $sql = "SELECT T_Username AS Username, T_Mail AS Mail FROM teacher WHERE teacher_id LIKE :ID";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(':ID', $userID );
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    $Avatar_directory = "Avatar/";
-    $files = scandir($Avatar_directory);
-    $fileFound = false;
-    foreach ($files as $file) {
-        if ($file != "." && $file != "..") { 
-            $avatar = pathinfo($file, PATHINFO_FILENAME);
-            
-            if ($avatar == $userID) {
-                $fullPath = $Avatar_directory . DIRECTORY_SEPARATOR . $file; 
-                $fileFound = true;
-                break; 
-            }else{
-                $fullPath = 'Avatar/avatar_default.png';
-            }
+require_once '../includes/check_session_teacher.php';
+include '../phpfile/connect.php';
+include '../includes/connect_DB.php';
+include 'resheadteacher.php';
+
+$userID = $_SESSION["user_id"];
+$sql = "SELECT T_Username AS Username, T_Mail AS Mail FROM teacher WHERE teacher_id LIKE :ID";
+$stmt = $pdo->prepare($sql);
+$stmt->bindValue(':ID', $userID );
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$Avatar_directory = "Avatar/";
+$files = scandir($Avatar_directory);
+$fileFound = false;
+foreach ($files as $file) {
+    if ($file != "." && $file != "..") { 
+        $avatar = pathinfo($file, PATHINFO_FILENAME);
+        
+        if ($avatar == $userID) {
+            $fullPath = $Avatar_directory . DIRECTORY_SEPARATOR . $file; 
+            $fileFound = true;
+            break; 
+        }else{
+            $fullPath = 'Avatar/avatar_default.png';
         }
     }
+}
 ?>
 
 <!DOCTYPE html>
@@ -31,9 +34,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../cssfile/headerAdmin.css">
+    <link rel="stylesheet" href="../cssfile/Teachermain.css">
+    <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/personal_profile.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <title>Document</title>
 </head>
 <body>

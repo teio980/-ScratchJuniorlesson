@@ -11,21 +11,10 @@ $teacher_id = $_SESSION['user_id'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Assigned Lessons</title>
     <link rel="stylesheet" href="../cssfile/Teachermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/assigned_lessons.css">
-    <style>
-        .delete-comment {
-            color: #ff0000;
-            cursor: pointer;
-            margin-left: 10px;
-            font-size: 14px;
-        }
-        .delete-comment:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>My Assigned Lessons</title>
 </head>
 <body>
     <div class="container">
