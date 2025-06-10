@@ -74,32 +74,6 @@ $teacher_id = $_SESSION['user_id'];
     function updateLessonOptions() {
         const classId = document.getElementById('classSelect').value;
         if (!classId) return;
-
-        // 获取该班级已经分配的课程
-        fetch(`get_assigned_lessons.php?class_id=${classId}`)
-            .then(response => response.json())
-            .then(assignedLessons => {
-                const lessonSelect = document.getElementById('lessonSelect');
-                const options = lessonSelect.options;
-                
-                for (let i = 0; i < options.length; i++) {
-                    const option = options[i];
-                    if (option.value && assignedLessons.includes(option.value)) {
-                        // 如果课程已经分配给这个班级，禁用该选项
-                        option.disabled = true;
-                        option.classList.add('disabled-option');
-                        // 添加提示文字
-                        option.textContent += ' (Assigned)';
-                    } else {
-                        // 否则启用该选项
-                        option.disabled = false;
-                        option.classList.remove('disabled-option');
-                        // 移除提示文字
-                        option.textContent = option.textContent.replace(' (Assigned)', '');
-                    }
-                }
-            })
-            .catch(error => console.error('Error:', error));
     }
 </script>
 

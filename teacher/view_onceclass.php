@@ -31,11 +31,21 @@ if ($class_row) {
     $pass_icon = $class_average >= 40 ? '✔' : '✘';
 
     echo "<div class='class-container'>";
+
+    // Add this back button section
+    echo "<div style='margin-bottom: 20px;'>";
+    echo "<a href='view_class.php' class='back-button' style='display: inline-block; padding: 8px 16px; background: #9101df; color: white; border-radius: 4px; text-decoration: none; font-weight: bold;'>";
+    echo "← Back to All Classes";
+    echo "</a>";
+    echo "</div>";
+
+    // Continue with existing code
     echo "<div class='class-header'>";
     echo "<h1 class='class-title'>Class: " . htmlspecialchars($class_name) . "</h1>";
     echo "<p class='class-description'>" . htmlspecialchars($class_description) . "</p>";
     echo "<div class='class-average'>Class Average: $class_average% <span class='pass-status $class_pass_status'>$pass_icon</span></div>";
     echo "</div>";
+    
 
     // Get total number of quizzes available
     $total_quizzes_query = "SELECT COUNT(DISTINCT difficult) as total FROM questions";

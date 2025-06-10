@@ -61,46 +61,52 @@ if ($Classid && mysqli_num_rows($Classid) > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../cssfile/Teachermain.css">
-    <link rel="stylesheet" href="../cssfile/view_ssub.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
+    <link rel="stylesheet" href="../cssfile/view_class.css">
     <title>View Class</title>
 </head>
 <body>
-    <h2>View Class</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Class CODE</th>
-                <th>Class Name</th>
-                <th>Student Number</th>
-                <th>Average Score</th>
-                <th>Pass Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php 
-                if (!empty($classList)) {
-                    foreach ($classList as $class) {
-                        $passStatus = $class['class_average'] >= 40 ? '✔' : '✘';
-            ?>
+    <div class="class-overview-container">
+        <div class="class-overview-header">
+            <h1 class="class-overview-title">Your Classes</h1>
+        </div>
+
+        <table class="classes-table">
+            <thead>
                 <tr>
-                    <td>
-                        <a href="view_onceclass.php?class_id=<?php echo $class['class_code']; ?>">
-                            <?php echo htmlspecialchars($class['class_code']); ?>
-                        </a>
-                    </td>
-                    <td><?php echo htmlspecialchars($class['class_name']); ?></td>
-                    <td><?php echo htmlspecialchars($class['student_count']); ?></td>
-                    <td><?php echo $class['class_average']; ?>%</td>
-                    <td><?php echo $passStatus; ?></td>
+                    <th>Class CODE</th>
+                    <th>Class Name</th>
+                    <th>Student Number</th>
+                    <th>Average Score</th>
+                    <th>Pass Status</th>
                 </tr>
-            <?php 
+            </thead>
+            <tbody>
+                <?php 
+                    if (!empty($classList)) {
+                        foreach ($classList as $class) {
+                            $passStatus = $class['class_average'] >= 40 ? 'pass-true' : 'pass-false';
+                            $passIcon = $class['class_average'] >= 40 ? '✔' : '✘';
+                ?>
+                    <tr>
+                        <td>
+                            <a href="view_onceclass.php?class_id=<?php echo $class['class_code']; ?>" class="class-link">
+                                <?php echo htmlspecialchars($class['class_code']); ?>
+                            </a>
+                        </td>
+                        <td><?php echo htmlspecialchars($class['class_name']); ?></td>
+                        <td><?php echo htmlspecialchars($class['student_count']); ?></td>
+                        <td class="average-score"><?php echo $class['class_average']; ?>%</td>
+                        <td><span class="pass-status <?php echo $passStatus; ?>"><?php echo $passIcon; ?></span></td>
+                    </tr>
+                <?php 
+                        }
+                    } else {
+                        echo '<tr><td colspan="5" class="no-classes">No classes found.</td></tr>';
                     }
-                } else {
-                    echo "<tr><td colspan='5'>No classes found.</td></tr>";
-                }
-            ?>
-        </tbody>
-    </table>
+                ?>
+            </tbody>
+        </table>
+    </div> <!-- 关闭 class-overview-container -->
 </body>
 </html>

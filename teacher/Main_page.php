@@ -36,7 +36,6 @@ if ($mini_game_row = $mini_game_result->fetch_assoc()) {
     <div class="dashboard-container">
         <div class="welcome-header">
             <h1>Welcome, <?php echo htmlspecialchars($teacher_name); ?></h1>
-            <p>Teacher Dashboard</p>
         </div>
 
         <div class="quick-stats">
