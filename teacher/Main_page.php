@@ -28,9 +28,9 @@ if ($mini_game_row = $mini_game_result->fetch_assoc()) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Dashboard</title>
     <link rel="stylesheet" href="../cssfile/Tmain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
+    <title>Teacher Dashboard</title>
 </head>
 <body>
     <div class="dashboard-container">
