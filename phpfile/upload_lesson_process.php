@@ -28,6 +28,8 @@ if (!is_dir($upload_dir_thumbnail)) {
 $thumbnail_name = '';
 if (isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == UPLOAD_ERR_OK) {
     $original_thumbnail = basename($_FILES['thumbnail_image']['name']);
+    // Replace spaces with underscores in filename
+    $original_thumbnail = str_replace(' ', '_', $original_thumbnail);
     $thumbnail_ext = pathinfo($original_thumbnail, PATHINFO_EXTENSION);
     $thumbnail_name = generateUniqueFilename($upload_dir_thumbnail, $original_thumbnail);
     $thumbnail_path = $upload_dir_thumbnail . $thumbnail_name;
@@ -48,6 +50,8 @@ if (isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == 
 $file_name = '';
 if (isset($_FILES['lesson_file']) && $_FILES['lesson_file']['error'] == UPLOAD_ERR_OK) {
     $original_filename = basename($_FILES['lesson_file']['name']);
+    // Replace spaces with underscores in filename
+    $original_filename = str_replace(' ', '_', $original_filename);
     $file_ext = pathinfo($original_filename, PATHINFO_EXTENSION);
     $file_name = generateUniqueFilename($upload_dir_file, $original_filename);
     $file_path = $upload_dir_file . $file_name;
