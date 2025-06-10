@@ -18,9 +18,8 @@
     if (isset($_POST['game_id'])) {
     $game_id = $_POST['game_id'];
 
-    $query = "INSERT INTO student_game_progress (student_id, game_id, complete)
-              VALUES ('$user_id', '$game_id', 1)
-              ON DUPLICATE KEY UPDATE complete = 1";
+    $query = "INSERT INTO student_game_progress (student_id, game_id)
+              VALUES ('$user_id', '$game_id')";
     mysqli_query($connect, $query);
 
     $update_xp_sql = "UPDATE student_level SET experience = experience + 50 WHERE student_id = '$user_id'";
@@ -543,6 +542,29 @@
         <div class="container tab-content active" id="marked">
             <div class="flr">
                 <?php
+                function renderStars($score) {
+                    $maxStars = 5;
+                    $starCount = ($score / 100) * $maxStars;
+                    $fullStars = floor($starCount);
+                    $halfStar = ($starCount - $fullStars) >= 0.5;
+                    $starsHtml = '';
+
+                    for ($i = 0; $i < $fullStars; $i++) {
+                        $starsHtml .= '<i class="fas fa-star"></i>';
+                    }
+
+                    if ($halfStar) {
+                        $starsHtml .= '<i class="fas fa-star-half-alt"></i>';
+                    }
+
+                    $emptyStars = $maxStars - $fullStars - ($halfStar ? 1 : 0);
+                    for ($i = 0; $i < $emptyStars; $i++) {
+                        $starsHtml .= '<i class="far fa-star"></i>';
+                    }
+
+                    return '<span class="stars">' . $starsHtml . '</span>';
+                }
+
                 $feedback_query = "
                     SELECT filename, score, description 
                     FROM student_submit
@@ -556,7 +578,7 @@
                 if ($feedback_result && mysqli_num_rows($feedback_result) > 0) {
                     while ($row = mysqli_fetch_assoc($feedback_result)) {
                         $filename = htmlspecialchars($row['filename']);
-                        $file_path = "../Student/uploads/" . $filename;
+                        $file_path = "../Student/uploads/" . $user_id . "/" . $filename;
                         $score = htmlspecialchars($row['score']);
                         $description = htmlspecialchars($row['description']);
 
@@ -571,30 +593,6 @@
                         $bg_style = $backgrounds[$counter % count($backgrounds)];
                         $counter++;
 
-                        //star
-                        function renderStars($score) {
-                            $maxStars = 5;
-                            $starCount = ($score / 100) * $maxStars;
-                            $fullStars = floor($starCount);
-                            $halfStar = ($starCount - $fullStars) >= 0.5;
-                            $starsHtml = '';
-
-                            for ($i = 0; $i < $fullStars; $i++) {
-                                $starsHtml .= '<i class="fas fa-star"></i>';
-                            }
-
-                            if ($halfStar) {
-                                $starsHtml .= '<i class="fas fa-star-half-alt"></i>';
-                            }
-
-                            $emptyStars = $maxStars - $fullStars - ($halfStar ? 1 : 0);
-                            for ($i = 0; $i < $emptyStars; $i++) {
-                                $starsHtml .= '<i class="far fa-star"></i>';
-                            }
-
-                            return '<span class="stars">' . $starsHtml . '</span>';
-                        }
-
                         echo '
                         <div class="card project-card" style="background: ' . $bg_style . '">
                             <div class="lang-tag">Marked</div>
@@ -608,9 +606,6 @@
                                 <div class="popup-description" style="display:none;">' . nl2br(htmlspecialchars($description)) . '</div>
                             </div>
                         </div>';
-                        
-
-
                     }
                 } else {
                     echo "<p>No marked homework available yet.</p>";
