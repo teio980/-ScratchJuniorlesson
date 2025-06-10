@@ -12,34 +12,23 @@ $teacher_id = $_SESSION['user_id'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assign Content to Classes</title>
-    <link rel="stylesheet" href="../cssfile/Tmain.css">
+    <title>Assign Lesson to Class</title>
+    <link rel="stylesheet" href="../cssfile/Tearchermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/availablework.css">
-    <style>
-        .section-container {
-            margin-bottom: 40px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .section-title {
-            color: rgb(142, 60, 181);
-            margin-bottom: 15px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <!-- Lessons Assignment Section -->
+        <!-- 课程分配部分 -->
         <div class="section-container">
-            <h2 class="section-title">Assign Lessons to Class</h2>
+            <h2 class="section-title">Assign Lesson to Class</h2>
             <form method="POST" action="">
                 <div class="form-group">
                     <label>Select Class:</label>
-                    <select name="class_id" required>
-                        <option value="">-- Select a Class --</option>
+                    <select name="class_id" id="classSelect" required onchange="updateLessonOptions()">
+                        <option value="">-- Select Class --</option>
                         <?php
+                        // 查询老师所教的班级
                         $classQuery = "SELECT c.class_id, c.class_name 
                                      FROM class c
                                      JOIN teacher_class tc ON c.class_id = tc.class_id
@@ -58,9 +47,10 @@ $teacher_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label>Select Lesson:</label>
-                    <select name="lesson_id" required>
-                        <option value="">-- Select a Lesson --</option>
+                    <select name="lesson_id" id="lessonSelect" required>
+                        <option value="">-- Select Lesson --</option>
                         <?php
+                        // 查询所有课程
                         $lessonResult = $connect->query("SELECT lesson_id, title FROM lessons");
                         while ($lesson = $lessonResult->fetch_assoc()) {
                             echo "<option value='{$lesson['lesson_id']}'>{$lesson['title']}</option>";
@@ -70,50 +60,57 @@ $teacher_id = $_SESSION['user_id'];
                 </div>
 
                 <div class="form-group">
-                    <label>Set Deadline:</label>
-                    <input type="datetime-local" name="expire_date" min="<?= date('Y-m-d\TH:i') ?>" required>
+                    <label>Set Expiration Date:</label>
+                    <input type="datetime-local" name="expire_date" min="<?= date('Y-m-d\\TH:i') ?>" required>
                 </div>
 
                 <button type="submit" name="assign_submit">Assign Lesson</button>
             </form>
         </div>
-
-        <!-- Materials Sharing Section -->
-        <div class="section-container">
-            <h2 class="section-title">Share Materials with All Your Classes</h2>
-            <form method="POST" action="">
-                <div class="form-group">
-                    <label>Select Material:</label>
-                    <select name="material_id" required>
-                        <option value="">-- Select a Material --</option>
-                        <?php
-                        $materialQuery = "SELECT material_id, title FROM teacher_materials 
-                                         WHERE teacher_id = ?";
-                        $stmt = $connect->prepare($materialQuery);
-                        $stmt->bind_param("s", $teacher_id);
-                        $stmt->execute();
-                        $materialResult = $stmt->get_result();
-                        
-                        while ($material = $materialResult->fetch_assoc()) {
-                            echo "<option value='{$material['material_id']}'>{$material['title']}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-
-                <button type="submit" name="share_material">Share to Classes</button>
-            </form>
-        </div>
     </div>
 
+<script>
+    // 更新课程选项的函数
+    function updateLessonOptions() {
+        const classId = document.getElementById('classSelect').value;
+        if (!classId) return;
+
+        // 获取该班级已经分配的课程
+        fetch(`get_assigned_lessons.php?class_id=${classId}`)
+            .then(response => response.json())
+            .then(assignedLessons => {
+                const lessonSelect = document.getElementById('lessonSelect');
+                const options = lessonSelect.options;
+                
+                for (let i = 0; i < options.length; i++) {
+                    const option = options[i];
+                    if (option.value && assignedLessons.includes(option.value)) {
+                        // 如果课程已经分配给这个班级，禁用该选项
+                        option.disabled = true;
+                        option.classList.add('disabled-option');
+                        // 添加提示文字
+                        option.textContent += ' (Assigned)';
+                    } else {
+                        // 否则启用该选项
+                        option.disabled = false;
+                        option.classList.remove('disabled-option');
+                        // 移除提示文字
+                        option.textContent = option.textContent.replace(' (Assigned)', '');
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
 <?php
-// 处理Lesson分配
+// 处理课程分配
 if (isset($_POST['assign_submit'])) {
     $class_id = $_POST['class_id'];
     $lesson_id = $_POST['lesson_id'];
     $expire_date = $_POST['expire_date'];
     
-    // 验证权限
+    // 验证老师是否有权限给这个班级分配课程
     $checkQuery = "SELECT 1 FROM teacher_class 
                   WHERE teacher_id = ? AND class_id = ?";
     $stmt = $connect->prepare($checkQuery);
@@ -122,11 +119,11 @@ if (isset($_POST['assign_submit'])) {
     $checkResult = $stmt->get_result();
     
     if ($checkResult->num_rows === 0) {
-        echo "<script>alert('You are not authorized to assign lessons to this class.');</script>";
+        echo "<script>alert('You do not have permission to assign lessons to this class.');</script>";
         exit();
     }
     
-    // 检查是否已分配
+    // 检查是否已经分配过这个课程
     $duplicateQuery = "SELECT 1 FROM class_work 
                       WHERE class_id = ? AND lesson_id = ?";
     $stmt = $connect->prepare($duplicateQuery);
@@ -139,7 +136,7 @@ if (isset($_POST['assign_submit'])) {
         exit();
     }
     
-    // 获取课程文件
+    // 获取课程文件信息
     $lessonQuery = "SELECT file_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($lessonQuery);
     $stmt->bind_param("s", $lesson_id);
@@ -149,13 +146,13 @@ if (isset($_POST['assign_submit'])) {
     if ($stmt->fetch()) {
         $stmt->close();
         
-        // 生成ID
+        // 生成唯一的课程分配ID
         $sql = "SELECT COUNT(*) AS total FROM class_work";
         $result = $connect->query($sql);
         $row = $result->fetch_assoc();
         $classwork_id = 'CW' . str_pad($row['total'] + 1, 6, '0', STR_PAD_LEFT);
         
-        // 插入记录
+        // 插入分配记录
         $insert_query = "INSERT INTO class_work 
                         (availability_id, lesson_id, class_id, student_work, expire_date) 
                         VALUES (?, ?, ?, ?, ?)";
@@ -169,38 +166,13 @@ if (isset($_POST['assign_submit'])) {
         );
         
         if ($insert_stmt->execute()) {
-            echo "<script>alert('Lesson assigned successfully!'); window.location.href = 'Main_page.php';</script>";
+            echo "<script>alert('Lesson assigned successfully!'); window.location.href = 'availablework.php';</script>";
         } else {
-            echo "<script>alert('Failed to assign lesson.');</script>";
+            echo "<script>alert('Lesson assignment failed.');</script>";
         }
     } else {
         echo "<script>alert('Lesson not found.');</script>";
     }
-}
-
-// 处理Material共享
-if (isset($_POST['share_material'])) {
-    $material_id = $_POST['material_id'];
-    
-    // 获取老师的所有班级
-    $classQuery = "SELECT class_id FROM teacher_class 
-                  WHERE teacher_id = ?";
-    $stmt = $connect->prepare($classQuery);
-    $stmt->bind_param("s", $teacher_id);
-    $stmt->execute();
-    $classResult = $stmt->get_result();
-    
-    // 更新每个班级的material关联
-    while ($class = $classResult->fetch_assoc()) {
-        $updateQuery = "UPDATE teacher_materials 
-                       SET class_id = ?
-                       WHERE material_id = ?";
-        $stmt = $connect->prepare($updateQuery);
-        $stmt->bind_param("ss", $class['class_id'], $material_id);
-        $stmt->execute();
-    }
-    
-    echo "<script>alert('Material shared to all your classes successfully!');</script>";
 }
 ?>
 </body>
