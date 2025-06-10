@@ -3,165 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ScratchJr LMS</title>
+  <title>ScratchJr LMS – Target Audience</title>
   <style>
-    :root {
-      --font-main: 'Helvetica Neue', sans-serif;
-      --color-text: #111;
-      --color-subtext: #555;
-      --color-border: #eee;
-      --color-bg: #fff;
-    }
-
-    * {
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
       margin: 0;
       padding: 0;
+      background-color: #ffffff;
+      color: #111111;
+    }
+
+    .audience-section {
+      background-color: #9101df;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
       box-sizing: border-box;
     }
 
-    body {
-      font-family: var(--font-main);
-      background: var(--color-bg);
-      color: var(--color-text);
-    }
-
-    .container {
+    .audience-wrapper {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 60px 40px;
       max-width: 1200px;
-      margin: auto;
-      padding: 60px 20px;
+      width: 100%;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
       text-align: center;
-      height: 100vh;
     }
 
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 10px;
-    }
 
-    .subtitle {
-      font-size: 1rem;
-      color: #666;
+    .audience-wrapper h2 {
+      font-size: 2rem;
       margin-bottom: 40px;
+      color: #222222;
     }
 
-    .grid {
+    .audience-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 30px;
     }
 
-    .box {
+    .audience-box {
+      background-color: #f9f9f9;
+      border-radius: 16px;
       padding: 30px 20px;
-      border: 1px solid var(--color-border);
-      border-radius: 12px;
-      background-color: #fafafa;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease;
+      border: 1px solid #eeeeee;
     }
 
-    .box:hover {
+    .audience-box:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
     }
 
-    .icon {
-      font-size: 40px;
+    .audience-icon {
+      font-size: 50px;
       margin-bottom: 15px;
     }
 
-    .title {
-      font-weight: 600;
-      font-size: 1.1rem;
+    .audience-title {
+      font-size: 1.3rem;
+      font-weight: bold;
       margin-bottom: 10px;
+      color: #333333;
     }
 
-    .description {
-      font-size: 0.95rem;
-      color: var(--color-subtext);
+    .audience-desc {
+      font-size: 1rem;
+      color: #555555;
+      line-height: 1.5;
     }
 
-    /* Tablet view */
-    @media (max-width: 992px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    /* Mobile view */
     @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
+      .audience-wrapper {
+        padding: 30px 20px;
       }
 
-      .container {
-        padding: 40px 15px;
+      .audience-wrapper h2 {
+        font-size: 1.6rem;
       }
 
-      h1 {
-        font-size: 1.8rem;
+      .audience-icon {
+        font-size: 40px;
       }
 
-      .subtitle {
+      .audience-title {
+        font-size: 1.1rem;
+      }
+
+      .audience-desc {
         font-size: 0.95rem;
-      }
-
-      .icon {
-        font-size: 36px;
-      }
-
-      .title {
-        font-size: 1rem;
-      }
-
-      .description {
-        font-size: 0.9rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Make every step ScratchJr-centric</h1>
-    <p class="subtitle">A playful, structured system designed for early coders</p>
-
-    <div class="grid">
-      <div class="box">
-        <div class="icon">🎧</div>
-        <div class="title">Student Support</div>
-        <div class="description">We provide guidance for every young learner exploring ScratchJr's creative features.</div>
-      </div>
-
-      <div class="box">
-        <div class="icon">📊</div>
-        <div class="title">Progress Tracking</div>
-        <div class="description">Track lesson completion, animation skills, and interactive project milestones.</div>
-      </div>
-
-      <div class="box">
-        <div class="icon">🧭</div>
-        <div class="title">Onboarding</div>
-        <div class="description">Easily get started with tutorials designed for children and educators new to coding.</div>
-      </div>
-
-      <div class="box">
-        <div class="icon">📚</div>
-        <div class="title">Interactive Lessons</div>
-        <div class="description">Step-by-step ScratchJr lessons</div>
-      </div>
-
-      <div class="box">
-        <div class="icon">❤️</div>
-        <div class="title">Quality Lessons</div>
-        <div class="description">Carefully crafted lessons with step-by-step guidance and playful logic-building.</div>
-      </div>
-
-      <div class="box">
-        <div class="icon">🎮</div>
-        <div class="title">Mini Games Fun</div>
-        <div class="description">Enjoy a variety of engaging mini games, including puzzles and quizzes. Perfect for all ages!</div>
-      </div>
-    </div>
-  </div>
+  
 
 </body>
 </html>
