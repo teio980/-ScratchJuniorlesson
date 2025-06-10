@@ -85,7 +85,6 @@ $teacher_id = $_SESSION['user_id'];
                             
                             <!-- 留言表单 -->
                             <form method="POST" action="post_comment.php" class="comment-form">
-                                <input type="hidden" name="content_type" value="lesson">
                                 <input type="hidden" name="availability_id" value="<?= $lesson['availability_id'] ?>">
                                 <textarea name="message" placeholder="Write your comment..." required></textarea>
                                 <button type="submit" class="submit-btn">Post Comment</button>
@@ -95,13 +94,13 @@ $teacher_id = $_SESSION['user_id'];
                             <div class="comment-list">
                                 <?php
                                 $commentQuery = "SELECT cc.*, 
-                                                IF(cc.sender_type='teacher', t.T_Username, s.S_Username) AS username
-                                                FROM content_comments cc
-                                                LEFT JOIN teacher t ON cc.sender_id = t.teacher_id AND cc.sender_type = 'teacher'
-                                                LEFT JOIN student s ON cc.sender_id = s.student_id AND cc.sender_type = 'student'
-                                                WHERE cc.content_type = 'lesson' 
-                                                AND cc.availability_id = ?
-                                                ORDER BY cc.created_at DESC";
+                                    IF(cc.sender_type='teacher', t.T_Username, s.S_Username) AS username
+                                    FROM content_comments cc
+                                    LEFT JOIN teacher t ON cc.sender_id = t.teacher_id AND cc.sender_type = 'teacher'
+                                    LEFT JOIN student s ON cc.sender_id = s.student_id AND cc.sender_type = 'student'
+                                    WHERE cc.availability_id = ?
+                                    ORDER BY cc.created_at DESC";
+                                    
                                 $stmt = $connect->prepare($commentQuery);
                                 $stmt->bind_param("s", $lesson['availability_id']);
                                 $stmt->execute();
@@ -116,7 +115,7 @@ $teacher_id = $_SESSION['user_id'];
                                             <div class="comment-author"><?= htmlspecialchars($comment['username']) ?></div>
                                             <?php if ($comment['sender_id'] == $teacher_id && $comment['sender_type'] == 'teacher'): ?>
                                                 <a href="?delete_comment=<?= $comment['comment_id'] ?>" class="delete-comment" 
-                                                   onclick="return confirm('Are you sure you want to delete this comment?')">× Delete</a>
+                                                   onclick="return confirm('Are you sure you want to delete this comment?')">Delete</a>
                                             <?php endif; ?>
                                         </div>
                                         <div class="comment-text"><?= htmlspecialchars($comment['message']) ?></div>

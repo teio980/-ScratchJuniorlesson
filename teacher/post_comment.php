@@ -3,7 +3,6 @@ session_start();
 require_once '../phpfile/connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $content_type = $_POST['content_type'] ?? '';
     $availability_id = $_POST['availability_id'] ?? '';
     $message = $_POST['message'] ?? '';
     $user_id = $_SESSION['user_id'] ?? '';
@@ -34,13 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $comment_id = 'CMT' . str_pad($row[0] + 1, 7, '0', STR_PAD_LEFT);
     
     $insert_sql = "INSERT INTO content_comments 
-                  (comment_id, content_type, availability_id, 
+                  (comment_id, availability_id, 
                   sender_id, sender_type, message)
-                  VALUES (?, ?, ?, ?, ?, ?)";
+                  VALUES (?, ?, ?, ?, ?)";
     $stmt = $connect->prepare($insert_sql);
-    $stmt->bind_param("ssssss", 
+    $stmt->bind_param("sssss", 
         $comment_id, 
-        $content_type, 
         $availability_id,
         $user_id,
         $sender_type,
@@ -48,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
     
     if ($stmt->execute()) {
-        // 返回来源页面
+        // Return to the previous page
         $referer = $_SERVER['HTTP_REFERER'] ?? 'assigned_lessons.php';
         header("Location: $referer");
     } else {
