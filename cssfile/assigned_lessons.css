@@ -1,0 +1,151 @@
+/* assigned_lessons.css */
+.class-container {
+    margin-bottom: 40px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    background: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.class-container:hover {
+    box-shadow: 0 5px 15px rgba(142, 60, 181, 0.1);
+}
+
+.class-header {
+    color: rgb(142, 60, 181);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 1.5rem;
+}
+
+.lesson-item {
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.lesson-item:hover {
+    transform: translateY(-3px);
+}
+
+.lesson-title {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.lesson-meta {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 15px;
+}
+
+.comment-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.comment-section h4 {
+    color: rgb(142, 60, 181);
+    margin-bottom: 15px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.comment-form textarea:focus {
+    outline: none;
+    border-color: rgb(142, 60, 181);
+    box-shadow: 0 0 0 2px rgba(142, 60, 181, 0.2);
+}
+
+.submit-btn {
+    background-color: rgb(142, 60, 181);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: rgb(122, 40, 161);
+}
+
+.comment-list {
+    margin-top: 20px;
+}
+
+.comment {
+    padding: 15px;
+    margin-bottom: 15px;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid rgb(142, 60, 181);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.comment-author {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.comment-text {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.comment-time {
+    font-size: 0.8em;
+    color: #999;
+    text-align: right;
+}
+
+.no-lessons {
+    color: #666;
+    font-style: italic;
+    padding: 15px;
+    text-align: center;
+}
+
+.container h1 {
+    color: rgb(142, 60, 181);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .class-container {
+        padding: 15px;
+    }
+    
+    .lesson-item {
+        padding: 15px;
+    }
+    
+    .lesson-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
