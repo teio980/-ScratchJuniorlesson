@@ -12,7 +12,7 @@ $teacher_id = $_SESSION['user_id'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Assigned Lessons</title>
-    <link rel="stylesheet" href="../cssfile/Tmain.css">
+    <link rel="stylesheet" href="../cssfile/Tearchermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/assigned_lessons.css">
 </head>
@@ -21,7 +21,6 @@ $teacher_id = $_SESSION['user_id'];
         <h1>My Assigned Lessons by Class</h1>
         
         <?php
-        // 获取老师负责的所有班级
         $classQuery = "SELECT c.class_id, c.class_name 
                       FROM class c
                       JOIN teacher_class tc ON c.class_id = tc.class_id
@@ -32,7 +31,6 @@ $teacher_id = $_SESSION['user_id'];
         $classes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         
         foreach ($classes as $class):
-            // 获取该班级分配的所有课程
             $lessonQuery = "SELECT l.*, cw.expire_date, cw.availability_id 
                             FROM lessons l
                             JOIN class_work cw ON l.lesson_id = cw.lesson_id

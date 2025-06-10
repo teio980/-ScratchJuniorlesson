@@ -4,8 +4,7 @@ require_once '../phpfile/connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $content_type = $_POST['content_type'] ?? '';
-    $content_id = $_POST['lesson_id'] ?? '';
-    $class_id = $_POST['class_id'] ?? '';
+    $availability_id = $_POST['availability_id'] ?? ''; // 改为使用availability_id
     $message = $_POST['message'] ?? '';
     $user_id = $_SESSION['user_id'] ?? '';
     
@@ -35,15 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $comment_id = 'CMT' . str_pad($row[0] + 1, 7, '0', STR_PAD_LEFT);
     
     $insert_sql = "INSERT INTO content_comments 
-                  (comment_id, content_type, lesson_id, class_id, 
+                  (comment_id, content_type, availability_id, 
                   sender_id, sender_type, message)
-                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+                  VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $connect->prepare($insert_sql);
-    $stmt->bind_param("sssssss", 
+    $stmt->bind_param("ssssss", 
         $comment_id, 
         $content_type, 
-        $content_id, 
-        $class_id,
+        $availability_id,
         $user_id,
         $sender_type,
         $message
