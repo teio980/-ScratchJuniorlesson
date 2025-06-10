@@ -3,30 +3,20 @@ session_start();
 require_once '../phpfile/connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $content_type = $_POST['content_type'] ?? '';
-    $availability_id = $_POST['availability_id'] ?? ''; // 改为使用availability_id
+    $availability_id = $_POST['availability_id'] ?? '';
     $message = $_POST['message'] ?? '';
-    $user_id = $_SESSION['user_id'] ?? '';
+    $teacher_id = $_SESSION['user_id'] ?? '';
     
-    $user_type = '';
-    $sql = "SELECT identity FROM (
-            SELECT teacher_id AS id, identity FROM teacher WHERE teacher_id = ?
-            UNION
-            SELECT student_id AS id, identity FROM student WHERE student_id = ?
-            UNION
-            SELECT admin_id AS id, identity FROM admin WHERE admin_id = ?
-        ) AS users LIMIT 1";
+    // Verify the user is a teacher
+    $sql = "SELECT teacher_id FROM teacher WHERE teacher_id = ?";
     $stmt = $connect->prepare($sql);
-    $stmt->bind_param("sss", $user_id, $user_id, $user_id);
+    $stmt->bind_param("s", $teacher_id);
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($result->num_rows === 0) {
-        die("Invalid user");
+        die("Only teachers can post comments");
     }
-    
-    $user = $result->fetch_assoc();
-    $sender_type = ($user['identity'] === 'teacher') ? 'teacher' : 'student';
     
     $sql = "SELECT COUNT(*) FROM content_comments";
     $result = $connect->query($sql);
@@ -34,21 +24,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $comment_id = 'CMT' . str_pad($row[0] + 1, 7, '0', STR_PAD_LEFT);
     
     $insert_sql = "INSERT INTO content_comments 
-                  (comment_id, content_type, availability_id, 
-                  sender_id, sender_type, message)
-                  VALUES (?, ?, ?, ?, ?, ?)";
+                  (comment_id, availability_id, teacher_id, message)
+                  VALUES (?, ?, ?, ?)";
     $stmt = $connect->prepare($insert_sql);
-    $stmt->bind_param("ssssss", 
+    $stmt->bind_param("ssss", 
         $comment_id, 
-        $content_type, 
         $availability_id,
-        $user_id,
-        $sender_type,
+        $teacher_id,
         $message
     );
     
     if ($stmt->execute()) {
-        // 返回来源页面
+        // Return to the referring page
         $referer = $_SERVER['HTTP_REFERER'] ?? 'assigned_lessons.php';
         header("Location: $referer");
     } else {
