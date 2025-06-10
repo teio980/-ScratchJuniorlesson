@@ -62,7 +62,7 @@ include 'header_Admin.php';
                     </div>
                 <?php endif; ?>
             </div>
-            <button type="submit">Register</button>
+            <button type="submit" id= "submit_btn">Register</button>
         </form>
     </div>
     <script src="../register.js"></script>

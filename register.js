@@ -53,80 +53,63 @@ function validatePasswordCondition(){
 
         if (value.length >= 8 && value.length <= 12) {
             length.textContent = "check"; 
-            P_isValid = true;
+            L_isValid = true;
         } else {
             length.textContent = "close";
-            P_isValid = false;
+            L_isValid = false;
         }
 
         if (/\d/.test(value)) {
             digit.textContent = "check";
-            P_isValid = true;
+            D_isValid = true;
         } else {
             digit.textContent = "close";
-            P_isValid = false;
+            D_isValid = false;
         }
 
         if (/[A-Z]/.test(value)) {
             upper.textContent = "check";
-            P_isValid = true;
+            UPPER_isValid = true;
         } else {
             upper.textContent = "close";
-            P_isValid = false;
+            UPPER_isValid = false;
         }
 
         if (/[a-z]/.test(value)) {
             lower.textContent = "check";
-            P_isValid = true;
+            LOWER_isValid = true;
         } else {
             lower.textContent = "close";
-            P_isValid = false;
+            LOWER_isValid = false;
         }
 
         if (/[^a-zA-Z0-9\s]/.test(value)) {
             symbol.textContent = "check";
-            P_isValid = true;
+            S_isValid = true;
         } else {
             symbol.textContent = "close";
-            P_isValid = false;
+            S_isValid = false;
+        }
+
+        if(L_isValid && D_isValid && UPPER_isValid && LOWER_isValid && S_isValid){
+            P_isValid = true;
+        }else{
+            P_isValid = false
         }
     });
 }
 
-/*function validateDataSubmit(){
-    let isValid = true;
-
-    if (document.getElementById("U_Username").value.length <= 5 && document.getElementById("U_Username").value.length >= 13) {
-        alert("Username's length is too short or too long. Please Try Again.");
-        isValid = false;
-    }
-
-    if (document.getElementById("U_Username").value.trim() === '') {
-        document.getElementById("errMessage_Username").style.display = 'block';
-        isValid = false;
-    }
-
-    if (document.getElementById("U_Email").value.trim() === '') {
-        document.getElementById("errMessage_Email").style.display = 'block';
-        isValid = false;
-    }
-
-    if (document.getElementById("U_Password").value.trim() === '') {
-        document.getElementById("errMessage_Password").style.display = 'block';
-        isValid = false;
-    }
-
-    if (document.getElementById("U_Confirmed_Password").value.trim() === '') {
-        document.getElementById("errMessage_Confirmed_Password").style.display = 'block';
-        isValid = false;
-    }
-
-    if (!P_isValid) {
-        isValid = false;
-    }
-
-    return isValid;
-}*/
+function setupSubmitValidation() {
+    const submitButton = document.getElementById("submit_btn"); 
+    
+    submitButton.addEventListener("click", function(event) {
+        if (!P_isValid) {
+            event.preventDefault();
+            alert("Please ensure your password meets all requirements.");
+            return false;
+        }
+    });
+}
 
 checkInput('U_Username', 'errMessage_Username');
 checkInput('U_Email', 'errMessage_Email');

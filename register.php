@@ -48,7 +48,7 @@ include 'reshead.php';
                 </div>
                 <p id="errMessage_Confirmed_Password" class="errMessage">Confirmed Password is required</p>
 
-                <button type="submit">Register</button>
+                <button type="submit" id= "submit_btn">Register</button>
             </form>
         </div>
     </div>
