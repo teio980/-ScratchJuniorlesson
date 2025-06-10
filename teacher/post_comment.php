@@ -33,18 +33,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $comment_id = 'CMT' . str_pad($row[0] + 1, 7, '0', STR_PAD_LEFT);
     
     $insert_sql = "INSERT INTO content_comments 
-                  (comment_id, availability_id, 
-                  sender_id, sender_type, message)
-                  VALUES (?, ?, ?, ?, ?)";
+                (availability_id, sender_id, sender_type, message)
+                VALUES (?, ?, ?, ?)";
     $stmt = $connect->prepare($insert_sql);
-    $stmt->bind_param("sssss", 
-        $comment_id, 
+    $stmt->bind_param("ssss", 
         $availability_id,
         $user_id,
         $sender_type,
         $message
     );
-    
+        
     if ($stmt->execute()) {
         // Return to the previous page
         $referer = $_SERVER['HTTP_REFERER'] ?? 'assigned_lessons.php';

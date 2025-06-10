@@ -32,17 +32,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (in_array($file_type, $allowed_types)) {
         $material_id = '';
         $sql = "SELECT COUNT(*) FROM teacher_materials";
-        if ($result = mysqli_query($connect, $sql)) {
-            $row = mysqli_fetch_row($result);
-            $material_Qty = (int)$row[0];
-            // 生成类似 M000001 格式的 material_id
-            $material_id = 'M' . str_pad($material_Qty + 1, 6, '0', STR_PAD_LEFT);
-            mysqli_free_result($result);
-        }
+
 
         if (move_uploaded_file($file["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO teacher_materials (material_id, teacher_id, class_id, title, description, file_name)
-                    VALUES ('$material_id', '$teacher_id', '$class_id', '$material_title', '$material_description', '$file_name')";
+            $sql = "INSERT INTO teacher_materials (teacher_id, class_id, title, description, file_name)
+                    VALUES ('$teacher_id', '$class_id', '$material_title', '$material_description', '$file_name')";
 
             if (mysqli_query($connect, $sql)) {
                 echo "<script>alert('Material uploaded successfully.'); window.location.href='lesson_management.php?tab=materials';</script>";
