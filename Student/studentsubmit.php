@@ -29,7 +29,7 @@ $existing_submission = mysqli_fetch_assoc($result3);
 $uploadMessage = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $filename = basename($_FILES['file']['name']);
+    $filename = str_replace(' ', '_', basename($_FILES['file']['name']));
     $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
 
     if (strtolower($file_ext) !== 'sjr') {
@@ -53,16 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
                     unlink($existing_submission['filepath']);
                 }
 
-                $update = "UPDATE student_submit
-                           SET filename = '$filename', upload_time = NOW()
-                           WHERE submit_id = '{$existing_submission['submit_id']}'";
+                $update = "UPDATE student_submit SET filename = '$filename', upload_time = NOW() WHERE submit_id = '{$existing_submission['submit_id']}'";
                 mysqli_query($connect, $update);
                 header("Location: Main_page.php?msg=updated");
                 exit();
             } else {
-                $insert = "INSERT INTO student_submit
-                           (submit_id, student_id, class_id, lesson_id, filename, upload_time)
-                           VALUES ('$submit_id', '$user_id', '$class_id', '$lesson_id', '$filename', NOW())";
+                $insert = "INSERT INTO student_submit (submit_id, student_id, class_id, lesson_id, filename, upload_time) VALUES ('$submit_id', '$user_id', '$class_id', '$lesson_id', '$filename', NOW())";
                 mysqli_query($connect, $insert);
                 header("Location: Main_page.php?msg=submitted");
                 exit();
