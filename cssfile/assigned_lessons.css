@@ -1,4 +1,3 @@
-/* assigned_lessons.css */
 .class-container {
     margin-bottom: 40px;
     border: 1px solid #ddd;
@@ -134,7 +133,6 @@
     text-align: center;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .class-container {
         padding: 15px;

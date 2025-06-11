@@ -1,4 +1,3 @@
-/* Base Styles */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -11,7 +10,6 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* Tab Styles */
 .tab-container {
     display: flex;
     margin-bottom: 20px;
@@ -46,7 +44,6 @@ h1 {
     display: block;
 }
 
-/* Card Styles */
 .lesson-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -129,7 +126,6 @@ h1 {
     gap: 10px;
 }
 
-/* Action Buttons */
 .lesson-actions {
     display: flex;
     border-top: 1px solid #eee;
@@ -163,7 +159,6 @@ h1 {
     background: #d32f2f;
 }
 
-/* Alert Styles */
 .alert-box {
     padding: 15px;
     margin-bottom: 20px;
@@ -191,30 +186,47 @@ h1 {
     font-weight: bold;
 }
 
-/* Modal Styles */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 1050;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
     animation: fadeIn 0.3s ease;
+    overflow-y: auto;
 }
 
 .modal-content {
     background-color: white;
-    margin: 5% auto;
-    padding: 25px;
-    border-radius: 8px;
-    width: 80%;
-    max-width: 600px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    margin: 2% auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 85%;
+    max-width: 700px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     position: relative;
     max-height: 90vh;
     overflow-y: auto;
+    border: 1px solid rgba(142, 60, 181, 0.2);
+    animation: slideIn 0.3s ease forwards;
+}
+
+.modal-scroll-container {
+    max-height: calc(90vh - 100px);
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.modal-content h2 {
+    color: rgb(142, 60, 181);
+    margin-top: 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 24px;
 }
 
 .close {
@@ -231,16 +243,20 @@ h1 {
     color: #333;
 }
 
-/* Form Styles */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 500;
+    font-weight: 600;
     color: #555;
+}
+
+.form-group label.required-field:after {
+    content: " *";
+    color: #e74c3c;
 }
 
 .form-group input[type="text"],
@@ -248,37 +264,187 @@ h1 {
 .form-group input[type="file"],
 .form-group select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px;
     font-family: inherit;
+    transition: border 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: rgb(142, 60, 181);
+    outline: none;
+    background-color: white;
+    box-shadow: 0 0 0 2px rgba(142, 60, 181, 0.1);
 }
 
 .form-group textarea {
-    min-height: 100px;
+    min-height: 120px;
     resize: vertical;
+    line-height: 1.5;
+}
+
+.file-upload {
+    margin-top: 10px;
+}
+
+.file-upload input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+.file-upload input[type="file"]:hover {
+    border-color: rgb(142, 60, 181);
+    background-color: #f0f0f0;
 }
 
 .file-info {
-    font-size: 12px;
+    font-size: 13px;
     color: #666;
+    margin-top: 8px;
+    padding: 5px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.file-name {
+    margin-left: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+input:invalid + .file-name {
+    color: #e74c3c;
+}
+
+.compact-criteria {
+    background-color: #f8f5fc;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #e9e1f5;
+}
+
+.compact-criteria label {
+    color: rgb(142, 60, 181);
+    font-size: 16px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.criteria-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.criteria-controls div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.small-select {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: white;
+}
+
+.small-btn {
+    padding: 8px 15px;
+    background-color: rgb(142, 60, 181);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.small-btn:hover {
+    background-color: rgb(122, 40, 161);
+}
+
+.compact-criteria-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.compact-criteria-row select {
+    flex: 1;
+    min-width: 150px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.compact-criteria-row input[type="text"] {
+    flex: 2;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    display: none;
+}
+
+.compact-criteria-row input[type="number"] {
+    width: 80px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.compact-preview {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.compact-list {
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+}
+
+.compact-list li {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 13px;
     margin-top: 5px;
-    font-style: italic;
+    display: block;
 }
 
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
 }
 
 .submit-btn, .cancel-btn {
-    padding: 10px 20px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: 500;
     transition: all 0.3s ease;
 }
 
@@ -289,48 +455,18 @@ h1 {
 
 .submit-btn:hover {
     background: rgb(122, 40, 161);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cancel-btn {
     background: #f1f1f1;
-    color: #333;
+    color: #555;
 }
 
 .cancel-btn:hover {
     background: #e0e0e0;
-}
-
-/* Criteria Styles */
-.criteria-row {
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #f5f5f5;
-    border-radius: 5px;
-}
-
-.criteria-select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.criteria-name-input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    display: none;
-}
-
-.criteria-points {
-    width: 60px;
-    padding: 8px;
-    margin-left: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    color: #333;
 }
 
 #criteriaPreview {
@@ -351,82 +487,68 @@ h1 {
     border-bottom: 1px solid #eee;
 }
 
-/* Compact Criteria for Edit Modal */
-.compact-criteria {
-    margin-bottom: 15px;
-}
-
-.compact-criteria-row {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.compact-criteria-row select, 
-.compact-criteria-row input {
-    padding: 5px;
-    font-size: 14px;
-}
-
-.compact-container {
-    margin-top: 10px;
-}
-
-.compact-preview {
-    margin-top: 10px;
-    padding: 10px;
-    background: #f5f5f5;
+.compact-criteria-row input[type="text"] {
+    flex: 2;
+    padding: 8px;
     border-radius: 4px;
+    border: 1px solid #ddd;
+    display: none;
 }
 
-.compact-list {
-    margin: 5px 0;
-    padding-left: 20px;
+.compact-criteria-row input[type="number"] {
+    width: 80px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
 }
 
-.criteria-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
+#existingCriteriaData {
+    display: none;
 }
 
-.small-select {
-    padding: 5px;
-    font-size: 14px;
-}
-
-.small-btn {
-    padding: 5px 10px;
-    font-size: 14px;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Responsive Styles */
 @media (max-width: 768px) {
     .lesson-cards-container {
         grid-template-columns: 1fr;
     }
     
     .modal-content {
-        width: 90%;
-        margin: 10% auto;
+        width: 95%;
+        padding: 20px;
+        margin: 5% auto;
+    }
+    
+    .compact-criteria-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .compact-criteria-row select,
+    .compact-criteria-row input {
+        width: 100%;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .submit-btn,
+    .cancel-btn {
+        width: 100%;
     }
 }
 
-.file-name {
-    margin-left: 10px;
-    font-size: 0.9em;
-    color: #666;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* 高亮显示无效文件 */
-input:invalid + .file-name {
-    color: #e74c3c;
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }

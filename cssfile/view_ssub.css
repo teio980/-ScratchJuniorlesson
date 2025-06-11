@@ -1,7 +1,5 @@
-/* Import global styles */
 @import url('global.css');
 
-/* General reset */
 * {
     margin: 0;
     padding: 0;
@@ -14,7 +12,6 @@ body, html {
     background-color: var(--background);
 }
 
-/* Header */
 h2 {
     font-size: 2rem;
     color: var(--primary-color);
@@ -22,7 +19,6 @@ h2 {
     text-align: center;
 }
 
-/* Table styling */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -48,7 +44,6 @@ table tr:nth-child(even) {
     background-color: #f4f4f4;
 }
 
-/* Button styling */
 button {
     padding: 10px 20px;
     font-size: 1rem;
@@ -64,7 +59,6 @@ button:hover {
     background-color: var(--secondary-color);
 }
 
-/* Feedback Modal */
 #feedbackModal {
     display: none;
     position: fixed;
@@ -119,5 +113,318 @@ button:hover {
 
 .download-link:hover {
     color: var(--secondary-color);
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 25px 0;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.submissions-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+}
+
+.submissions-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.submissions-table th {
+    background-color: #3f51b5;
+    color: white;
+    padding: 14px 16px;
+    font-weight: 500;
+    text-align: center;
+    border: none;
+}
+
+.submissions-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.submissions-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.submissions-table tr:hover {
+    background-color: #f1f3ff;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-ungraded {
+    background-color: #f5f5f5;
+    color: #757575;
+}
+
+.status-pass {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-fail {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.download-link {
+    color: #3f51b5;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.download-link:hover {
+    color: #283593;
+    text-decoration: underline;
+}
+
+.download-link::before {
+    content: "↓";
+    font-size: 1.1em;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.rate-btn {
+    background-color: #4caf50;
+    color: white;
+}
+
+.rate-btn:hover {
+    background-color: #388e3c;
+    transform: translateY(-1px);
+}
+
+.update-btn {
+    background-color: #ff9800;
+    color: white;
+}
+
+.update-btn:hover {
+    background-color: #f57c00;
+    transform: translateY(-1px);
+}
+
+.rating-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.rating-modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-content {
+    background-color: white;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
+
+.rating-modal.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-header {
+    padding: 20px;
+    background-color: #3f51b5;
+    color: white;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.criteria-group {
+    margin-bottom: 25px;
+}
+
+.criteria-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+}
+
+.criteria-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #424242;
+}
+
+.criteria-input {
+    width: 80px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.criteria-input:focus {
+    border-color: #3f51b5;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+
+.max-score {
+    color: #757575;
+    margin-left: 8px;
+}
+
+.score-summary {
+    margin: 25px 0;
+    padding: 15px;
+    background-color: #e3f2fd;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.final-score {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #3f51b5;
+}
+
+.feedback-area {
+    margin-top: 20px;
+}
+
+.feedback-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.feedback-input {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.feedback-input:focus {
+    border-color: #3f51b5;
+    outline: none;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.submit-btn {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+}
+
+.submit-btn:hover {
+    background-color: #283593;
+}
+
+.cancel-btn {
+    background-color: #f5f5f5;
+    color: #424242;
+    border: 1px solid #ddd;
+}
+
+.cancel-btn:hover {
+    background-color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 15px;
+        margin: 15px;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+    
+    .criteria-item {
+        padding: 12px;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-btn {
+        width: 100%;
+    }
 }
 

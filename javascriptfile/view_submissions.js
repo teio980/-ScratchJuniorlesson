@@ -1,4 +1,33 @@
-// 评分模态框相关功能
+function downloadAll() {
+    try {
+        var links = document.querySelectorAll('a.download-link');
+        if (links.length === 0) {
+            alert('No downloadable files found');
+            return;
+        }
+
+        var delay = 0;
+        links.forEach(function(link) {
+            setTimeout(function() {
+                try {
+                    var a = document.createElement('a');
+                    a.href = link.href;
+                    a.download = link.getAttribute('data-filename') || link.href.split('/').pop();
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } catch (e) {
+                    console.error('Error downloading file:', e);
+                }
+            }, delay);
+            delay += 500; 
+        });
+    } catch (e) {
+        console.error('Error in downloadAll:', e);
+        alert('An error occurred while trying to download files');
+    }
+}
+
 function openRatingModal(submit_id, student_id, lesson_id) {
     fetch('../phpfile/get_lesson_criteria.php?lesson_id=' + lesson_id)
         .then(response => {
@@ -27,11 +56,11 @@ function openRatingModal(submit_id, student_id, lesson_id) {
                 const div = document.createElement('div');
                 div.className = 'criteria-item';
                 div.innerHTML = `
-                    <label for="criteria_${index}">${name} (0-${maxScore}):</label><br>
+                    <label for="criteria_${index}">${name} (0-${maxScore}):</label>
                     <input type="number" name="criteria[]" id="criteria_${index}" 
-                           min="0" max="${maxScore}" value="0" 
+                           min="0" max="${maxScore}" value="${data.existing_scores ? data.existing_scores[index] || 0 : 0}" 
                            onchange="calculateTotalScore(${maxScore}, this)">
-                    <span class="max-score">/ ${maxScore}</span><br><br>
+                    <span class="max-score">/ ${maxScore}</span>
                 `;
                 form.querySelector('#criteriaContainer').appendChild(div);
             });
@@ -39,18 +68,14 @@ function openRatingModal(submit_id, student_id, lesson_id) {
             form.querySelector('#criteriaContainer').innerHTML += `
                 <div class="total-score">
                     <strong>Total Score: </strong>
-                    <span id="displayTotal">0</span> / ${totalMaxScore}
-                    <input type="hidden" name="total_score" id="total_score" value="0">
+                    <span id="displayTotal">${data.existing_score || 0}</span> / ${totalMaxScore}
+                    <input type="hidden" name="total_score" id="total_score" value="${data.existing_score || 0}">
                 </div>
             `;
 
-            if (data.feedback) {
-                document.getElementById('feedback').value = data.feedback;
-            }
+            document.getElementById('feedback').value = data.feedback || '';
             
-            if (data.existing_score) {
-                document.getElementById('total_score').value = data.existing_score;
-                document.getElementById('displayTotal').textContent = data.existing_score;
+            if (data.existing_score !== undefined && data.existing_score !== null) {
                 document.getElementById('finalScoreDisplay').textContent = data.existing_score;
                 document.getElementById('finalScoreContainer').style.display = 'block';
             }
@@ -92,7 +117,6 @@ function closeRatingModal() {
     document.getElementById('ratingModal').style.display = 'none';
 }
 
-// 删除提交功能
 function deleteSubmission(submit_id) {
     if (confirm('Are you sure you want to delete this submission? This action cannot be undone.')) {
         fetch('../phpfile/delete_submission.php', {
@@ -106,7 +130,7 @@ function deleteSubmission(submit_id) {
         .then(data => {
             if (data.success) {
                 alert('Submission deleted successfully.');
-                location.reload(); // 刷新页面
+                location.reload();
             } else {
                 alert('Failed to delete submission: ' + (data.error || 'Unknown error'));
             }
@@ -118,9 +142,7 @@ function deleteSubmission(submit_id) {
     }
 }
 
-// 初始化事件监听器
 document.addEventListener('DOMContentLoaded', function() {
-    // 为删除按钮添加事件监听器（如果有删除按钮）
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const submit_id = this.dataset.submitId;

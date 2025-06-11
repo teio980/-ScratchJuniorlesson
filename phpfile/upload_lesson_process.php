@@ -2,7 +2,6 @@
 session_start();
 include 'connect.php';
 
-// 创建上传目录
 $upload_dir_file = '../phpfile/uploads/lesson/';
 $upload_dir_thumbnail = '../phpfile/uploads/thumbnail/';
 
@@ -13,13 +12,11 @@ if (!is_dir($upload_dir_thumbnail)) {
     mkdir($upload_dir_thumbnail, 0755, true);
 }
 
-// 初始化变量
 $thumbnail_name = '';
 $file_name = '';
 $error = false;
 $error_messages = [];
 
-// 处理缩略图上传
 if (isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == UPLOAD_ERR_OK) {
     $original_thumbnail = basename($_FILES['thumbnail_image']['name']);
     $original_thumbnail = str_replace(' ', '_', $original_thumbnail);
@@ -45,7 +42,6 @@ if (isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == 
     $error_messages[] = "Thumbnail upload error: " . $_FILES['thumbnail_image']['error'];
 }
 
-// 处理课程文件上传
 if (isset($_FILES['lesson_file']) && $_FILES['lesson_file']['error'] == UPLOAD_ERR_OK) {
     $original_filename = basename($_FILES['lesson_file']['name']);
     $original_filename = str_replace(' ', '_', $original_filename);
@@ -77,7 +73,6 @@ if (isset($_FILES['lesson_file']) && $_FILES['lesson_file']['error'] == UPLOAD_E
     }
 }
 
-// 如果有错误，显示错误并退出
 if ($error) {
     if ($file_name && file_exists($upload_dir_file . $file_name)) {
         @unlink($upload_dir_file . $file_name);
@@ -91,13 +86,11 @@ if ($error) {
     exit();
 }
 
-// 获取表单数据
 $title = mysqli_real_escape_string($connect, $_POST['title']);
 $description = mysqli_real_escape_string($connect, $_POST['description']);
 $category = mysqli_real_escape_string($connect, $_POST['category']);
 $grading_criteria = isset($_POST['scoring_criteria']) ? mysqli_real_escape_string($connect, $_POST['scoring_criteria']) : '';
 
-// 插入数据库 - 使用自增ID
 $sql_insert = "INSERT INTO lessons (title, description, category, grading_criteria, file_name, thumbnail_name) 
 VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -106,14 +99,12 @@ $stmt->bind_param("ssssss", $title, $description, $category, $grading_criteria, 
 
 if ($stmt->execute()) {
     $lesson_id = $stmt->insert_id;
-    // 更新格式化的课程ID
     $formatted_id = 'LL' . str_pad($lesson_id, 6, '0', STR_PAD_LEFT);
     mysqli_query($connect, "UPDATE lessons SET lesson_id = '$formatted_id' WHERE auto_id = $lesson_id");
     
     header("Location: ../teacher/lesson_management.php?success=1&tab=lessons");
     exit();
 } else {
-    // 清理上传的文件
     if ($file_name && file_exists($upload_dir_file . $file_name)) {
         @unlink($upload_dir_file . $file_name);
     }
@@ -124,7 +115,6 @@ if ($stmt->execute()) {
     die("Error: " . mysqli_error($connect));
 }
 
-// 生成唯一文件名函数
 function generateUniqueFilename($directory, $filename) {
     $counter = 1;
     $fileinfo = pathinfo($filename);

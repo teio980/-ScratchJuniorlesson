@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Modal functionality
     const modal = document.getElementById("categoryModal");
     const btn = document.getElementById("chooseCategoryBtn");
     const span = document.getElementById("closeModal");
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Auto-prefix title based on category selection
     const categorySelect = document.getElementById('category');
     const titleInput = document.getElementById('title');
     const typePrefixInput = document.querySelector('input[name="type_prefix"]');
@@ -101,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (label) label.textContent = file.name;
     });
 
-    // File type validation
     const thumbnailInput = document.getElementById('thumbnail_image');
     if (thumbnailInput) {
         thumbnailInput.addEventListener('change', function(e) {
@@ -131,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Grading criteria functionality
     const presetCriteria = JSON.parse(document.getElementById('presetCriteria').textContent);
     
     function updateCriteriaFields() {
@@ -225,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let criteria = [];
         let previewHTML = "<h4>Selected Criteria:</h4><ul>";
         let isValid = true;
+        let totalpoint = 0;
         
         for (let i = 0; i < count; i++) {
             const nameInput = document.getElementById(`criteria_name_${i}`);
@@ -235,11 +232,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 continue;
             }
             
+            const points = parseInt(pointsInput.value) || 0;
+            totalpoint += points;
             criteria.push(`${nameInput.value}:${pointsInput.value}`);
             previewHTML += `<li><strong>${nameInput.value}</strong>: ${pointsInput.value} points</li>`;
         }
         
-        previewHTML += "</ul>";
+        previewHTML += `</ul><p><strong>Total: ${totalpoint} points</strong></p>`;
         
         if (isValid && criteria.length > 0) {
             document.getElementById('scoring_criteria').value = criteria.join('|');
@@ -250,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-    // Initialize criteria fields
     if (document.getElementById('criteria_count')) {
         updateCriteriaFields();
         document.getElementById('criteria_count').addEventListener('change', updateCriteriaFields);

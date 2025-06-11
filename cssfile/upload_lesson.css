@@ -1,4 +1,3 @@
-/* Modal Styles (unchanged) */
 .modal {
     display: none;
     position: fixed;
@@ -188,7 +187,6 @@
     background-color: #d0d0d0;
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
     .lesson-form {
         grid-template-columns: 1fr;
