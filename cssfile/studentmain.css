@@ -1130,17 +1130,16 @@ main{
 .chat-message {
     display: flex;
     margin-bottom: 30px;
-    max-width: 100%;
 }
 
 .chat-message.user {
     background-color: var(--background); 
-    justify-content: flex-end;
+    justify-content: flex-start;
     padding: 10px 15px;
     border-radius: 15px;
     color: var(--text-color); 
     width: fit-content;
-    max-width: 80%;
+    max-width: 90%;
 }
 
 .chat-message.other {
@@ -1150,7 +1149,7 @@ main{
     padding: 10px 15px;
     border-radius: 15px;
     width: fit-content;
-    max-width: 80%;
+    max-width: 90%;
 }
 
 /*puzzle*/

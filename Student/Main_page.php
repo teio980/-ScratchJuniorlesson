@@ -853,7 +853,10 @@
                         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
 
                         <div class="input-with-emoji">
-                            <input type="text" name="message" placeholder="Type your message..." required />
+                            <input type="text" name="message" placeholder="Type your message..." required 
+                            onpaste="return false;" 
+                            ondrop="return false;"
+                            autocomplete="off" />
                             <button type="button" id="emoji-icon" class="emoji-icon"><i class="fas fa-smile"></i></button>
                         </div>
 
@@ -1305,6 +1308,8 @@ $connect->close();
             ul.previousElementSibling.classList.remove('rotate')
         })
         }
+
+
     
     //comment popout
     function togglePopup(button) {
