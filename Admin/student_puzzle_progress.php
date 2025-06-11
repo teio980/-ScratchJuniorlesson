@@ -76,7 +76,7 @@ if ($page > $total_pages && $total_pages > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../cssfile/headerAdmin.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-    <link rel="stylesheet" href="../cssfile/manageClass.css">
+    <link rel="stylesheet" href="../cssfile/manageUser.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <title>Student Game Progress</title>
 </head>
