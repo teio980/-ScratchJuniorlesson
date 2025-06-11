@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2025-06-10 18:43:44
+-- 生成日期： 2025-06-11 06:36:43
 -- 服务器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -47,7 +47,7 @@ INSERT INTO `teacher_materials` (`material_id`, `teacher_id`, `class_id`, `title
 ('M000005', 'TCH000001', 'CLS000001', '21221', '1w2w2e', 'Lab_8_(3).pdf', '2025-06-10 16:27:33', 5),
 ('M000006', 'TCH000001', 'CLS000002', 'gyguuh', 'huiijko', 'Tutorial_04_!.docx', '2025-06-10 16:28:50', 6),
 ('M000007', 'TCH000001', 'CLS000001', '11ww1ww1', 'w1w1ew1e', 'Tutorial_02_(2).docx', '2025-06-10 16:29:22', 7),
-('M000008', 'TCH000001', 'CLS000001', '111111', '12e2edd', 'Lab_7_Question.pdf', '2025-06-10 16:32:01', 8);
+('M000008', 'TCH000001', 'CLS000001', '2', '12e2edd', 'Lab_7_Question.pdf', '2025-06-10 16:32:01', 8);
 
 --
 -- 触发器 `teacher_materials`

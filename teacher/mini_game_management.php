@@ -7,7 +7,6 @@ include 'resheadteacher.php';
 $teacher_id = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     if (isset($_POST['action']) && $_POST['action'] === 'edit' && isset($_POST['game_id'])) {
         $game_id = $_POST['game_id'];
         $title = $_POST['title'];
@@ -20,19 +19,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $fileName = $old_image;
         
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = '../phpfile/uploads_mini_games/';
-            $fileExtension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $fileName = uniqid() . '.' . $fileExtension;
-            $filePath = $uploadDir . $fileName;
-            
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
-                if (file_exists($uploadDir . $old_image)) {
-                    unlink($uploadDir . $old_image);
+        if (isset($_FILES['image'])) {
+            if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = '../phpfile/uploads_mini_games/';
+                $fileName = str_replace(' ', '_', $_FILES['image']['name']);
+                $filePath = $uploadDir . $fileName;
+                
+                // Handle duplicate filenames
+                $counter = 1;
+                $fileInfo = pathinfo($fileName);
+                while (file_exists($filePath)) {
+                    $fileName = $fileInfo['filename'] . '_' . $counter . '.' . $fileInfo['extension'];
+                    $filePath = $uploadDir . $fileName;
+                    $counter++;
                 }
-            } else {
-                $error_message = "Failed to upload new image. Keeping the old one.";
-                $fileName = $old_image;
+                
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
+                    if (file_exists($uploadDir . $old_image)) {
+                        unlink($uploadDir . $old_image);
+                    }
+                } else {
+                    $error_message = "Failed to upload new image. Keeping the old one.";
+                    $fileName = $old_image;
+                }
+            } elseif ($_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                $error_message = "File upload error occurred.";
             }
         }
         
@@ -56,21 +67,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mkdir($uploadDir, 0777, true);
             }
             
-            $fileExtension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $fileName = uniqid() . '.' . $fileExtension;
+            // Get next auto_id
+            $last_id_query = "SELECT MAX(auto_id) as max_id FROM mini_games";
+            $result = $connect->query($last_id_query);
+            $max_id = $result->fetch_assoc()['max_id'];
+            $next_id = ($max_id ? $max_id + 1 : 1);
+            
+            // Generate game_id from auto_id
+            $game_id = 'G' . str_pad($next_id, 6, '0', STR_PAD_LEFT);
+            
+            // Handle filename
+            $fileName = str_replace(' ', '_', $_FILES['image']['name']);
             $filePath = $uploadDir . $fileName;
             
+            // Handle duplicate filenames
+            $counter = 1;
+            $fileInfo = pathinfo($fileName);
+            while (file_exists($filePath)) {
+                $fileName = $fileInfo['filename'] . '_' . $counter . '.' . $fileInfo['extension'];
+                $filePath = $uploadDir . $fileName;
+                $counter++;
+            }
+            
             if (move_uploaded_file($_FILES['image']['tmp_name'], $filePath)) {
-                $last_id_query = "SELECT MAX(CAST(SUBSTRING(game_id, 2) AS UNSIGNED)) as max_id FROM mini_games";
-                $result = $connect->query($last_id_query);
-                $max_id = $result->fetch_assoc()['max_id'];
-                $next_id = ($max_id ? $max_id + 1 : 1);
-                $game_id = 'G' . str_pad($next_id, 6, '0', STR_PAD_LEFT);
-                
-                $insert_query = "INSERT INTO mini_games (game_id, teacher_id, title, image_name) 
-                                VALUES (?, ?, ?, ?)";
+                $insert_query = "INSERT INTO mini_games (game_id, teacher_id, title, image_name, auto_id) 
+                                VALUES (?, ?, ?, ?, ?)";
                 $stmt = $connect->prepare($insert_query);
-                $stmt->bind_param("ssss", $game_id, $teacher_id, $title, $fileName);
+                $stmt->bind_param("ssssi", $game_id, $teacher_id, $title, $fileName, $next_id);
                 
                 if ($stmt->execute()) {
                     $success_message = "Mini Game uploaded successfully!";
@@ -163,8 +186,8 @@ if (isset($_GET['deleted'])) {
                 </div>
                 <div>
                     <label for="image">Image (16:9 aspect ratio required):</label>
-                    <input type="file" id="image" name="image" accept="image/*" required>
-                    <div id="fileNameDisplay" class="file-name-display"></div>
+                    <input type="file" id="image" name="image" accept="image/*" required onchange="showOriginalName(this)">
+                    <div id="fileNameDisplay" class="file-name-display">No file chosen</div>
                     <div id="imagePreviewContainer" style="display:none; margin-top:10px;">
                         <img id="imagePreview" src="#" alt="Preview" style="max-width:100%;">
                     </div>
@@ -190,6 +213,7 @@ if (isset($_GET['deleted'])) {
                         <img src="../phpfile/uploads_mini_games/<?php echo htmlspecialchars($game['image_name']); ?>" 
                              alt="<?php echo htmlspecialchars($game['title']); ?>">
                         <h3><?php echo htmlspecialchars($game['title']); ?></h3>
+                        <small>Filename: <?php echo htmlspecialchars($game['image_name']); ?></small>
                         <small>Uploaded: <?php echo date('Y-m-d', strtotime($game['create_time'])); ?></small>
                     </div>
                 <?php endwhile; ?>
@@ -211,8 +235,12 @@ if (isset($_GET['deleted'])) {
                     <input type="text" id="editTitle" name="title" required>
                 </div>
                 <div>
-                    <label for="editImage">New Image (optional):</label>
-                    <input type="file" id="editImage" name="image" accept="image/*">
+                    <label for="editImage">New Image (optional, 16:9 aspect ratio required):</label>
+                    <input type="file" id="editImage" name="image" accept="image/*" onchange="showEditOriginalName(this); previewEditImage(this)">
+                    <div id="editFileNameDisplay" class="file-name-display">No file chosen</div>
+                    <div id="editImagePreviewContainer" style="display:none; margin-top:10px;">
+                        <img id="editImagePreview" src="#" alt="Preview" style="max-width:100%;">
+                    </div>
                 </div>
                 <button type="submit">Save Changes</button>
             </form>
