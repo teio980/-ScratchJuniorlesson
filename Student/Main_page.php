@@ -340,7 +340,6 @@
                     $availability_id = $row['availability_id'];
                     $lesson_id = $row['lesson_id'];
 
-                    // Skip if already submitted
                     $check_submission = "SELECT 1 FROM student_submit WHERE student_id = '$user_id' AND lesson_id = '$lesson_id' AND class_id = '$class_id'";
                     $result_submission = mysqli_query($connect, $check_submission);
                     if (mysqli_num_rows($result_submission) > 0) continue;
@@ -348,7 +347,6 @@
                     $student_work = htmlspecialchars($row['student_work']);
                     $expire_date = htmlspecialchars($row['expire_date']);
 
-                    // Get lesson title
                     $sql_lesson = "SELECT title FROM lessons WHERE file_name = '$student_work' LIMIT 1";
                     $result_lesson = mysqli_query($connect, $sql_lesson);
                     $lesson_title = $student_work;

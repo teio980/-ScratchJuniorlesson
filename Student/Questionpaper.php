@@ -57,6 +57,7 @@ include 'resheadstudent.php';
         }
 
         $connect->close();
+        echo "<button onclick='window.location.href=\"Main_page.php\"' class='submit-btn returnbtn'>Return</button>";
         ?>
       </form>
     </div>
