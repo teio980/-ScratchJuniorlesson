@@ -261,7 +261,7 @@ if ($page > $total_pages && $total_pages > 0) {
                 
                 <div class="form-group">
                     <label for="Class_code">Class Code:</label>
-                    <input type="text" id="Class_code" name="Class_code" required>
+                    <input type="text" id="Class_code" name="Class_code" pattern="[A-Z]{3}\d{4}" required>
                 </div>
                 
                 <div class="form-group">
@@ -309,7 +309,7 @@ if ($page > $total_pages && $total_pages > 0) {
                 
                 <div class="form-group">
                     <label for="Class_code">Class Code:</label>
-                    <input type="text" id="Class_code" name="Class_code" required>
+                    <input type="text" id="Class_code" name="Class_code" pattern="[A-Z]{3}\d{4}" required>
                     <p>Class Code Format:Three UPPERCASE Follow By Four DIGIT <br> Example: ABC1234</p>
                 </div>
                 

@@ -58,7 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $insertStmt->bindParam(':email', $email);
         $insertStmt->bindParam(':password', $hashedPassword);
         $insertStmt->bindParam(':identity', $identity);
-        $insertStmt->bindParam(':time', $now->format('Y-m-d H:i:s'));
+        $formattedTime = $now->format('Y-m-d H:i:s');
+        $insertStmt->bindParam(':time', $formattedTime);
         
         if ($insertStmt->execute()) {
             $last_id = $pdo->lastInsertId();
@@ -75,11 +76,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $getUserIdStmt->execute([$last_id]);
             $student_id = $getUserIdStmt->fetchColumn();
             
+            $allowedExtensions = ['jpg', 'jpeg', 'png'];
             $fileName = $_FILES['U_Avatar']['name'];
             $fileTmpName = $_FILES['U_Avatar']['tmp_name'];
             $fileSize = $_FILES['U_Avatar']['size'];
             $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
             $fileExt = strtolower($fileExtension);
+            if (!in_array($fileExt, $allowedExtensions)) {
+                    echo "<script>
+                        alert('Only JPG, JPEG, and PNG files are allowed.\nAccount Succeful Register But with Default Avatar.');
+                        window.location.href = '../register.php';
+                    </script>";
+                    exit();
+            }
 
             $maxFileSize = 5 * 1024 * 1024;
             if ($fileSize > $maxFileSize) {

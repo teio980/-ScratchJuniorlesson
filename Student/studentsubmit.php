@@ -126,6 +126,7 @@ if ($expire_time > $current_time) {
           📁 Choose .sjr file to upload
         </label>
         <input type="file" name="file" id="file" accept=".sjr" required>
+        <span id="file-name"></span>
       </div>
       <button type="submit">Submit</button>
     </form>
@@ -139,3 +140,16 @@ if ($expire_time > $current_time) {
 
 </body>
 </html>
+
+<script>
+  const fileInput = document.getElementById('file');
+  const fileNameSpan = document.getElementById('file-name');
+
+  fileInput.addEventListener('change', function () {
+    if (fileInput.files.length > 0) {
+      fileNameSpan.textContent = fileInput.files[0].name;
+    } else {
+      fileNameSpan.textContent = 'No file chosen';
+    }
+  });
+</script>

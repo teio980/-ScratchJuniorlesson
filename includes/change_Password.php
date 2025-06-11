@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_id = $_SESSION["user_id"];
 
     if($identity == "student"){
-        $url = '../Student/Personal_Profile.php';
+        $url = '../Student/Main_page.php';
         $check_password_sql = "SELECT S_Password AS Password FROM student WHERE student_id = :ID";
         $update_password_sql = "UPDATE student SET S_Password = :password WHERE student_id = :ID";
     }

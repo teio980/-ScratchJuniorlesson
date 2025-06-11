@@ -2,74 +2,128 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ScratchJr Learning Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background: #fff;
-      color: #333;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    .hero {
-      background: #9101df;
-      color: white;
-      padding: 60px 20px;
+    body {
+      background: #ffffff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 350px;
       text-align: center;
-      clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+      color: #fff;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     }
 
-    .hero h1 {
-      font-size: 36px;
+    .login-box h2 {
+      margin-bottom: 10px;
+    }
+
+    .login-box p {
+      font-size: 14px;
+      margin-bottom: 30px;
+      color: #ccc;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 5px;
+      color: #ccc;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 30px;
+      background: #111;
+      color: white;
+      font-size: 14px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 20px;
+      color: #aaa;
+    }
+
+    .options a {
+      color: #ffb3b3;
+      text-decoration: none;
+    }
+
+    .login-box button {
+      background: linear-gradient(to right, #ff9966, #ff5e62);
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 30px;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
       margin-bottom: 20px;
     }
 
-    .hero p {
-      font-size: 18px;
-      max-width: 600px;
-      margin: 0 auto;
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
     }
 
-    .content {
-      padding: 40px 20px;
-      max-width: 800px;
-      margin: auto;
+    .social-icons img {
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
     }
-
-    .content h2 {
-      color: #9101df;
-      margin-bottom: 16px;
-    }
-
-    .content p {
-      line-height: 1.6;
-      font-size: 16px;
-    }
-
   </style>
 </head>
 <body>
 
-  <section class="hero">
-    <h1>My ScratchJr Learning Website</h1>
-    <p>A creative and fun platform where kids can learn programming by building interactive stories and games using ScratchJr.</p>
-  </section>
+  <div class="login-box">
+    <h2>Welcome back</h2>
+    <p>Please Enter your Account details</p>
 
-  <section class="content">
-    <h2>Why I Built This</h2>
-    <p>I created this website to help children aged 5 to 7 get started with coding using ScratchJr. It offers simple lessons, interactive exercises, and colorful visuals to make learning fun and accessible.</p>
+    <div class="input-group">
+      <label for="email">Username</label>
+      <input type="email" id="email" value="" />
+    </div>
 
-    <h2>Features</h2>
-    <p>
-      - Easy-to-follow lessons for beginners<br>
-      - Fun quizzes to test understanding<br>
-      - Progress tracking and student profiles<br>
-      - Works in your browser – no install needed
-    </p>
-  </section>
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" value="" />
+    </div>
 
+    <div class="options">
+      <a href="#">Register</a>
+      <a href="#">Forgot Password</a>
+    </div>
+
+    <button class="signin_btn">Sign in</button>
+
+  </div>
 
 </body>
 </html>

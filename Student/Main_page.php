@@ -340,7 +340,6 @@
                     $availability_id = $row['availability_id'];
                     $lesson_id = $row['lesson_id'];
 
-                    // Skip if already submitted
                     $check_submission = "SELECT 1 FROM student_submit WHERE student_id = '$user_id' AND lesson_id = '$lesson_id' AND class_id = '$class_id'";
                     $result_submission = mysqli_query($connect, $check_submission);
                     if (mysqli_num_rows($result_submission) > 0) continue;
@@ -348,7 +347,6 @@
                     $student_work = htmlspecialchars($row['student_work']);
                     $expire_date = htmlspecialchars($row['expire_date']);
 
-                    // Get lesson title
                     $sql_lesson = "SELECT title FROM lessons WHERE file_name = '$student_work' LIMIT 1";
                     $result_lesson = mysqli_query($connect, $sql_lesson);
                     $lesson_title = $student_work;
@@ -970,7 +968,7 @@
         <div class="container tab-content active" id="profile">
             <h1>Personal Profile</h1>
             <form action="../includes/change_Avatar.php" class="avatar_container" method="post" enctype="multipart/form-data">
-            <input type="file" name="change_Avatar" id="change_Avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="this.form.submit()">
+            <input type="file" name="change_Avatar" id="change_Avatar" accept=".jpg, .jpeg, .png" style="display: none;" onchange="this.form.submit()">
             <label for="change_Avatar" style="cursor: pointer;">
                 <img src="<?php echo $fullPath; ?>" alt="Avatar" class="avatar">
                 <span class="material-symbols-outlined" id="edit_avatar_icon">edit</span>
@@ -1050,6 +1048,10 @@
 
         <!--Change Class Page-->
         <div class="container tab-content" id="recent">
+            <?php
+            $result = mysqli_query($connect, "SELECT class_id FROM student_class WHERE student_id = '$user_id'");
+            if ($row = mysqli_fetch_assoc($result)) {
+            ?>
             <form action="../includes/process_change_Class.php" method="post" class="changeClass_box">
                 <input type="hidden" name="S_ID" value="<?php echo htmlspecialchars($user_id); ?>">
                 <div class="Class_box">
@@ -1062,7 +1064,6 @@
                     <?php endforeach; ?>
                     </select>
                 </div>
-
 
                 <div class="Class_box">
                     <label for="class_option">Change to class:</label>
@@ -1081,12 +1082,17 @@
                 </div>
 
                 <div class="Class_box">
-                <label for="changeClassReason">Reason:</label>
-                <textarea name="changeClassReason" id="changeClassReason" rows="1" style="height: 50px;"></textarea>
+                    <label for="changeClassReason">Reason:</label>
+                    <textarea name="changeClassReason" id="changeClassReason" rows="1" style="height: 50px;" maxlength="500"></textarea>
                 </div>
 
                 <button type="submit" class="save_btn">Send Request</button>
             </form>
+            <?php
+            } else {
+                echo "<div>You are not enrolled in any class yet. Please enroll a class.</div>";
+            }
+            ?>
         </div>
 
     </main>             

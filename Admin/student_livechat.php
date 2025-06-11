@@ -47,7 +47,7 @@ $stmt->bindValue(':keywords', '%' . $keywords . '%');
 $stmt->execute();
 }
 else{
-$sql = "SELECT * FROM student_livechat WHERE student_id"; 
+$sql = "SELECT * FROM student_livechat"; 
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 }
@@ -128,7 +128,7 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><input type="checkbox" name="selected_dataset[]" value="<?php echo $data['id']?>"></td>
                             <td><?php echo htmlspecialchars($data['id']) ?></td>
                             <td><?php echo htmlspecialchars($data['student_id']) ?></td>
-                            <td><?php echo htmlspecialchars($data['chat']) ?></td>
+                            <td class="wrap_text"><?php echo htmlspecialchars($data['chat']) ?></td>
                             <td><?php echo htmlspecialchars($data['createtime']) ?></td>
                         </tr>
                     <?php endforeach; ?>
@@ -138,7 +138,7 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><input type="checkbox" name="selected_dataset[]" value="<?php echo $dataset[$i]['id']?>"></td>
                             <td><?php echo htmlspecialchars($dataset[$i]['id']) ?></td>
                             <td><?php echo htmlspecialchars($dataset[$i]['student_id']) ?></td>
-                            <td><?php echo htmlspecialchars($dataset[$i]['chat']) ?></td>
+                            <td class="wrap_text"><?php echo htmlspecialchars($dataset[$i]['chat']) ?></td>
                             <td><?php echo htmlspecialchars($dataset[$i]['createtime']) ?></td>
                         </tr>
                     <?php endfor; ?>

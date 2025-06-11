@@ -1,117 +1,104 @@
-html{
-    height: 100%;
-    margin: 0px;
-}
+   @import url('global.css');
+   * {
+      box-sizing: border-box;
+    }
 
-body{
-    height: 100%;
-    margin: 0px;
-}
+    .main {
+      width: 100%;
+      height: 93vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: linear-gradient(rgba(3,9,30,0.6),rgba(3,9,30,0.6)),url(../img_logo/backgrd.jpg);
+      background-size: cover;
+      background-position: center;
+    }
 
-.main{
-    background-color: lightblue;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-}
+    .right {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 60px 30px;
+      border-radius: 20px;
+      width: 350px;
+      color: white;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
 
-.left{
-    display: flex;
-    border-radius: 10px;
-    border-color: black;
-    border: 1px solid;
-    margin: 5% 2px 5% 1%;
-    width: 40%;
-    height: 80%;
-}
+    .login h2 {
+        margin-bottom: 18px;
+        color: white;
+        text-align: center;
+    }
 
-.left img{
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-}
+    .login p {
+        font-size: 14px;
+        margin-bottom: 35px;
+        color: #ccc;
+        text-align: center;
+    }
 
-.right{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 221, 255, 0.8);
-    border-radius: 10px;
-    border-color: black;
-    border: 1px solid;
-    margin: 5% 1% 5% 2px;
-    width: 50%;
-    height: 80%;
-}
 
-.login{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 35%;
-}
+    .login label {
+      display: block;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #ccc;
+    }
 
-.login a{
-    text-decoration: none;
-}
+    .login input[type="text"],
+    .login input[type="password"] {
+      width: 100%;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 30px;
+      background: #111;
+      color: white;
+      margin-top: 5px;
+      font-size: 14px;
+    }
 
-.login button{
-    width: 50%;
-    background: #fff;
-    border: none;
-    outline: none;
-    border-radius: 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    font-size: 16px;
-    color: #333;
-    font-weight: 550; 
-    margin-left: 30%;
-}
+    .password-box {
+      position: relative;
+    }
 
-.login input{
-    background: transparent;
-    border: none;
-    outline: none;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    border-radius: 40px;
-    font-size: 15px;
-    color: black;
-    padding: 5px 5px 5px 5px;
-    width: 100%;
-}
+    .password-box input {
+      width: 100%;
+      padding-right: 40px;
+    }
 
-.login label{
-    font-size: 18px;
-}
+    .material-symbols-outlined {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: #aaa;
+      cursor: pointer;
+    }
 
-.link{
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-}
+    .link {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0;
+      font-size: 13px;
+    }
 
-.password-box {
-    position: relative;
-    width: 100%;
-}
+    .link a {
+      color: #ffb3b3;
+      text-decoration: none;
+    }
 
-.password-box span {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #333; 
-    font-size: 20px; 
-}
+    button[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(to right, #ff9966, var(--secondary-color));
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      opacity: 0.9;
+      transform: scale(1.01);
+    }

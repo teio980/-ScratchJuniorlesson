@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
                 error_log("Error processing class change: " . $e->getMessage());
             }
         } else if ($action == 'rejected' && $status == 'approved') {
-            $rejectionErrors[] = $studentId;
+            $rejectionErrors[] = $changeId;
             continue;
         } else if($action == 'rejected' && $status != 'approved'){
             $updateChangeClassStmt->execute([
@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
     }
 
     if (!empty($rejectionErrors)) {
-        $_SESSION['message'] = "Cannot reject already approved requests for student(s): " . implode(", ", $rejectionErrors) . ". \nOther requests were processed successfully.";
+        $_SESSION['message'] = "Cannot reject already approved requests for requests: " . implode(", ", $rejectionErrors) . ". \nOther requests were processed successfully.";
     } elseif ($success == 0) {
         $_SESSION['message'] = "Failed to change class. Please Try Again Later!";
     } else {
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
     exit();
 }
 
-if (isset($_GET["search"]) && isset($_GET["query"]) && !empty($_GET["query"])) {
+if (!empty($keywords)) {
 
 $getChangeClassSql = "SELECT student_change_class_id, student_change_class_reason AS reason, student_original_class AS Ori, student_prefer_class AS Prefer, student_id, status 
                     FROM student_change_class
@@ -208,6 +208,7 @@ if ($page > $total_pages && $total_pages > 0) {
             <thead>
                 <tr>
                     <th>Select</th>
+                    <th>Request ID</th>
                     <th>Student ID</th>
                     <th>Original Class</th>
                     <th>Preferred Class</th>
@@ -221,10 +222,11 @@ if ($page > $total_pages && $total_pages > 0) {
                         <?php foreach ($ChangeClassData as $row): ?>
                             <tr>
                                 <td><input type="checkbox" name="selected_classes[]" value="<?= htmlspecialchars($row['student_change_class_id'].'|'.$row['student_id'].'|'.$row['Prefer'].'|'.$row['Ori'].'|'.$row['status'])?>"></td>
+                                <td><?php echo htmlspecialchars($row['student_change_class_id']); ?></td>
                                 <td><?php echo htmlspecialchars($row['student_id']); ?></td>
                                 <td><?php echo htmlspecialchars($row['Ori']); ?></td>
                                 <td><?php echo htmlspecialchars($row['Prefer']); ?></td>
-                                <td><?php echo htmlspecialchars($row['reason']); ?></td>
+                                <td class="wrap_text" ><?php echo htmlspecialchars($row['reason']); ?></td>
                                 <td><?php echo htmlspecialchars($row['status']); ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -232,10 +234,11 @@ if ($page > $total_pages && $total_pages > 0) {
                         <?php for ($i = $start; $i < $start + $records_per_page && $i < count($ChangeClassData); $i++): ?>
                             <tr>
                                 <td><input type="checkbox" name="selected_classes[]" value="<?= htmlspecialchars($ChangeClassData[$i]['student_change_class_id'].'|'.$ChangeClassData[$i]['student_id'].'|'.$ChangeClassData[$i]['Prefer'].'|'.$ChangeClassData[$i]['Ori'].'|'.$ChangeClassData[$i]['status'])?>"></td>
+                                <td><?php echo htmlspecialchars($ChangeClassData[$i]['student_change_class_id']); ?></td>
                                 <td><?php echo htmlspecialchars($ChangeClassData[$i]['student_id']); ?></td>
                                 <td><?php echo htmlspecialchars($ChangeClassData[$i]['Ori']); ?></td>
                                 <td><?php echo htmlspecialchars($ChangeClassData[$i]['Prefer']); ?></td>
-                                <td><?php echo htmlspecialchars($ChangeClassData[$i]['reason']); ?></td>
+                                <td class="wrap_text" ><?php echo htmlspecialchars($ChangeClassData[$i]['reason']); ?></td>
                                 <td><?php echo htmlspecialchars($ChangeClassData[$i]['status']); ?></td>
                             </tr>
                         <?php endfor; ?>
