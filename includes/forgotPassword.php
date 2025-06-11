@@ -30,13 +30,13 @@ if (isset($_POST["reset_password_button"])) {
             $sql = "UPDATE teacher SET reset_token = ?, reset_token_expires = ? WHERE teacher_id = ? AND T_Mail = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$token_hash, $expiry,$user_id,$user_mail]);
-        }elseif($user_identity == 'admin'){
+        }elseif($user_identity == 'admin' || $user_identity == 'superadmin'){
             $sql = "UPDATE admin SET reset_token = ?, reset_token_expires = ? WHERE admin_id = ? AND A_Mail = ?";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$token_hash, $expiry,$user_id,$user_mail]);
         }else{
             echo "<script>
-                alert('Invalid Password.Please Try Again.');
+                alert('Invalid Email.Please Try Again.');
                 window.location.href = '../register.php';
                 </script>";
                 exit();

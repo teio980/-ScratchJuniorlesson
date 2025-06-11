@@ -88,5 +88,5 @@ if($identity == 'student') {
     die("Invalid user type");
 }
 
-echo "Password Successful Updated."
+echo "Password Successful Updated.You can close this tab now"
 ?>

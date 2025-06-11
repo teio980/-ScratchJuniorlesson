@@ -19,7 +19,7 @@ if($identity == 'student') {
     $stmt->execute([$token_hash]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
-} elseif($identity == 'admin') {
+} elseif($identity == 'admin' || $identity == 'superadmin') {
     $sql = "SELECT * FROM admin 
             WHERE reset_token = ? AND reset_token_expires > NOW()";
     $stmt = $pdo->prepare($sql);
