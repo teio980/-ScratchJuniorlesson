@@ -48,30 +48,37 @@ include '../reshead.php';
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 <body>
-    <h1>Reset Password</h1>
-    <form action="process_reset_password.php" method="post" id="resetPassword_form">
-        <input type="hidden" name="token" value="<?=htmlspecialchars($token)?>">
-        <input type="hidden" name="identity" value="<?=htmlspecialchars($identity)?>">
-        <label for="U_Password">Password:</label>
-        <div class="password-box">
-            <input type="password" id="U_Password" name="U_Password" placeholder="Password" required>
-            <span class="material-symbols-outlined" id="showPassword_icon" onclick="showPassword() ">visibility_off</span>
-        </div>
-        <div>
-            <p id="password_condition_length" class="password_condition"><span class="material-symbols-outlined">close</span> Length is between 8-12 Characters</p>
-            <p id="password_condition_digit" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one number</p>
-            <p id="password_condition_upper" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one Uppercase</p>
-            <p id="password_condition_lower" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one Lowercase</p>
-            <p id="password_condition_symbol" class="password_condition"><span class="material-symbols-outlined">close</span> Contain at least one Symbol</p>
-        </div>
+    <div class="main">
+        <div class="form">
+            <h2>Reset Password</h2>
+            <form action="process_reset_password.php" method="post" id="resetPassword_form">
+            <input type="hidden" name="token" value="<?=htmlspecialchars($token)?>">
+            <input type="hidden" name="identity" value="<?=htmlspecialchars($identity)?>">
 
-        <label for="U_Confirmed_Password">Confirmed Password:</label>
-        <div class="password-box">
-            <input type="password" id="U_Confirmed_Password" placeholder="Password" required>
-            <span class="material-symbols-outlined" id="showConfirmedPassword_icon" onclick="showConfirmedPassword() ">visibility_off</span>
+            <p for="U_Password" class="textrp">Password:</p>
+            <div class="password-box">
+                <input type="password" id="U_Password" name="U_Password" placeholder="Password" required>
+                <span class="material-symbols-outlined" id="showPassword_icon" onclick="showPassword()">visibility_off</span>
+            </div>
+
+            <div class="conditionrp">
+                <p id="password_condition_length" class="password_condition"><span class="material-symbols-outlined">close</span> Length is between 8–12 Characters</p>
+                <p id="password_condition_digit" class="password_condition"><span class="material-symbols-outlined">close</span> At least one number</p>
+                <p id="password_condition_upper" class="password_condition"><span class="material-symbols-outlined">close</span> At least one Uppercase</p>
+                <p id="password_condition_lower" class="password_condition"><span class="material-symbols-outlined">close</span> At least one Lowercase</p>
+                <p id="password_condition_symbol" class="password_condition"><span class="material-symbols-outlined">close</span> At least one Symbol</p>
+            </div>
+
+            <p for="U_Confirmed_Password" class="textrp">Confirmed Password:</p>
+            <div class="password-box">
+                <input type="password" id="U_Confirmed_Password" placeholder="Password" required>
+                <span class="material-symbols-outlined" id="showConfirmedPassword_icon" onclick="showConfirmedPassword()">visibility_off</span>
+            </div>
+
+            <button type="submit">Reset</button>
+            </form>
         </div>
-        <button type="submit">Reset</button>
-    </form>
+    </div>
     <script src="../reset_password.js"></script>
 </body>
 </html>
