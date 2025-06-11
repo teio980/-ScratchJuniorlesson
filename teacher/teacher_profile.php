@@ -37,6 +37,7 @@ foreach ($files as $file) {
     <link rel="stylesheet" href="../cssfile/Teachermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/personal_profile.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <title>Document</title>
 </head>
 <body>
