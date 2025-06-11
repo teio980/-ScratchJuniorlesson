@@ -21,11 +21,11 @@ include 'reshead.php';
                     </div>
                 </div>
                 <div class="intro_box">
-                    <div class="intro_image"><img src="img_logo/kwk.photo.jpg"></div>
                     <div class="intro_content">
                         <h2><b>HI</b>,Nice to Meet you.</h2>
                         <p>I am the leader of this e-learning platform.Hope that you can have a nice experience with our platform.</p>
                     </div>
+                    <div class="intro_image"><img src="img_logo/kwk.photo.jpg"></div>
                 </div>
                 <div class="intro_box">
                     <div class="intro_image"><img src="img_logo/kbs.photo.jpg" ></div>

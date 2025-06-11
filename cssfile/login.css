@@ -9,7 +9,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-image: linear-gradient(rgba(3,9,30,0.6),rgba(3,9,30,0.6)),url(../img_logo/backgrd.jpg);
+      background-image: linear-gradient(rgba(3,9,30,0.4),rgba(3,9,30,0.6)),url(../img_logo/backgrd.jpg);
       background-size: cover;
       background-position: center;
     }

@@ -15,7 +15,10 @@ include 'reshead.php';
     <div class="main">
         <div class="form" >
             <form class="Register_form" id="Register_form" action="includes/registerFunction.php" method="POST" enctype="multipart/form-data">
-                
+                <h2 style="text-align:center; margin-bottom:10px;">Create Your Account</h2>
+                <p style="text-align:center; font-size:14px; color:#ccc; margin-bottom:20px;">Please fill in the details below</p>
+    
+
                 <label for="U_Username">Username (6-12 Characters):</label>
                 <input type="text" id="U_Username" name="U_Username" placeholder="Username" required minlength="6" maxlength="12">
                 <p id="errMessage_Username" class="errMessage">Username is required</p>
