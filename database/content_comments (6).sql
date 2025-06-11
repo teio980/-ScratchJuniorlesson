@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： 127.0.0.1
--- 生成日期： 2025-06-10 10:08:42
+-- 生成日期： 2025-06-11 06:36:17
 -- 服务器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -30,17 +30,24 @@ SET time_zone = "+00:00";
 CREATE TABLE `content_comments` (
   `comment_id` varchar(20) NOT NULL,
   `availability_id` varchar(255) NOT NULL,
-  `teacher_id` varchar(20) NOT NULL,
+  `sender_id` varchar(20) NOT NULL,
+  `sender_type` enum('teacher','student') NOT NULL,
   `message` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `auto_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- 转存表中的数据 `content_comments`
+-- 触发器 `content_comments`
 --
-
-INSERT INTO `content_comments` (`comment_id`, `availability_id`, `teacher_id`, `message`, `created_at`) VALUES
-('CMT0000001', 'CW000002', 'STU2025000002', 'kumbs', '2025-06-10 08:08:32');
+DELIMITER $$
+CREATE TRIGGER `set_comment_id` BEFORE INSERT ON `content_comments` FOR EACH ROW BEGIN
+    DECLARE next_id INT;
+    SELECT IFNULL(MAX(auto_id), 0) + 1 INTO next_id FROM `content_comments`;
+    SET NEW.comment_id = CONCAT('CMT', LPAD(next_id, 6, '0'));
+END
+$$
+DELIMITER ;
 
 --
 -- 转储表的索引
@@ -51,7 +58,18 @@ INSERT INTO `content_comments` (`comment_id`, `availability_id`, `teacher_id`, `
 --
 ALTER TABLE `content_comments`
   ADD PRIMARY KEY (`comment_id`),
-  ADD KEY `availability_idx` (`availability_id`);
+  ADD UNIQUE KEY `auto_id` (`auto_id`),
+  ADD KEY `content_idx` (`availability_id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
+--
+
+--
+-- 使用表AUTO_INCREMENT `content_comments`
+--
+ALTER TABLE `content_comments`
+  MODIFY `auto_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

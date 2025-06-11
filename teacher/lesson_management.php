@@ -4,11 +4,23 @@ include '../phpfile/connect.php';
 include '../includes/connect_DB.php';
 include 'resheadteacher.php';
 
-// 处理lesson删除
 if (isset($_GET['id'])) {
     $lesson_id = $_GET['id'];
     
-    // 获取文件信息
+    $check_sql = "SELECT COUNT(*) FROM student_submit 
+                 WHERE lesson_id = ? AND score != -1";
+    $check_stmt = $connect->prepare($check_sql);
+    $check_stmt->bind_param("s", $lesson_id);
+    $check_stmt->execute();
+    $check_result = $check_stmt->get_result();
+    $row = $check_result->fetch_row();
+    
+    if ($row[0] > 0) {
+        $_SESSION['error'] = "Cannot delete lesson that has student submissions with scores!";
+        header("Location: lesson_management.php");
+        exit();
+    }
+    
     $sql = "SELECT file_name, thumbnail_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $lesson_id);
@@ -16,32 +28,48 @@ if (isset($_GET['id'])) {
     $result = $stmt->get_result();
     $lesson = $result->fetch_assoc();
     
-    // 删除记录
-    $delete_sql = "DELETE FROM lessons WHERE lesson_id = ?";
-    $delete_stmt = $connect->prepare($delete_sql);
-    $delete_stmt->bind_param("s", $lesson_id);
+    $connect->begin_transaction();
     
-    if ($delete_stmt->execute()) {
-        // 删除文件
-        $lesson_file_path = "../phpfile/uploads/lesson/" . $lesson['file_name'];
-        $thumbnail_path = "../phpfile/uploads/thumbnail/" . $lesson['thumbnail_name'];
+    try {
+        $delete_class_work_sql = "DELETE FROM class_work WHERE lesson_id = ?";
+        $delete_class_work_stmt = $connect->prepare($delete_class_work_sql);
+        $delete_class_work_stmt->bind_param("s", $lesson_id);
+        $delete_class_work_stmt->execute();
         
-        if (file_exists($lesson_file_path)) unlink($lesson_file_path);
-        if (file_exists($thumbnail_path)) unlink($thumbnail_path);
+        $delete_submit_sql = "DELETE FROM student_submit WHERE lesson_id = ?";
+        $delete_submit_stmt = $connect->prepare($delete_submit_sql);
+        $delete_submit_stmt->bind_param("s", $lesson_id);
+        $delete_submit_stmt->execute();
         
-        $_SESSION['success'] = "Lesson deleted successfully!";
-    } else {
-        $_SESSION['error'] = "Failed to delete lesson!";
+        $delete_sql = "DELETE FROM lessons WHERE lesson_id = ?";
+        $delete_stmt = $connect->prepare($delete_sql);
+        $delete_stmt->bind_param("s", $lesson_id);
+        
+        if ($delete_stmt->execute()) {
+            $lesson_file_path = "../phpfile/uploads/lesson/" . $lesson['file_name'];
+            $thumbnail_path = "../phpfile/uploads/thumbnail/" . $lesson['thumbnail_name'];
+            
+            if (file_exists($lesson_file_path)) unlink($lesson_file_path);
+            if (file_exists($thumbnail_path)) unlink($thumbnail_path);
+            
+            $connect->commit();
+            $_SESSION['success'] = "Lesson deleted successfully!";
+        } else {
+            $connect->rollback();
+            $_SESSION['error'] = "Failed to delete lesson!";
+        }
+    } catch (Exception $e) {
+        $connect->rollback();
+        $_SESSION['error'] = "Error during deletion: " . $e->getMessage();
     }
+    
     header("Location: lesson_management.php");
     exit();
 }
 
-// 处理material删除
 if (isset($_GET['delete_material'])) {
     $material_id = $_GET['delete_material'];
     
-    // 获取文件信息
     $sql = "SELECT file_name FROM teacher_materials WHERE material_id = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $material_id);
@@ -49,13 +77,11 @@ if (isset($_GET['delete_material'])) {
     $result = $stmt->get_result();
     $material = $result->fetch_assoc();
     
-    // 删除记录
     $delete_sql = "DELETE FROM teacher_materials WHERE material_id = ?";
     $delete_stmt = $connect->prepare($delete_sql);
     $delete_stmt->bind_param("s", $material_id);
     
     if ($delete_stmt->execute()) {
-        // 删除文件
         $file_path = "../phpfile/upload_teacher_material/" . $material['file_name'];
         if (file_exists($file_path)) unlink($file_path);
         
@@ -65,13 +91,14 @@ if (isset($_GET['delete_material'])) {
     exit();
 }
 
-// 处理lesson更新部分修改
 if (isset($_POST['update'])) {
     $lesson_id = $_POST['lesson_id'];
     $title = $_POST['title'];
     $description = $_POST['description'];
+    $category = $_POST['category'];
+    $grading_criteria = isset($_POST['scoring_criteria']) ? $_POST['scoring_criteria'] : '';
     
-    // 获取当前文件信息
+    // Get current file info
     $sql = "SELECT file_name, thumbnail_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $lesson_id);
@@ -84,43 +111,39 @@ if (isset($_POST['update'])) {
     $new_file_name = $old_file_name;
     $new_thumbnail_name = $old_thumbnail_name;
     
-    // 处理文件更新
     if (!empty($_FILES['lesson_file']['name'])) {
-        // 删除旧文件
         $old_file_path = "../phpfile/uploads/lesson/" . $old_file_name;
         if (file_exists($old_file_path)) {
             unlink($old_file_path);
         }
         
-        // 生成新文件名
         $original_filename = basename($_FILES['lesson_file']['name']);
         $new_file_name = generateUniqueFilename("../phpfile/uploads/lesson/", $original_filename);
         move_uploaded_file($_FILES['lesson_file']['tmp_name'], "../phpfile/uploads/lesson/" . $new_file_name);
     }
     
     if (!empty($_FILES['thumbnail']['name'])) {
-        // 删除旧缩略图
         $old_thumb_path = "../phpfile/uploads/thumbnail/" . $old_thumbnail_name;
         if (file_exists($old_thumb_path)) {
             unlink($old_thumb_path);
         }
         
-        // 生成新缩略图文件名
         $original_thumbnail = basename($_FILES['thumbnail']['name']);
         $new_thumbnail_name = generateUniqueFilename("../phpfile/uploads/thumbnail/", $original_thumbnail);
         move_uploaded_file($_FILES['thumbnail']['tmp_name'], "../phpfile/uploads/thumbnail/" . $new_thumbnail_name);
     }
     
-    // 更新数据库
     $update_sql = "UPDATE lessons SET 
                   title = ?, 
                   description = ?, 
+                  category = ?,
+                  grading_criteria = ?,
                   file_name = ?, 
                   thumbnail_name = ? 
                   WHERE lesson_id = ?";
                   
     $stmt = $connect->prepare($update_sql);
-    $stmt->bind_param("sssss", $title, $description, $new_file_name, $new_thumbnail_name, $lesson_id);
+    $stmt->bind_param("sssssss", $title, $description, $category, $grading_criteria, $new_file_name, $new_thumbnail_name, $lesson_id);
     
     if ($stmt->execute()) {
         $_SESSION['success'] = "Lesson updated successfully!";
@@ -131,14 +154,13 @@ if (isset($_POST['update'])) {
     exit();
 }
 
-// 处理material更新
+
 if (isset($_POST['update_material'])) {
     $material_id = $_POST['material_id'];
     $title = $_POST['material_title'];
     $description = $_POST['material_description'];
     $class_id = $_POST['class_id'];
     
-    // 获取当前文件信息
     $sql = "SELECT file_name FROM teacher_materials WHERE material_id = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $material_id);
@@ -149,21 +171,17 @@ if (isset($_POST['update_material'])) {
     $old_file_name = $material['file_name'];
     $new_file_name = $old_file_name;
     
-    // 处理文件更新
     if (!empty($_FILES['material_file']['name'])) {
-        // 删除旧文件
         $old_file_path = "../phpfile/upload_teacher_material/" . $old_file_name;
         if (file_exists($old_file_path)) {
             unlink($old_file_path);
         }
         
-        // 生成新文件名
         $original_filename = basename($_FILES['material_file']['name']);
         $new_file_name = str_replace(' ', '_', $original_filename);
         move_uploaded_file($_FILES['material_file']['tmp_name'], "../phpfile/upload_teacher_material/" . $new_file_name);
     }
     
-    // 更新数据库
     $update_sql = "UPDATE teacher_materials SET 
                   title = ?, 
                   description = ?, 
@@ -212,13 +230,11 @@ function generateUniqueFilename($directory, $filename) {
     <div class="container">
         <h1>Teaching Content Management</h1>
         
-        <!-- 选项卡导航 -->
         <div class="tab-container">
-            <div class="tab active" onclick="switchTab('lessons')">Lessons</div>
+            <div class="tab active" onclick="switchTab('lessons')">Tasks</div>
             <div class="tab" onclick="switchTab('materials')">Materials</div>
         </div>
         
-        <!-- 消息提示 -->
         <?php if (isset($_SESSION['success'])): ?>
             <div class="alert-box success">
                 <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
@@ -233,12 +249,11 @@ function generateUniqueFilename($directory, $filename) {
             </div>
         <?php endif; ?>
         
-        <!-- Lessons Section -->
         <div id="lessons" class="content-section active">
             <div class="lesson-cards-container">
                 <div class="add-lesson-card" onclick="location.href='upload_lesson.php'">
                     <div class="add-lesson-icon">+</div>
-                    <div class="add-lesson-text">Add New Lesson</div>
+                    <div class="add-lesson-text">Add New Task</div>
                 </div>
                 
                 <?php
@@ -271,7 +286,6 @@ function generateUniqueFilename($directory, $filename) {
             </div>
         </div>
         
-        <!-- Materials Section -->
         <div id="materials" class="content-section <?php echo (isset($_GET['tab']) && $_GET['tab']) == 'materials' ? 'active' : ''; ?>">
             <div class="lesson-cards-container">
                 <div class="add-lesson-card" onclick="location.href='upload_teacher_material.php'">
@@ -316,83 +330,316 @@ function generateUniqueFilename($directory, $filename) {
             </div>
         </div>
 
-        <!-- Lesson Edit Modal -->
-        <?php if (isset($_GET['edit_id'])):
-            $edit_id = $_GET['edit_id'];
-            $edit_sql = "SELECT * FROM lessons WHERE lesson_id = ?";
-            $edit_stmt = $connect->prepare($edit_sql);
-            $edit_stmt->bind_param("s", $edit_id);
-            $edit_stmt->execute();
-            $edit_result = $edit_stmt->get_result();
-            $edit_row = $edit_result->fetch_assoc();
+        <?php 
+            if (isset($_GET['edit_id'])):
+                $edit_id = $_GET['edit_id'];
+                $edit_sql = "SELECT * FROM lessons WHERE lesson_id = ?";
+                $edit_stmt = $connect->prepare($edit_sql);
+                $edit_stmt->bind_param("s", $edit_id);
+                $edit_stmt->execute();
+                $edit_result = $edit_stmt->get_result();
+                $edit_row = $edit_result->fetch_assoc();
+            
+            $existing_criteria = [];
+            if (!empty($edit_row['grading_criteria'])) {
+                $criteria_pairs = explode('|', $edit_row['grading_criteria']);
+                foreach ($criteria_pairs as $pair) {
+                    list($name, $points) = explode(':', $pair);
+                    $existing_criteria[] = [
+                        'name' => $name,
+                        'points' => $points
+                    ];
+                }
+            }
         ?>
         <div id="editModal" class="modal" style="display: block;">
             <div class="modal-content">
                 <span class="close" onclick="location.href='lesson_management.php'">&times;</span>
-                <h2>Edit Lesson</h2>
-                <form method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="lesson_id" value="<?php echo $edit_row['lesson_id']; ?>">
-                    
-                    <div class="form-group">
-                        <label for="title">Title:</label>
-                        <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($edit_row['title']); ?>" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="description">Description:</label>
-                        <textarea id="description" name="description" required><?php echo htmlspecialchars($edit_row['description']); ?></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="thumbnail">Thumbnail:</label>
-                        <input type="file" id="thumbnail" name="thumbnail" accept="image/*">
-                        <div class="file-info">Current: <?php echo htmlspecialchars($edit_row['thumbnail_name']); ?></div>
-                    </div>
+                <h2>Edit Task</h2>
+                <div class="modal-scroll-container">
+                    <form method="post" enctype="multipart/form-data" id="lessonEditForm">
+                        <input type="hidden" name="lesson_id" value="<?php echo $edit_row['lesson_id']; ?>">
+                        
+                        <div class="form-group">
+                            <label for="title">Title:</label>
+                            <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($edit_row['title']); ?>" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description" required><?php echo htmlspecialchars($edit_row['description']); ?></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="category">Category:</label>
+                            <select id="category" name="category" required>
+                                <option value="Assignment" <?php echo $edit_row['category'] == 'Assignment' ? 'selected' : ''; ?>>Assignment</option>
+                                <option value="Project" <?php echo $edit_row['category'] == 'Project' ? 'selected' : ''; ?>>Project</option>
+                                <option value="Exercise" <?php echo $edit_row['category'] == 'Exercise' ? 'selected' : ''; ?>>Exercise</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="thumbnail">Thumbnail (JPG/PNG only):</label>
+                            <input type="file" id="thumbnail" name="thumbnail" accept="image/jpeg,image/png">
+                            <div class="file-info">Current: <?php echo htmlspecialchars($edit_row['thumbnail_name']); ?></div>
+                            <div id="thumbnailError" class="error-message" style="color: red; display: none;"></div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="lesson_file">Lesson File:</label>
-                        <input type="file" id="lesson_file" name="lesson_file" accept=".pdf,.doc,.docx">
-                        <div class="file-info">Current: <?php echo htmlspecialchars($edit_row['file_name']); ?></div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" name="update" class="submit-btn" onclick="return confirm('Save changes?')">Save</button>
-                        <button type="button" onclick="location.href='lesson_management.php'" class="cancel-btn">Cancel</button>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label for="lesson_file">Task File (PDF/DOC/DOCX only):</label>
+                            <input type="file" id="lesson_file" name="lesson_file" accept=".pdf,.doc,.docx">
+                            <div class="file-info">Current: <?php echo htmlspecialchars($edit_row['file_name']); ?></div>
+                            <div id="lessonFileError" class="error-message" style="color: red; display: none;"></div>
+                        </div>
+                        
+                        <div class="form-group compact-criteria">
+                            <label>Grading Criteria</label>
+                            <div class="criteria-controls">
+                                <div>
+                                    <label for="criteria_count">Number of Criteria:</label>
+                                    <select id="criteria_count" name="criteria_count" class="small-select">
+                                        <?php for($i=1; $i<=5; $i++): ?>
+                                            <option value="<?php echo $i; ?>" <?php echo count($existing_criteria) == $i ? 'selected' : ''; ?>>
+                                                <?php echo $i; ?>
+                                            </option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
+                                <button type="button" id="updateCriteriaBtn" class="small-btn">Update</button>
+                            </div>
+
+                            <div id="criteriaFieldsContainer" class="compact-container"></div>
+                            <input type="hidden" id="scoring_criteria" name="scoring_criteria" value="<?php echo htmlspecialchars($edit_row['grading_criteria']); ?>">
+                            <div id="criteriaPreview" class="compact-preview"></div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" name="update" class="submit-btn">Save</button>
+                            <button type="button" onclick="location.href='lesson_management.php'" class="cancel-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+
+        <script>
+        document.getElementById('lessonEditForm').addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            const thumbnailInput = document.getElementById('thumbnail');
+            if (thumbnailInput.files.length > 0) {
+                const allowedThumbnailTypes = ['image/jpeg', 'image/png'];
+                const file = thumbnailInput.files[0];
+                
+                if (!allowedThumbnailTypes.includes(file.type)) {
+                    document.getElementById('thumbnailError').textContent = 'Only JPG/JPEG/PNG images are allowed';
+                    document.getElementById('thumbnailError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('thumbnailError').style.display = 'none';
+                }
+            }
+            
+            const lessonFileInput = document.getElementById('lesson_file');
+            if (lessonFileInput.files.length > 0) {
+                const allowedLessonTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                const file = lessonFileInput.files[0];
+                const fileExt = file.name.split('.').pop().toLowerCase();
+                
+                if (!allowedLessonTypes.includes(file.type) && !['pdf','doc','docx'].includes(fileExt)) {
+                    document.getElementById('lessonFileError').textContent = 'Only PDF/DOC/DOCX files are allowed';
+                    document.getElementById('lessonFileError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('lessonFileError').style.display = 'none';
+                }
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                return false;
+            }
+            
+            return confirm('Are you sure you want to save these changes?');
+        });
+
+        const presetCriteria = ['Completion', 'Creativity', 'Presentation', 'Originality', 'Technical'];
+
+        function updateCriteriaFields() {
+            const count = parseInt(document.getElementById('criteria_count').value);
+            const container = document.getElementById('criteriaFieldsContainer');
+            container.innerHTML = '';
+            
+            const existingCriteria = <?php echo json_encode($existing_criteria); ?>;
+            
+            for (let i = 0; i < count; i++) {
+                const existing = existingCriteria[i] || {};
+                const isCustom = existing.name && !presetCriteria.includes(existing.name);
+                
+                const row = document.createElement('div');
+                row.className = 'compact-criteria-row';
+                
+                const nameSelect = document.createElement('select');
+                nameSelect.className = 'criteria-name';
+                nameSelect.name = `criteria_name_${i}`;
+                nameSelect.required = true;
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select criteria';
+                nameSelect.appendChild(defaultOption);
+                
+                presetCriteria.forEach(criterion => {
+                    const option = document.createElement('option');
+                    option.value = criterion;
+                    option.textContent = criterion;
+                    option.selected = (existing.name === criterion);
+                    nameSelect.appendChild(option);
+                });
+                
+                const customOption = document.createElement('option');
+                customOption.value = 'custom';
+                customOption.textContent = 'Custom...';
+                customOption.selected = isCustom;
+                nameSelect.appendChild(customOption);
+                
+                const customInput = document.createElement('input');
+                customInput.type = 'text';
+                customInput.className = 'criteria-custom-name';
+                customInput.placeholder = 'Enter custom name';
+                customInput.style.display = isCustom ? 'inline-block' : 'none';
+                customInput.value = isCustom ? existing.name : '';
+                
+                const pointsInput = document.createElement('input');
+                pointsInput.type = 'number';
+                pointsInput.className = 'criteria-points';
+                pointsInput.name = `criteria_points_${i}`;
+                pointsInput.min = '1';
+                pointsInput.max = '100';
+                pointsInput.value = existing.points || '10';
+                pointsInput.required = true;
+                
+                row.appendChild(nameSelect);
+                row.appendChild(customInput);
+                row.appendChild(document.createTextNode(' Points: '));
+                row.appendChild(pointsInput);
+                
+                nameSelect.addEventListener('change', function() {
+                    customInput.style.display = this.value === 'custom' ? 'inline-block' : 'none';
+                    if (this.value !== 'custom') {
+                        customInput.value = this.value;
+                    }
+                    updateCriteriaPreview();
+                });
+                
+                customInput.addEventListener('input', updateCriteriaPreview);
+                pointsInput.addEventListener('input', updateCriteriaPreview);
+                
+                container.appendChild(row);
+            }
+            
+            updateCriteriaPreview();
+        }
+
+        function updateCriteriaPreview() {
+            const count = parseInt(document.getElementById('criteria_count').value);
+            let criteria = [];
+            let previewHTML = "<strong>Current Criteria:</strong><ul class='compact-list'>";
+            
+            for (let i = 0; i < count; i++) {
+                const nameSelect = document.querySelector(`select[name="criteria_name_${i}"]`);
+                const customInput = document.querySelector(`.criteria-custom-name`);
+                const pointsInput = document.querySelector(`input[name="criteria_points_${i}"]`);
+                
+                if (!nameSelect || !pointsInput) continue;
+                
+                const name = nameSelect.value === 'custom' 
+                    ? (customInput ? customInput.value : '') 
+                    : nameSelect.value;
+                const points = pointsInput.value;
+                
+                if (name && points) {
+                    criteria.push(`${name}:${points}`);
+                    previewHTML += `<li>${name}: ${points} points</li>`;
+                }
+            }
+            
+            previewHTML += "</ul>";
+            document.getElementById('scoring_criteria').value = criteria.join('|');
+            document.getElementById('criteriaPreview').innerHTML = criteria.length > 0 
+                ? previewHTML 
+                : "<p>No criteria set</p>";
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('updateCriteriaBtn').addEventListener('click', updateCriteriaFields);
+            
+            updateCriteriaFields();
+            
+            document.getElementById('thumbnail').addEventListener('change', function() {
+                const allowedTypes = ['image/jpeg', 'image/png'];
+                if (this.files.length > 0 && !allowedTypes.includes(this.files[0].type)) {
+                    document.getElementById('thumbnailError').textContent = 'Only JPG/JPEG/PNG images are allowed';
+                    document.getElementById('thumbnailError').style.display = 'block';
+                } else {
+                    document.getElementById('thumbnailError').style.display = 'none';
+                }
+            });
+            
+            document.getElementById('lesson_file').addEventListener('change', function() {
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                const file = this.files[0];
+                if (file) {
+                    const fileExt = file.name.split('.').pop().toLowerCase();
+                    if (!allowedTypes.includes(file.type) && !['pdf','doc','docx'].includes(fileExt)) {
+                        document.getElementById('lessonFileError').textContent = 'Only PDF/DOC/DOCX files are allowed';
+                        document.getElementById('lessonFileError').style.display = 'block';
+                    } else {
+                        document.getElementById('lessonFileError').style.display = 'none';
+                    }
+                }
+            });
+        });
+        </script>
         <?php endif; ?>
 
-        <!-- Material Edit Modal -->
-        <?php if (isset($_GET['edit_material_id'])):
+        <?php if (isset($_GET['edit_material_id'])): 
             $edit_material_id = $_GET['edit_material_id'];
-            $edit_sql = "SELECT * FROM teacher_materials WHERE material_id = ?";
-            $edit_stmt = $connect->prepare($edit_sql);
-            $edit_stmt->bind_param("s", $edit_material_id);
-            $edit_stmt->execute();
-            $edit_result = $edit_stmt->get_result();
-            $edit_row = $edit_result->fetch_assoc();
+            $edit_material_sql = "SELECT * FROM teacher_materials WHERE material_id = ?";
+            $edit_material_stmt = $connect->prepare($edit_material_sql);
+            $edit_material_stmt->bind_param("s", $edit_material_id);
+            $edit_material_stmt->execute();
+            $edit_material_result = $edit_material_stmt->get_result();
+            $edit_row = $edit_material_result->fetch_assoc();
         ?>
+
+        <style>
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+        </style>
+        
         <div id="editMaterialModal" class="modal" style="display: block;">
             <div class="modal-content">
                 <span class="close" onclick="location.href='lesson_management.php?tab=materials'">&times;</span>
                 <h2>Edit Material</h2>
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" id="materialEditForm">
                     <input type="hidden" name="material_id" value="<?php echo $edit_row['material_id']; ?>">
                     
                     <div class="form-group">
-                        <label for="material_title">Title:</label>
+                        <label for="material_title" class="required-field">Title:</label>
                         <input type="text" id="material_title" name="material_title" value="<?php echo htmlspecialchars($edit_row['title']); ?>" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="material_description">Description:</label>
+                        <label for="material_description" class="required-field">Description:</label>
                         <textarea id="material_description" name="material_description" required><?php echo htmlspecialchars($edit_row['description']); ?></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="class_id">Class:</label>
+                        <label for="class_id" class="required-field">Class:</label>
                         <select name="class_id" id="class_id" required>
                             <?php
                             $class_sql = "SELECT c.class_id, c.class_name FROM class c
@@ -414,18 +661,70 @@ function generateUniqueFilename($directory, $filename) {
                     </div>
 
                     <div class="form-group">
-                        <label for="material_file">Material File:</label>
-                        <input type="file" id="material_file" name="material_file" accept=".pdf,.docx,.pptx">
-                        <div class="file-info">Current: <?php echo htmlspecialchars($edit_row['file_name']); ?></div>
+                        <label>Material File (PDF/DOCX/PPTX):</label>
+                        <div class="file-upload">
+                            <input type="file" id="material_file" name="material_file" accept=".pdf,.docx,.pptx">
+                            <div class="file-info">Current: <?php echo htmlspecialchars($edit_row['file_name']); ?></div>
+                            <div id="materialFileError" class="error-message"></div>
+                        </div>
                     </div>
                     
                     <div class="form-actions">
-                        <button type="submit" name="update_material" class="submit-btn" onclick="return confirm('Save changes?')">Save</button>
+                        <button type="submit" name="update_material" class="submit-btn">Save</button>
                         <button type="button" onclick="location.href='lesson_management.php?tab=materials'" class="cancel-btn">Cancel</button>
                     </div>
                 </form>
             </div>
         </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const materialFileInput = document.getElementById('material_file');
+            const materialFileInfo = document.querySelector('#editMaterialModal .file-info');
+            const materialFileError = document.getElementById('materialFileError');
+            
+            materialFileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const file = this.files[0];
+                    const fileName = file.name;
+                    const fileExt = fileName.split('.').pop().toLowerCase();
+                    const allowedTypes = ['pdf', 'docx', 'pptx'];
+                    
+                    materialFileInfo.textContent = fileName;
+                    
+                    if (!allowedTypes.includes(fileExt)) {
+                        materialFileError.textContent = 'Only PDF, DOCX, and PPTX files are allowed!';
+                        materialFileError.style.color = 'red';
+                    } else {
+                        materialFileError.textContent = '';
+                    }
+                } else {
+                    materialFileInfo.textContent = 'Current: <?php echo htmlspecialchars($edit_row['file_name']); ?>';
+                    materialFileError.textContent = '';
+                }
+            });
+            
+            document.getElementById('materialEditForm').addEventListener('submit', function(e) {
+                if (materialFileInput.files.length > 0) {
+                    const file = materialFileInput.files[0];
+                    const fileName = file.name;
+                    const fileExt = fileName.split('.').pop().toLowerCase();
+                    const allowedTypes = ['pdf', 'docx', 'pptx'];
+                    
+                    if (!allowedTypes.includes(fileExt)) {
+                        e.preventDefault();
+                        materialFileError.textContent = 'Only PDF, DOCX, and PPTX files are allowed!';
+                        materialFileError.style.color = 'red';
+                        return;
+                    }
+                }
+                
+                if (!confirm('Are you sure you want to save these changes?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+        </script>
         <?php endif; ?>
 
         <script>
@@ -435,7 +734,6 @@ function generateUniqueFilename($directory, $filename) {
                     switchTab(urlParams.get('tab'));
                 }
                 
-                // 关闭提示框
                 document.querySelectorAll('.close-alert').forEach(btn => {
                     btn.addEventListener('click', function() {
                         this.parentElement.style.display = 'none';
@@ -443,7 +741,6 @@ function generateUniqueFilename($directory, $filename) {
                 });
             });
             
-            // 选项卡切换
             function switchTab(tabName) {
                 document.querySelectorAll('.tab').forEach(tab => {
                     tab.classList.remove('active');
@@ -455,7 +752,6 @@ function generateUniqueFilename($directory, $filename) {
                 document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
                 document.getElementById(tabName).classList.add('active');
                 
-                // 更新URL但不刷新页面
                 const url = new URL(window.location);
                 url.searchParams.set('tab', tabName);
                 window.history.pushState({}, '', url);

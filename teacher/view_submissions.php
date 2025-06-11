@@ -78,12 +78,12 @@ $teacher_id = $_SESSION['user_id'];
                 <td><?= $class_name ?></td>
                 
                 <td>
-                    <a href="../Student/uploads/<?= $row['student_id'] ?>/<?= $row['filename'] ?>" download>Download</a>
+                    <a href="../Student/uploads/<?= $row['student_id'] ?>/<?= $row['filename'] ?>" download class="download-link" data-filename="<?= $row['filename'] ?>"> Download</a>
                 </td>
 
                 <td>
                     <button onclick="openRatingModal('<?= $row['submit_id'] ?>', '<?= $row['student_id'] ?>', '<?= $row['lesson_id'] ?>')">
-                        <?= $row['score'] !== null ? 'Edit' : 'Rate' ?>
+                        <?= $row['score'] !== null ? 'Rate' : 'Rate' ?>
                     </button>
                 </td>
 

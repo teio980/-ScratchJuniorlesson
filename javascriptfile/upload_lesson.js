@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Modal functionality (existing code)
+    // Modal functionality
     const modal = document.getElementById("categoryModal");
     const btn = document.getElementById("chooseCategoryBtn");
     const span = document.getElementById("closeModal");
@@ -26,39 +26,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const typePrefixInput = document.querySelector('input[name="type_prefix"]');
 
     if (categorySelect && titleInput && typePrefixInput) {
-        // Map category values to prefixes
         const prefixes = {
             'Assignment': 'Assignment - ',
             'Project': 'Project - ',
             'Exercise': 'Exercise - '
         };
 
-        // Update title when category changes
         categorySelect.addEventListener('change', function() {
             const selectedCategory = this.value;
             const currentTitle = titleInput.value;
             const newPrefix = prefixes[selectedCategory] || '';
             
-            // Update the hidden type_prefix field
             typePrefixInput.value = newPrefix;
             
-            // Only modify the title if:
-            // 1. It's empty, or
-            // 2. It starts with one of our prefixes (so we can replace it)
             if (!currentTitle || Object.values(prefixes).some(prefix => currentTitle.startsWith(prefix))) {
                 titleInput.value = newPrefix;
             }
         });
 
-        // Ensure prefix is maintained when user types (optional)
         titleInput.addEventListener('input', function() {
             const selectedCategory = categorySelect.value;
             const currentTitle = this.value;
             const expectedPrefix = prefixes[selectedCategory] || '';
             
-            // If category is selected but title doesn't start with the prefix
             if (selectedCategory && expectedPrefix && !currentTitle.startsWith(expectedPrefix)) {
-                // Remove any existing prefixes
                 let cleanTitle = currentTitle;
                 for (const prefix of Object.values(prefixes)) {
                     if (currentTitle.startsWith(prefix)) {
@@ -66,13 +57,81 @@ document.addEventListener('DOMContentLoaded', function () {
                         break;
                     }
                 }
-                // Add the correct prefix
                 this.value = expectedPrefix + cleanTitle;
             }
         });
     }
 
-    // Grading criteria functionality (moved from PHP file)
+    document.getElementById('thumbnail_image')?.addEventListener('change', function(e) {
+        const file = this.files[0];
+        if (!file) return;
+        
+        const validImageTypes = ['image/jpeg', 'image/png'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+        if (!validImageTypes.includes(file.type) || !['jpg', 'jpeg', 'png'].includes(fileExtension)) {
+            alert('Only JPG/JPEG/PNG format images are allowed to be uploaded!');
+            this.value = '';
+            const label = this.nextElementSibling;
+            if (label) label.textContent = 'No file chosen';
+            return;
+        }
+        
+        const label = this.nextElementSibling;
+        if (label) label.textContent = file.name;
+    });
+
+    document.getElementById('lesson_file')?.addEventListener('change', function(e) {
+        const file = this.files[0];
+        if (!file) return;
+        
+        const validFileTypes = ['application/pdf', 'application/msword', 
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+        if (!validFileTypes.includes(file.type) || !['pdf', 'doc', 'docx'].includes(fileExtension)) {
+            alert('Only PDF/DOC/DOCX files are allowed to be uploaded!');
+            this.value = ''; 
+            const label = this.nextElementSibling;
+            if (label) label.textContent = 'No file chosen';
+            return;
+        }
+        
+        const label = this.nextElementSibling;
+        if (label) label.textContent = file.name;
+    });
+
+    // File type validation
+    const thumbnailInput = document.getElementById('thumbnail_image');
+    if (thumbnailInput) {
+        thumbnailInput.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Only JPG/PNG images are allowed for thumbnails!');
+                    this.value = '';
+                }
+            }
+        });
+    }
+
+    const lessonFileInput = document.getElementById('lesson_file');
+    if (lessonFileInput) {
+        lessonFileInput.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                const validTypes = ['application/pdf', 'application/msword', 
+                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Only PDF/DOC/DOCX files are allowed for lessons!');
+                    this.value = '';
+                }
+            }
+        });
+    }
+
+    // Grading criteria functionality
     const presetCriteria = JSON.parse(document.getElementById('presetCriteria').textContent);
     
     function updateCriteriaFields() {

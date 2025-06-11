@@ -39,13 +39,13 @@ $presetCriteria = [
     <link rel="stylesheet" href="../cssfile/Teachermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/upload_lesson.css">
-    <title>Upload Lesson</title>
+    <title>Upload Task</title>
     <script id="presetCriteria" type="application/json"><?php echo json_encode($presetCriteria); ?></script>
 </head>
 <body>
     <div class="dashboard-container">
         <div class="container">
-            <h1>Upload New Lesson</h1>
+            <h1>Upload New Task</h1>
             
             <form action="../phpfile/upload_lesson_process.php" method="POST" enctype="multipart/form-data" class="lesson-form">
                 <div class="form-left">
@@ -66,18 +66,20 @@ $presetCriteria = [
                     </div>
 
                     <div class="form-group">
-                        <label for="description">Lesson Description:</label>
+                        <label for="description">Task Description:</label>
                         <textarea id="description" name="description" rows="4" required></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="thumbnail_image">Thumbnail Image (JPG/PNG):</label>
-                        <input type="file" name="thumbnail_image" id="thumbnail_image" accept=".jpg, .jpeg, .png">
-                    </div>   
+                        <input type="file" name="thumbnail_image" id="thumbnail_image" accept=".jpg,.jpeg,.png">
+                        <span class="file-name">No file chosen</span>
+                    </div>
 
                     <div class="form-group">
-                        <label for="lesson_file">Lesson File (PDF/Word):</label>
-                        <input type="file" name="lesson_file" id="lesson_file" accept=".pdf, .doc, .docx">
+                        <label for="lesson_file">Task File (PDF/Word):</label>
+                        <input type="file" name="lesson_file" id="lesson_file" accept=".pdf,.doc,.docx">
+                        <span class="file-name">No file chosen</span>
                     </div>
                 </div>
 
@@ -100,7 +102,7 @@ $presetCriteria = [
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" name="savebtn" class="submit-btn">Upload Lesson</button>
+                    <button type="submit" name="savebtn" class="submit-btn">Upload Task</button>
                     <button type="button" onclick="location.href='lesson_management.php'" class="cancel-btn">Cancel</button>
                 </div>
             </form>
