@@ -124,6 +124,7 @@ if ($page > $total_pages && $total_pages > 0) {
                 </tr>
             </thead>
             <tbody>
+            <?php if (!empty($dataset)): ?>
                 <?php 
                 if ($records_per_page === 'ALL') {
                     foreach ($S_Quiz_Progress as $row): ?>
@@ -160,6 +161,11 @@ if ($page > $total_pages && $total_pages > 0) {
                         </tr>
                     <?php endfor;
                 } ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="4">Do Not Any student Answer Quiz at Now.</td>
+                </tr>
+            <?php endif; ?>
             </tbody>
         </table>
         <button onclick="printTable()" class="print_button">Print Table</button>
