@@ -187,8 +187,21 @@ tbody tr:hover {
 }
 
 .print_button,
-.pdf_button{
+.pdf_button,
+.add_btn,
+.edit_btn,
+.delete_btn,
+.approved_btn,
+.rejected_btn{
     margin-top: 20px;
+}
+
+.approved_btn:hover {
+    background-color: #45a049;
+}
+
+.rejected_btn:hover {
+    background-color: rgba(255, 13, 0, 0.66);
 }
 
 .print_button {
