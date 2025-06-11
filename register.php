@@ -1,6 +1,7 @@
 <?php
 include 'reshead.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
