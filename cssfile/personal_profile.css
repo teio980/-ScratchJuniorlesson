@@ -22,6 +22,7 @@ h1{
     flex-direction: column;
     margin: 2% 1%;
     padding: 1% 2%;
+    border-radius: 10px;
 }
 
 .password_box,.UsernameEmail_box,.Class_box{
@@ -32,10 +33,6 @@ h1{
     width: 100%;
 }
 
-.password_box input{
-    position: relative;
-    width: 100%;
-}
 
 .password_box span {
     position: absolute;
@@ -65,6 +62,7 @@ h1{
   padding: 8px .8em;
   position: relative;
   text-align: center;
+  border-radius: 10px;
 }
 
 .save_btn:hover,
@@ -111,5 +109,37 @@ h1{
 
 .avatar_container:hover #edit_avatar_icon {
     opacity: 1;
+}
+
+  label {
+    display: block;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+input {
+  width: 100%;
+  padding: 5px 16px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.2s;
+}
+
+input:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 6px var(--secondary-color);
+  outline: none;
+}
+
+input:hover {
+  background-color: #f9f9f9;
 }
 
