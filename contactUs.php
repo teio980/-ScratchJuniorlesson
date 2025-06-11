@@ -11,14 +11,14 @@ include 'reshead.php';
     <title>Contact Us</title>
 </head>
 <body>
-    <h1>Leave Us A Massage</h1>
     <div class="main_form">
         <form action="includes/insert_UserMassage.php" method="post" class="form_content">
+        <h1>Leave Us A Massage</h1>
         <label for="phoneNumber">Phones No.:</label>
-        <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="012-3456789" pattern="[0-9]{3}-[0-9]{7,8}" required>
+        <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="012-xxxxxxxx" pattern="[0-9]{3}-[0-9]{7,8}" required>
         <label for="Massage">Massage:</label>
-        <textarea id="Massage" name="U_Massage" maxlength="500" placeholder="Maximum Length of Massage is 500" required></textarea>
-        <button type="submit">Send Massage Through WhatsApp</button>
+        <textarea id="Massage" name="U_Massage" maxlength="500" placeholder="content" required></textarea>
+        <button type="submit">Send Massage</button>
         </form>
     </div>
 </body>
