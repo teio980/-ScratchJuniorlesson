@@ -17,11 +17,7 @@ include 'reshead.php';
                     <div class="intro_image"><img src="img_logo/LYL_parsonal_photo.jpg"></div>
                     <div class="intro_content">
                         <h2><b>HI</b>,Nice to Meet you.</h2>
-<<<<<<< Updated upstream
                         <p>I am the developer of this e-learning platform and we want you to have a wonderful and enriching experience.</p>
-=======
-                        <p>I'm the leader of this e-learning platform, and we hope you have a fantastic and enriching experience with it. Our goal is to provide a seamless and engaging learning journey for everyone, and we're constantly working to improve. We're truly excited to have you join our community!</p>
->>>>>>> Stashed changes
                     </div>
                 </div>
                 <div class="intro_box">
