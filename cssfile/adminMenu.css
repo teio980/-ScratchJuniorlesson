@@ -3,44 +3,47 @@
 body{
     min-height: 100vh;
     background-color: var(--background);
+    
 }
 
 .menu_container {
-    display: flex;
-    position: relative;
+  position: fixed;
+  top: 7vh;
+  left: 0;
+  width: 220px;
+  height: calc(100vh - 80px);
+  background-color: #f9f9f9;
+  border-right: 2px solid var(--secondary-color);
+  padding: 16px 10px;
+  overflow-y: auto;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
 }
 
 .adminMenu {
-    position: absolute;
-    left: 0; 
-    top: 100%; 
-    gap: 20px;
-    flex-direction: column;
-    background-color: var(--secondary-color);
-    width: 15%;
-    height: calc(100vh - 88px); 
-    overflow-y: auto;
-    display: flex; 
-    list-style-type: none; 
-    margin: 0;
-    padding: 20px 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.adminMenu li{
-    display: flex;
-    flex-wrap: wrap;
+.adminMenu li a {
+  display: block;
+  padding: 10px 16px;
+  color: #333;
+  text-decoration: none;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.adminMenu a {
-    font-size: 20px;
-    text-decoration: none;
-    color: white;
-    padding-left: 10px;
+.adminMenu li a:hover {
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
-.adminMenu a:hover {
-    color: black;
-}
 
 .notification_container{
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;

@@ -41,6 +41,7 @@ $unreadMessage = $getMassageUnreadStmt->fetchAll();
         <li></li>
         </ul>
     </div>
+    
     <div class="chart_container">
     <canvas id="passChart" width="450" height="350" ></canvas>
     <canvas id="userChart" width="700" height="350"></canvas>
