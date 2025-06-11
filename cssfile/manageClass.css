@@ -26,6 +26,12 @@ th {
 tr:nth-child(even) {
     background-color: #95c0b8;
 }
+.wrap_text{
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 200px;
+}
 
 .editFormModal, .addClassModal {
     display: none; 

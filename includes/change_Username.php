@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_id = $_POST["student_id"];
     
     if($identity == "student"){
-        $url = '../Student/Personal_Profile.php';
+        $url = '../Student/Main_page.php';
         $sql = "UPDATE student SET S_Username = :username, S_Mail = :mail WHERE student_id = :ID";
     }
     elseif($identity == "teacher"){

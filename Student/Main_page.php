@@ -968,7 +968,7 @@
         <div class="container tab-content active" id="profile">
             <h1>Personal Profile</h1>
             <form action="../includes/change_Avatar.php" class="avatar_container" method="post" enctype="multipart/form-data">
-            <input type="file" name="change_Avatar" id="change_Avatar" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="this.form.submit()">
+            <input type="file" name="change_Avatar" id="change_Avatar" accept=".jpg, .jpeg, .png" style="display: none;" onchange="this.form.submit()">
             <label for="change_Avatar" style="cursor: pointer;">
                 <img src="<?php echo $fullPath; ?>" alt="Avatar" class="avatar">
                 <span class="material-symbols-outlined" id="edit_avatar_icon">edit</span>
@@ -1048,43 +1048,51 @@
 
         <!--Change Class Page-->
         <div class="container tab-content" id="recent">
-            <form action="../includes/process_change_Class.php" method="post" class="changeClass_box">
-                <input type="hidden" name="S_ID" value="<?php echo htmlspecialchars($user_id); ?>">
-                <div class="Class_box">
-                    <label for="old_class">Change from class:</label>
-                    <select name="old_class" id="old_class">
-                    <?php foreach ($oldClass as $class): ?>
+        <?php
+        $result = mysqli_query($connect, "SELECT class_id FROM student_class WHERE student_id = '$user_id'");
+        if ($row = mysqli_fetch_assoc($result)) {
+        ?>
+        <form action="../includes/process_change_Class.php" method="post" class="changeClass_box">
+            <input type="hidden" name="S_ID" value="<?php echo htmlspecialchars($user_id); ?>">
+            <div class="Class_box">
+                <label for="old_class">Change from class:</label>
+                <select name="old_class" id="old_class">
+                <?php foreach ($oldClass as $class): ?>
+                    <option value="<?php echo htmlspecialchars($class['class_code']); ?>">
+                    <?php echo htmlspecialchars($class['class_code'] . ' ' . $class['class_name']); ?>
+                    </option>
+                <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="Class_box">
+                <label for="class_option">Change to class:</label>
+                <select name="class_option" id="class_option" required>
+                <option value="">-- Select a Class --</option>
+                <?php
+                $oldClassCodes = array_column($oldClass, 'class_code');
+                ?>
+                <?php foreach ($classes as $class): ?>
+                    <?php if (in_array($class['class_code'], $oldClassCodes)) continue; ?>
                         <option value="<?php echo htmlspecialchars($class['class_code']); ?>">
-                        <?php echo htmlspecialchars($class['class_code'] . ' ' . $class['class_name']); ?>
+                                <?php echo htmlspecialchars($class['class_code'] . ' ' . $class['class_name']); ?>
                         </option>
-                    <?php endforeach; ?>
-                    </select>
-                </div>
+                <?php endforeach; ?>
+                </select>
+            </div>
 
-
-                <div class="Class_box">
-                    <label for="class_option">Change to class:</label>
-                    <select name="class_option" id="class_option" required>
-                    <option value="">-- Select a Class --</option>
-                    <?php
-                    $oldClassCodes = array_column($oldClass, 'class_code');
-                    ?>
-                    <?php foreach ($classes as $class): ?>
-                        <?php if (in_array($class['class_code'], $oldClassCodes)) continue; ?>
-                            <option value="<?php echo htmlspecialchars($class['class_code']); ?>">
-                                    <?php echo htmlspecialchars($class['class_code'] . ' ' . $class['class_name']); ?>
-                            </option>
-                    <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="Class_box">
+            <div class="Class_box">
                 <label for="changeClassReason">Reason:</label>
-                <textarea name="changeClassReason" id="changeClassReason" rows="1" style="height: 50px;"></textarea>
-                </div>
+                <textarea name="changeClassReason" id="changeClassReason" rows="1" style="height: 50px;" maxlength="500"></textarea>
+            </div>
 
-                <button type="submit" class="save_btn">Send Request</button>
-            </form>
+            <button type="submit" class="save_btn">Send Request</button>
+        </form>
+        <?php
+        } else {
+            echo "<div>You are not enrolled in any class yet. Please enroll a class.</div>";
+        }
+        ?>
         </div>
 
     </main>             
