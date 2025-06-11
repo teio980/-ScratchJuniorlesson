@@ -10,6 +10,7 @@ include 'reshead.php';
     <link rel="stylesheet" href="cssfile/header.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <title>Login</title>
+    
 </head>
 <body>
 <div class="main">
