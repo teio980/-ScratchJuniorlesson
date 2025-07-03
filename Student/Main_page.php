@@ -251,8 +251,8 @@
                 <div class="header-row-top">
                     <h2>Notes</h2>
                     <div class="action-buttons">
-                    <button class="export-btn" id="sort-btn" onclick="toggleSort()">⬆ Sort</button>
-                    <button class="filter-btn" onclick="downloadSelected()">Download</button>
+                        <button class="export-btn" id="sort-btn" onclick="toggleSort()">⬆ Sort</button>
+                        <button class="filter-btn" onclick="downloadSelected()">Download</button>
                     </div>
                 </div>
                 </div>
@@ -516,49 +516,49 @@
 
 
 
-                // ========== Unavailable Section ==========
-                $sql_all_lessons = "SELECT lesson_id, title FROM lessons";
-                $result_all_lessons = mysqli_query($connect, $sql_all_lessons);
+            // ========== Unavailable Section ==========
+            $sql_all_lessons = "SELECT lesson_id, title FROM lessons";
+            $result_all_lessons = mysqli_query($connect, $sql_all_lessons);
 
-                $unavailable_cards = '';
-                if ($result_all_lessons && mysqli_num_rows($result_all_lessons) > 0) {
-                    $existing_lessons = [];
-                    $sql_existing = "SELECT lesson_id FROM class_work WHERE class_id = '$class_id'";
-                    $result_existing = mysqli_query($connect, $sql_existing);
-                    while ($row = mysqli_fetch_assoc($result_existing)) {
-                        $existing_lessons[] = $row['lesson_id'];
-                    }
-
-                    $counter = 0;
-                    while ($lesson = mysqli_fetch_assoc($result_all_lessons)) {
-                        $lesson_id = $lesson['lesson_id'];
-                        $lesson_title = htmlspecialchars($lesson['title']);
-
-                        if (!in_array($lesson_id, $existing_lessons)) {
-                            $backgrounds = [
-                                "linear-gradient(to bottom right, #bdc3c7, #2c3e50)",
-                                "linear-gradient(to bottom right, #7f8c8d, #95a5a6)",
-                                "linear-gradient(to bottom right, #e0e0e0, #c0c0c0)",
-                            ];
-                            $bg_style = $backgrounds[$counter % count($backgrounds)];
-                            $counter++;
-
-                            $unavailable_cards .= '
-                            <div class="card project-card" style="background: ' . $bg_style . '">
-                                <div class="lang-tag">Unavailable</div>
-                                <div class="circle"></div>
-                                <div class="title">' . $lesson_title . '</div>
-                                <div class="expireddate">N/A</div>
-                                <button class="buttonsubmit" disabled><a>Unavailable</a></button>
-                            </div>';
-                        }
-                    }
+            $unavailable_cards = '';
+            if ($result_all_lessons && mysqli_num_rows($result_all_lessons) > 0) {
+                $existing_lessons = [];
+                $sql_existing = "SELECT lesson_id FROM class_work WHERE class_id = '$class_id'";
+                $result_existing = mysqli_query($connect, $sql_existing);
+                while ($row = mysqli_fetch_assoc($result_existing)) {
+                    $existing_lessons[] = $row['lesson_id'];
                 }
 
-                if (!empty($unavailable_cards)) {
-                    echo '<div class="section-divider"><span class="section-title">Unavailable</span></div>';
-                    echo '<div class="exercisewrapper">' . $unavailable_cards . '</div>';
+                $counter = 0;
+                while ($lesson = mysqli_fetch_assoc($result_all_lessons)) {
+                    $lesson_id = $lesson['lesson_id'];
+                    $lesson_title = htmlspecialchars($lesson['title']);
+
+                    if (!in_array($lesson_id, $existing_lessons)) {
+                        $backgrounds = [
+                            "linear-gradient(to bottom right, #bdc3c7, #2c3e50)",
+                            "linear-gradient(to bottom right, #7f8c8d, #95a5a6)",
+                            "linear-gradient(to bottom right, #e0e0e0, #c0c0c0)",
+                        ];
+                        $bg_style = $backgrounds[$counter % count($backgrounds)];
+                        $counter++;
+
+                        $unavailable_cards .= '
+                        <div class="card project-card" style="background: ' . $bg_style . '">
+                            <div class="lang-tag">Unavailable</div>
+                            <div class="circle"></div>
+                            <div class="title">' . $lesson_title . '</div>
+                            <div class="expireddate">N/A</div>
+                            <button class="buttonsubmit" disabled><a>Unavailable</a></button>
+                        </div>';
+                    }
                 }
+            }
+
+            if (!empty($unavailable_cards)) {
+                echo '<div class="section-divider"><span class="section-title">Unavailable</span></div>';
+                echo '<div class="exercisewrapper">' . $unavailable_cards . '</div>';
+            }
 
             } else {
                 echo "
@@ -1165,10 +1165,10 @@ $connect->close();
     }
     //notes sort
     function toggleSort() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentSort = urlParams.get('sort') === 'desc' ? 'desc' : 'asc';
-    const nextSort = currentSort === 'asc' ? 'desc' : 'asc';
-    window.location.href = window.location.pathname + '?sort=' + nextSort;
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentSort = urlParams.get('sort') === 'desc' ? 'desc' : 'asc';
+        const nextSort = currentSort === 'asc' ? 'desc' : 'asc';
+        window.location.href = window.location.pathname + '?sort=' + nextSort;
     }
 
     window.addEventListener('DOMContentLoaded', () => {
