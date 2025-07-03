@@ -424,26 +424,26 @@
             }
 
 
-             // ========== Submitted Section ==========
-                $sql_submitted = "
-                    SELECT cw.availability_id, ss.filename AS student_work, cw.expire_date
-                    FROM class_work cw
-                    INNER JOIN student_submit ss 
-                        ON cw.class_id = ss.class_id 
-                        AND cw.lesson_id = ss.lesson_id
-                    WHERE cw.class_id = '$class_id'
-                        AND ss.student_id = '$user_id'
-                ";
-                $result_submitted = mysqli_query($connect, $sql_submitted);
+            // ========== Submitted Section ==========
+            $sql_submitted = "
+                SELECT cw.availability_id, ss.filename AS student_work, cw.expire_date
+                FROM class_work cw
+                INNER JOIN student_submit ss 
+                    ON cw.class_id = ss.class_id 
+                    AND cw.lesson_id = ss.lesson_id
+                WHERE cw.class_id = '$class_id'
+                    AND ss.student_id = '$user_id'
+            ";
+            $result_submitted = mysqli_query($connect, $sql_submitted);
 
-                if (mysqli_num_rows($result_submitted) > 0) {
-                    echo '<div class="section-divider"><span class="section-title">Submitted</span></div>';
-                    echo '<div class="exercisewrapper">';
+            if (mysqli_num_rows($result_submitted) > 0) {
+                echo '<div class="section-divider"><span class="section-title">Submitted</span></div>';
+                echo '<div class="announcement-wrapper">';
 
-                    $current_date = date('Y-m-d');
-                    $counter = 0;
+                $current_date = date('Y-m-d');
 
                 while ($row = mysqli_fetch_assoc($result_submitted)) {
+                    $availability_id = $row['availability_id'];
                     $student_work = htmlspecialchars($row['student_work']);
                     $expire_date = htmlspecialchars($row['expire_date']);
 
@@ -455,30 +455,64 @@
                         $lesson_title = htmlspecialchars($lesson_row['title']);
                     }
 
-                    $backgrounds = [
-                        "linear-gradient(to bottom right, #6dd5ed, #2193b0)",
-                        "linear-gradient(to bottom right, #ff758c, #ff7eb3)",
-                        "linear-gradient(to bottom right, #43cea2, #185a9d)",
-                    ];
-                    $bg_style = $backgrounds[$counter % count($backgrounds)];
-                    $counter++;
-
                     $is_expired = strtotime($expire_date) < strtotime($current_date);
                     $button_html = $is_expired
-                        ? '<button class="buttonsubmit disabled" disabled>Deadline Passed</button>'
-                        : '<button class="buttonsubmit"><a href="studentsubmit.php?availability_id=' . $row['availability_id'] . '">Edit Submission</a></button>';
+                        ? '<button class="submit-button disabled" disabled>Deadline Passed</button>'
+                        : '<a href="studentsubmit.php?availability_id=' . $availability_id . '" class="submit-button">Edit Submission</a>';
+
+                    $comment_html = '';
+                    $sql_comments = "
+                        SELECT 
+                            c.message, 
+                            c.created_at, 
+                            c.sender_type, 
+                            COALESCE(t.T_Username, s.S_Username) AS username
+                        FROM content_comments c
+                        LEFT JOIN teacher t ON c.sender_type = 'teacher' AND c.sender_id = t.teacher_id
+                        LEFT JOIN student s ON c.sender_type = 'student' AND c.sender_id = s.student_id
+                        WHERE c.availability_id = '$availability_id'
+                    ";
+                    $result_comments = mysqli_query($connect, $sql_comments);
+                    if ($result_comments && mysqli_num_rows($result_comments) > 0) {
+                        while ($comment = mysqli_fetch_assoc($result_comments)) {
+                            $username = htmlspecialchars($comment['username']);
+                            $message = htmlspecialchars($comment['message']);
+                            $created_at = htmlspecialchars($comment['created_at']);
+
+                            $comment_html .= '
+                            <div class="author-time">' . $username . ' · ' . $created_at . '</div>
+                            <div class="reply">' . $message . '</div>';
+                        }
+                    }
+
+                    $reply_section = '';
+                    if (!empty($comment_html)) {
+                        $reply_section = '<div class="reply-section">' . $comment_html . ' </div>';
+                    }
+
+                    $send_message_html = '
+                        <form class="send-message-section" method="post">
+                            <div class="message-input-wrapper">
+                                <textarea name="message" class="message-input" placeholder="Write a message to your teacher..." required></textarea>
+                                <input type="hidden" name="availability_id" value="' . $availability_id . '">
+                                <button type="submit" name="send_comment" class="send-button" title="Send">➤</button>
+                            </div>
+                        </form>
+                    ';
 
                     echo '
-                    <div class="card project-card" style="background: ' . $bg_style . '">
-                        <div class="lang-tag">Submitted</div>
-                        <div class="circle"></div>
-                        <div class="title">' . $lesson_title . '</div>
-                        <div class="expireddate">Due: ' . $expire_date . '</div>
-                        ' . $button_html . '
+                    <div class="announcement-card">
+                        <div class="circle-image"></div>
+                        <div class="author-time">Due: ' . $expire_date . '</div>
+                        <div class="message-title">' . $lesson_title . '</div>
+                        <div class="button-wrapper">' . $button_html . '</div>
+                        ' . $reply_section . '
+                        ' . $send_message_html . '
                     </div>';
                 } 
                 echo '</div>';
             }
+
 
 
 
