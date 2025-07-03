@@ -214,6 +214,7 @@ if ($page > $total_pages && $total_pages > 0) {
     
     function saveAsPDF() {
         const element = document.querySelector('table');
+
         const opt = {
             margin: 10,
             filename: 'Quiz.pdf',
@@ -221,7 +222,8 @@ if ($page > $total_pages && $total_pages > 0) {
             html2canvas: { 
                 scale: 2,
                 useCORS: true,
-                logging: true 
+                logging: true,
+                scrollY: 0
             },
             jsPDF: { 
                 unit: 'mm', 

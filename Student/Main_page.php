@@ -61,17 +61,23 @@
         $created_at = date('Y-m-d H:i:s');
 
         if (!empty($message)) {
-            $sql_count = "SELECT COUNT(*) FROM content_comments";
-            $result_count = mysqli_query($connect, $sql_count);
-            $row_count = mysqli_fetch_row($result_count);
-            $comment_id = 'CMT' . str_pad($row_count[0] + 1, 7, '0', STR_PAD_LEFT);
-
             $message_safe = mysqli_real_escape_string($connect, $message);
             $sql_insert = "
-                INSERT INTO content_comments (comment_id, availability_id, sender_id, sender_type, message, created_at)
-                VALUES ('$comment_id', '$availability_id', '$sender_id', '$sender_type', '$message_safe', '$created_at')
+                INSERT INTO content_comments (availability_id, sender_id, sender_type, message, created_at)
+                VALUES ('$availability_id', '$sender_id', '$sender_type', '$message_safe', '$created_at')
             ";
             mysqli_query($connect, $sql_insert);
+            
+            $new_id = mysqli_insert_id($connect);
+            
+            $comment_id ="CMT".str_pad($new_id, 6, '0', STR_PAD_LEFT);
+            
+            $sql_update = "
+                UPDATE content_comments 
+                SET comment_id = '$comment_id'
+                WHERE auto_id = '$new_id'
+            ";
+            mysqli_query($connect, $sql_update);
             
             header("Location: Main_page.php");
             exit;

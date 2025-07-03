@@ -6,8 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $selectedClasses = $_POST['selected_classes'];
         foreach ($selectedClasses as $classId) {
         $check_C_Sql = "SELECT * FROM student_class WHERE class_id = ?";
-        $check_C_Stmt = $pdo->prepare($check_C_Stmt);
-        $check_C_Stmt->execute([$class_id]);
+        $check_C_Stmt = $pdo->prepare($check_C_Sql);
+        $check_C_Stmt->execute([$classId]);
         }
         if ($check_C_Stmt->rowCount() > 0) {
             echo "<script>
