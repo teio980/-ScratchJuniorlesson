@@ -135,7 +135,11 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><?= htmlspecialchars($row['class_id']) ?></td>
                             <td><?= htmlspecialchars($row['lesson_id']) ?></td>
                             <td><?= htmlspecialchars($row['student_id']) ?></td>
-                            <td><?= htmlspecialchars($row['filename']) ?></td>
+                            <td>
+                                <a href="../Student/uploads/<?= $row['student_id'] ?>/<?= $row['filename'] ?>" download>
+                                    <?= htmlspecialchars($row['filename']) ?>
+                                </a>
+                            </td>
                             <td><?= htmlspecialchars($row['upload_time']) ?></td>
                             <td><?= htmlspecialchars($row['score']) ?></td>
                             <td><?= htmlspecialchars($row['description']) ?></td>
@@ -148,7 +152,11 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><?= htmlspecialchars($StudentSubmitDetail[$i]['class_id']) ?></td>
                             <td><?= htmlspecialchars($StudentSubmitDetail[$i]['lesson_id']) ?></td>
                             <td><?= htmlspecialchars($StudentSubmitDetail[$i]['student_id']) ?></td>
-                            <td><?= htmlspecialchars($StudentSubmitDetail[$i]['filename']) ?></td>
+                            <td>
+                                <a href="../Student/uploads/<?= $StudentSubmitDetail[$i]['student_id'] ?>/<?= $StudentSubmitDetail[$i]['filename'] ?>" download>
+                                    <?= htmlspecialchars($StudentSubmitDetail[$i]['filename']) ?>
+                                </a>
+                            </td>
                             <td><?= htmlspecialchars($StudentSubmitDetail[$i]['upload_time']) ?></td>
                             <td><?= htmlspecialchars($StudentSubmitDetail[$i]['score']) ?></td>
                             <td><?= htmlspecialchars($StudentSubmitDetail[$i]['description']) ?></td>

@@ -134,7 +134,11 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><?= htmlspecialchars($row['class_id']) ?></td>
                             <td><?= htmlspecialchars($row['title']) ?></td>
                             <td><?= htmlspecialchars($row['description']) ?></td>
-                            <td><?= htmlspecialchars($row['file_name']) ?></td>
+                            <td>
+                                <a href="../phpfile/upload_teacher_material/<?php echo htmlspecialchars($row['file_name']); ?>" download>
+                                    <?php echo htmlspecialchars($row['file_name']) ?>
+                                </a>
+                            </td>
                             <td><?= htmlspecialchars($row['create_time']) ?></td>
                         </tr>
                     <?php endforeach;
@@ -146,7 +150,11 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><?= htmlspecialchars($T_Materials[$i]['class_id']) ?></td>
                             <td><?= htmlspecialchars($T_Materials[$i]['title']) ?></td>
                             <td><?= htmlspecialchars($T_Materials[$i]['description']) ?></td>
-                            <td><?= htmlspecialchars($T_Materials[$i]['file_name']) ?></td>
+                            <td>
+                                <a href="../phpfile/upload_teacher_material/<?php echo htmlspecialchars($T_Materials[$i]['file_name']); ?>" download>
+                                    <?php echo htmlspecialchars($T_Materials[$i]['file_name']) ?>
+                                </a>
+                            </td>
                             <td><?= htmlspecialchars($T_Materials[$i]['create_time']) ?></td>
                         </tr>
                     <?php endfor;
