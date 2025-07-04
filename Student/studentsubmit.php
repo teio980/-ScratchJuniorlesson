@@ -28,7 +28,7 @@ $existing_submission = mysqli_fetch_assoc($result3);
 
 $uploadMessage = "";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+if (isset($_FILES['file'])) {
     $filename = str_replace(' ', '_', basename($_FILES['file']['name']));
     $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
 

@@ -53,7 +53,7 @@
     }
 
     //comment
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_comment'])) {
+    if (isset($_POST['send_comment'])) {
         $message = trim($_POST['message']);
         $availability_id = mysqli_real_escape_string($connect, $_POST['availability_id']);
         $sender_id = mysqli_real_escape_string($connect, $user_id);
@@ -334,7 +334,7 @@
                     </div>
                 ";
 
-            // ========== Not Yet Submitted ==========
+            // ========== Not Submitted ==========
             $sql_work = "SELECT availability_id, student_work, expire_date, lesson_id FROM class_work WHERE class_id = '$class_id'";
             $result_work = mysqli_query($connect, $sql_work);
 
@@ -353,7 +353,7 @@
                     $student_work = htmlspecialchars($row['student_work']);
                     $expire_date = htmlspecialchars($row['expire_date']);
 
-                    $sql_lesson = "SELECT title FROM lessons WHERE file_name = '$student_work' LIMIT 1";
+                    $sql_lesson = "SELECT title FROM lessons WHERE lesson_id = '$lesson_id'";
                     $result_lesson = mysqli_query($connect, $sql_lesson);
                     $lesson_title = $student_work;
                     if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
@@ -401,7 +401,7 @@
                     $send_message_html = '
                         <form class="send-message-section" method="post">
                             <div class="message-input-wrapper">
-                                <textarea name="message" class="message-input" placeholder="Write a message to your teacher..." required></textarea>
+                                <textarea name="message" class="message-input" placeholder="Write a message..." required></textarea>
                                 <input type="hidden" name="availability_id" value="' . $availability_id . '">
                                 <button type="submit" name="send_comment" class="send-button" title="Send">➤</button>
                             </div>
@@ -432,7 +432,7 @@
 
             // ========== Submitted Section ==========
             $sql_submitted = "
-                SELECT cw.availability_id, ss.filename AS student_work, cw.expire_date
+                SELECT cw.availability_id, cw.lesson_id, ss.filename AS student_work, cw.expire_date
                 FROM class_work cw
                 INNER JOIN student_submit ss 
                     ON cw.class_id = ss.class_id 
@@ -450,10 +450,11 @@
 
                 while ($row = mysqli_fetch_assoc($result_submitted)) {
                     $availability_id = $row['availability_id'];
+                    $lesson_id = $row['lesson_id'];
                     $student_work = htmlspecialchars($row['student_work']);
                     $expire_date = htmlspecialchars($row['expire_date']);
 
-                    $sql_lesson = "SELECT title FROM lessons WHERE file_name = '$student_work' LIMIT 1";
+                    $sql_lesson = "SELECT title FROM lessons WHERE lesson_id = '$lesson_id'";
                     $result_lesson = mysqli_query($connect, $sql_lesson);
                     $lesson_title = $student_work;
                     if ($result_lesson && mysqli_num_rows($result_lesson) > 0) {
