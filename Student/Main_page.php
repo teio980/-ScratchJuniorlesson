@@ -674,7 +674,7 @@
                 $current_xp = 0;
                 $current_level = 1;
 
-                if ($xp_result && mysqli_num_rows($xp_result) > 0) {
+                if (mysqli_num_rows($xp_result) > 0) {
                     $xp_row = mysqli_fetch_assoc($xp_result);
                     $current_xp = (int)$xp_row['experience'];
                     $current_level = (int)$xp_row['level'];
@@ -954,8 +954,7 @@
                             ];
                         }
 
-                        $user_id_escaped = mysqli_real_escape_string($connect, $user_id);
-                        $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id_escaped'";
+                        $completedQuery = "SELECT game_id FROM student_game_progress WHERE student_id = '$user_id'";
                         $completedResult = mysqli_query($connect, $completedQuery);
                         if ($completedResult) {
                             while ($row = mysqli_fetch_assoc($completedResult)) {
@@ -984,7 +983,7 @@
                                     <button class="nav right" onclick="nextPuzzle()">&gt;</button>
                                 </div>
                                 <div class="dots">
-                                    <?php for ($i = 0; $i < count($games); $i++): ?>
+                                    <?php for ($i = 1; $i < count($games); $i++): ?>
                                         <span class="dot" id="dot<?= $i ?>"></span>
                                     <?php endfor; ?>
                                 </div>
@@ -1026,6 +1025,25 @@
                 <label for="new_Mail">E-mail:</label>
                 <input type="email" name="new_Mail" id="new_Mail" required  value="<?php echo htmlspecialchars($user['Mail']) ?>">
                 </div>
+
+                <?php
+                    $sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
+                    $result = mysqli_query($connect, $sql);
+
+                    // Fetch the class_id
+                    $class_id = '';
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        $row = mysqli_fetch_assoc($result);
+                        $class_id = $row['class_id'];
+                    }
+                ?>
+
+                <div class="UsernameEmail_box">
+                <label for="new_Class">Class:</label> 
+                <input type="text" name="new_Class" id="new_Class" required value="<?php echo htmlspecialchars($class_id); ?>" readonly>
+                </div>
+            
+
 
                 <button type="submit" class="save_btn">Save Changes</button>
             </form>
@@ -1475,6 +1493,7 @@ $connect->close();
         }
     }
 
+    //puzzle
     function loadPuzzle(index) {
         const gameId = gameIds[index];
         const isCompleted = completedGameIds.includes(gameId);
