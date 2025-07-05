@@ -289,7 +289,7 @@ if ($page > $total_pages && $total_pages > 0) {
                 
                 <div class="form-group">
                     <label for="max_capacity">Max Capacity:</label>
-                    <input type="number" id="max_capacity" name="max_capacity" required>
+                    <input type="number" id="max_capacity" name="max_capacity" min="1" required>
                 </div>
 
                 <button type="submit" class="save_btn">Save Changes</button>

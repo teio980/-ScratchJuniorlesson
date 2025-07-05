@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
         $action = 'rejected';
     }
     
-    $updateChangeClassSql = "UPDATE student_change_class SET status = :status WHERE student_change_class_id = :id";
+    $updateChangeClassSql = "UPDATE student_change_class SET status = :status, status_read = 'unread' WHERE student_change_class_id = :id";
     $updateChangeClassStmt = $pdo->prepare($updateChangeClassSql);
     
     $getClassIdSql = "SELECT class_id FROM class WHERE class_code = :C_CODE";
@@ -70,65 +70,126 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_classes'])) 
     $deductCurCapacitySql = "UPDATE class SET current_capacity = current_capacity - 1 WHERE class_id = :C_ID AND current_capacity > 0;";
     $deductCurCapacityStmt = $pdo->prepare($deductCurCapacitySql);
 
+    $successResults = [];
+    $errorResults = [];
+
     foreach ($selectedIds as $combinedValue) {
         list($changeId, $studentId, $new_class_Code, $old_class_Code, $status) = explode('|', $combinedValue);
         
-        if($action == 'approved'){
-            $getClassIdStmt->execute([':C_CODE'=>$new_class_Code]);
-            $new_class_row = $getClassIdStmt->fetch(PDO::FETCH_ASSOC);
-            $new_class_id = $new_class_row['class_id'];
+        // Skip non-pending requests
+        if($status != 'pending') {
+            $errorResults[] = "Request $changeId failed: Status is not pending ($status)";
+            continue;
+        }
 
-            $getClassIdStmt->execute([':C_CODE'=>$old_class_Code]);
-            $old_class_row = $getClassIdStmt->fetch(PDO::FETCH_ASSOC);
-            $old_class_id = $old_class_row['class_id'];
-
-            $pdo->beginTransaction();
+        if($action == 'approved') {
             try {
+                // Get class IDs
+                $getClassIdStmt->execute([':C_CODE'=>$new_class_Code]);
+                $new_class_row = $getClassIdStmt->fetch(PDO::FETCH_ASSOC);
+                if(!$new_class_row) {
+                    throw new Exception("New class code $new_class_Code does not exist");
+                }
+                $new_class_id = $new_class_row['class_id'];
+
+                $getClassIdStmt->execute([':C_CODE'=>$old_class_Code]);
+                $old_class_row = $getClassIdStmt->fetch(PDO::FETCH_ASSOC);
+                if(!$old_class_row) {
+                    throw new Exception("Old class code $old_class_Code does not exist");
+                }
+                $old_class_id = $old_class_row['class_id'];
+
+                // Check new class capacity
+                $checkCapacitySql = "SELECT max_capacity, current_capacity FROM class WHERE class_id = :C_ID";
+                $checkCapacityStmt = $pdo->prepare($checkCapacitySql);
+                $checkCapacityStmt->execute([':C_ID' => $new_class_id]);
+                $capacityInfo = $checkCapacityStmt->fetch(PDO::FETCH_ASSOC);
+                
+                if($capacityInfo['current_capacity'] >= $capacityInfo['max_capacity']) {
+                    throw new Exception("New class $new_class_Code is full ({$capacityInfo['current_capacity']}/{$capacityInfo['max_capacity']})");
+                }
+
+                // Begin transaction
+                $pdo->beginTransaction();
+                
+                // Increase new class capacity (with condition check)
                 $updateCurCapacityStmt->execute([':C_ID'=>$new_class_id]);
+                if($updateCurCapacityStmt->rowCount() === 0) {
+                    throw new Exception("Failed to increase new class capacity - possibly already full");
+                }
+                
+                // Decrease old class capacity (with condition check)
                 $deductCurCapacityStmt->execute([':C_ID'=>$old_class_id]);
+                if($deductCurCapacityStmt->rowCount() === 0) {
+                    throw new Exception("Failed to decrease old class capacity - possibly already 0");
+                }
+                
+                // Update student class
                 $updateClassStmt->execute([
                     ':new_C_ID' => $new_class_id,
                     ':date_now'=>$now->format('Y-m-d H:i:s'),
                     ':S_ID' => $studentId,
                     ':Old_C_ID' => $old_class_id
                 ]);
+                
+                // Update request status
                 $updateChangeClassStmt->execute([
                     ':status' => $action,
                     ':id' => $changeId
                 ]);
+                
+                // Commit transaction
                 $pdo->commit();
+                $successResults[] = "Request $changeId approved: Student $studentId moved from $old_class_Code to $new_class_Code";
+                
             } catch (Exception $e) {
-                $pdo->rollBack();
-                $success = 0;
-                error_log("Error processing class change: " . $e->getMessage());
+                // Rollback transaction
+                if($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
+                $errorResults[] = "Request $changeId approval failed: " . $e->getMessage();
+                error_log("Approval failed for request $changeId: " . $e->getMessage());
             }
-        } else if ($action == 'rejected' && $status == 'approved') {
-            $rejectionErrors[] = $changeId;
-            continue;
-        } else if($action == 'rejected' && $status != 'approved'){
-            $updateChangeClassStmt->execute([
-                ':status' => $action,
-                ':id' => $changeId
-            ]);
-        } else {
-            $success = 0;
-            break;
+            
+        } else if($action == 'rejected') {
+            try {
+                // Update request status to rejected
+                $updateChangeClassStmt->execute([
+                    ':status' => $action,
+                    ':id' => $changeId
+                ]);
+                
+                if($updateChangeClassStmt->rowCount() > 0) {
+                    $successResults[] = "Request $changeId rejected";
+                } else {
+                    throw new Exception("Status update failed");
+                }
+                
+            } catch (Exception $e) {
+                $errorResults[] = "Request $changeId rejection failed: " . $e->getMessage();
+                error_log("Rejection failed for request $changeId: " . $e->getMessage());
+            }
         }
     }
 
-    if (!empty($rejectionErrors)) {
-        $_SESSION['message'] = "Cannot reject already approved requests for requests: " . implode(", ", $rejectionErrors) . ". \nOther requests were processed successfully.";
-    } elseif ($success == 0) {
-        $_SESSION['message'] = "Failed to change class. Please Try Again Later!";
-    } else {
-        $_SESSION['message'] = "Successful to " . ($action == 'approved' ? 'approve' : 'reject') . " class change request(s)!";
+    $message = "";
+    if(!empty($successResults)) {
+        $message .= "Successful operations:\n" . implode("\n", $successResults) . "\n\n";
     }
+    if(!empty($errorResults)) {
+        $message .= "Failed operations:\n" . implode("\n", $errorResults) . "\n\n";
+    }
+
+    if(empty($successResults) && empty($errorResults)) {
+        $message = "No operations performed";
+    }
+
+    $_SESSION['message'] = $message;
     header("Location: manageChangeClass.php");
     exit();
 }
 
 if (!empty($keywords)) {
-
 $getChangeClassSql = "SELECT student_change_class_id, student_change_class_reason AS reason, student_original_class AS Ori, student_prefer_class AS Prefer, student_id, status 
                     FROM student_change_class
                     WHERE student_id like :keywords";
@@ -220,7 +281,11 @@ if ($page > $total_pages && $total_pages > 0) {
                     <?php if ($records_per_page === 'ALL'): ?>
                         <?php foreach ($ChangeClassData as $row): ?>
                             <tr>
-                                <td><input type="checkbox" name="selected_classes[]" value="<?= htmlspecialchars($row['student_change_class_id'].'|'.$row['student_id'].'|'.$row['Prefer'].'|'.$row['Ori'].'|'.$row['status'])?>"></td>
+                                <td>
+                                    <input type="checkbox" name="selected_classes[]" 
+                                        value="<?= htmlspecialchars($row['student_change_class_id'].'|'.$row['student_id'].'|'.$row['Prefer'].'|'.$row['Ori'].'|'.$row['status'])?>"
+                                        <?php echo ($row['status'] != 'pending') ? 'disabled' : ''; ?>>
+                                </td>
                                 <td><?php echo htmlspecialchars($row['student_change_class_id']); ?></td>
                                 <td><?php echo htmlspecialchars($row['student_id']); ?></td>
                                 <td><?php echo htmlspecialchars($row['Ori']); ?></td>
@@ -232,7 +297,11 @@ if ($page > $total_pages && $total_pages > 0) {
                     <?php else: ?>
                         <?php for ($i = $start; $i < $start + $records_per_page && $i < count($ChangeClassData); $i++): ?>
                             <tr>
-                                <td><input type="checkbox" name="selected_classes[]" value="<?= htmlspecialchars($ChangeClassData[$i]['student_change_class_id'].'|'.$ChangeClassData[$i]['student_id'].'|'.$ChangeClassData[$i]['Prefer'].'|'.$ChangeClassData[$i]['Ori'].'|'.$ChangeClassData[$i]['status'])?>"></td>
+                                <td>
+                                    <input type="checkbox" name="selected_classes[]" 
+                                        value="<?= htmlspecialchars($ChangeClassData[$i]['student_change_class_id'].'|'.$ChangeClassData[$i]['student_id'].'|'.$ChangeClassData[$i]['Prefer'].'|'.$ChangeClassData[$i]['Ori'].'|'.$ChangeClassData[$i]['status'])?>"
+                                        <?php echo ($ChangeClassData[$i]['status'] != 'pending') ? 'disabled' : ''; ?>>
+                                </td>
                                 <td><?php echo htmlspecialchars($ChangeClassData[$i]['student_change_class_id']); ?></td>
                                 <td><?php echo htmlspecialchars($ChangeClassData[$i]['student_id']); ?></td>
                                 <td><?php echo htmlspecialchars($ChangeClassData[$i]['Ori']); ?></td>

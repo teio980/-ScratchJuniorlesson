@@ -14,8 +14,8 @@ include 'reshead.php';
     <div class="main_form">
         <form action="includes/insert_UserMassage.php" method="post" class="form_content">
         <h1>Leave Us A Massage</h1>
-        <label for="phoneNumber">Phones No.:</label>
-        <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="012-xxxxxxxx" pattern="[0-9]{3}-[0-9]{7,8}" required>
+        <label for="phoneNumber">Phones No. (Example: 012-3456789):</label>
+        <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="xxx-xxxxxxxx" pattern="[0-9]{3}-[0-9]{7,8}" required>
         <label for="Massage">Massage:</label>
         <textarea id="Massage" name="U_Massage" maxlength="500" placeholder="content" required></textarea>
         <button type="submit">Send Massage</button>
