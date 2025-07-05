@@ -137,7 +137,11 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><?php echo htmlspecialchars($data['lesson_id']) ?></td>
                             <td><?php echo htmlspecialchars($data['title']) ?></td>
                             <td><?php echo htmlspecialchars($data['description']) ?></td>
-                            <td><?php echo htmlspecialchars($data['file_name']) ?></td>
+                            <td>
+                                <a href="../phpfile/uploads/lesson/<?php echo htmlspecialchars($data['file_name']); ?>" download>
+                                    <?php echo htmlspecialchars($data['file_name']) ?>
+                                </a>
+                            </td>
                             <td><?php echo htmlspecialchars($data['thumbnail_name']) ?></td>
                             <td><?php echo htmlspecialchars($data['category']) ?></td>
                             <td><?php echo htmlspecialchars($data['grading_criteria']) ?></td>
@@ -150,7 +154,11 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><?php echo htmlspecialchars($dataset[$i]['lesson_id']) ?></td>
                             <td><?php echo htmlspecialchars($dataset[$i]['title']) ?></td>
                             <td><?php echo htmlspecialchars($dataset[$i]['description']) ?></td>
-                            <td><?php echo htmlspecialchars($dataset[$i]['file_name']) ?></td>
+                            <td>
+                                <a href="../phpfile/uploads/lesson/<?php echo htmlspecialchars($dataset[$i]['file_name']); ?>" download>
+                                    <?php echo htmlspecialchars($dataset[$i]['file_name']) ?>
+                                </a>
+                            </td>
                             <td><?php echo htmlspecialchars($dataset[$i]['thumbnail_name']) ?></td>
                             <td><?php echo htmlspecialchars($dataset[$i]['category']) ?></td>
                             <td><?php echo htmlspecialchars($dataset[$i]['grading_criteria']) ?></td>

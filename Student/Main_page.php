@@ -1049,7 +1049,7 @@
             </form>
             <form action="../includes/change_Password.php" method="post" class="changePassword_box">
                 <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($user_id) ?>">
-
+                <div><label>Password must between 8-12 characters. Contain ONE Lowercase, ONE Uppercase, ONE Digit and ONE Symbol.</label></div>
                 <div class="password_box">
                 <label for="old_Password">Old Password:</label>
                 <input type="password" name="old_Password" id="old_Password" required>
