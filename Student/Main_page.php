@@ -999,7 +999,7 @@
                                     <button class="nav right" onclick="nextPuzzle()">&gt;</button>
                                 </div>
                                 <div class="dots">
-                                    <?php for ($i = 1; $i < count($games); $i++): ?>
+                                    <?php for ($i = 0; $i < count($games); $i++): ?>
                                         <span class="dot" id="dot<?= $i ?>"></span>
                                     <?php endfor; ?>
                                 </div>
