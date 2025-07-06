@@ -5,6 +5,26 @@ include '../phpfile/connect.php';
 $user_id = $_SESSION['user_id'];
 $availability_id = $_GET['availability_id'];
 
+$sql = "SELECT class_id FROM student_class WHERE student_id = '$user_id'";
+$resultclass = mysqli_query($connect, $sql);
+
+while ($row = mysqli_fetch_assoc($resultclass)) {
+    $class_id = $row['class_id'];
+    $average_query = "
+        UPDATE student_class sc
+        SET average_score = (
+            SELECT AVG(score) 
+            FROM student_submit 
+            WHERE student_id = '$user_id' 
+            AND class_id = '$class_id'
+            AND score IS NOT NULL
+        )
+        WHERE student_id = '$user_id' 
+        AND class_id = '$class_id'
+    ";
+    mysqli_query($connect, $average_query);
+}
+
 $query = "SELECT class_id, lesson_id, expire_date FROM class_work WHERE availability_id = '$availability_id'";
 $result = mysqli_query($connect, $query);
 $row = mysqli_fetch_assoc($result);
@@ -28,7 +48,7 @@ $existing_submission = mysqli_fetch_assoc($result3);
 
 $uploadMessage = "";
 
-if (isset($_FILES['file'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $filename = str_replace(' ', '_', basename($_FILES['file']['name']));
     $file_ext = pathinfo($filename, PATHINFO_EXTENSION);
 
@@ -53,12 +73,7 @@ if (isset($_FILES['file'])) {
                     unlink($existing_submission['filepath']);
                 }
 
-                $update = "UPDATE student_submit 
-                          SET filename = '$filename', 
-                          score = NULL, 
-                          description = NULL, 
-                          upload_time = NOW() 
-                          WHERE submit_id = '{$existing_submission['submit_id']}'";
+                $update = "UPDATE student_submit SET filename = '$filename', upload_time = NOW() WHERE submit_id = '{$existing_submission['submit_id']}'";
                 mysqli_query($connect, $update);
                 header("Location: Main_page.php?msg=updated");
                 exit();
@@ -122,7 +137,6 @@ if ($expire_time > $current_time) {
             View Submitted File
         </a>
         <p>You can re-upload to update your submission below.</p>
-        <p style="color: red; ">#If a student resubmits the work and it has already been signed by the teacher, the score will be changed to zero.</p>
       </div>
     <?php endif; ?>
 
