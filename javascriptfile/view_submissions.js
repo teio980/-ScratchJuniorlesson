@@ -1,16 +1,16 @@
 function downloadAll() {
     try {
-        var links = document.querySelectorAll('a.download-link');
+        const links = document.querySelectorAll('a.download-link');
         if (links.length === 0) {
             alert('No downloadable files found');
             return;
         }
 
-        var delay = 0;
-        links.forEach(function(link) {
-            setTimeout(function() {
+        let delay = 0;
+        links.forEach(link => {
+            setTimeout(() => {
                 try {
-                    var a = document.createElement('a');
+                    const a = document.createElement('a');
                     a.href = link.href;
                     a.download = link.getAttribute('data-filename') || link.href.split('/').pop();
                     document.body.appendChild(a);
@@ -20,7 +20,7 @@ function downloadAll() {
                     console.error('Error downloading file:', e);
                 }
             }, delay);
-            delay += 500; 
+            delay += 500;
         });
     } catch (e) {
         console.error('Error in downloadAll:', e);
@@ -29,11 +29,9 @@ function downloadAll() {
 }
 
 function openRatingModal(submit_id, student_id, lesson_id) {
-    fetch('../phpfile/get_lesson_criteria.php?lesson_id=' + lesson_id)
+    fetch(`../phpfile/get_lesson_criteria.php?lesson_id=${lesson_id}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
         })
         .then(data => {
@@ -42,7 +40,7 @@ function openRatingModal(submit_id, student_id, lesson_id) {
             
             form.querySelector('#criteriaContainer').innerHTML = '';
             
-            if (!data || !data.grading_criteria) {
+            if (!data?.grading_criteria) {
                 throw new Error('Invalid grading criteria data');
             }
             
@@ -58,20 +56,21 @@ function openRatingModal(submit_id, student_id, lesson_id) {
                 div.innerHTML = `
                     <label for="criteria_${index}">${name} (0-${maxScore}):</label>
                     <input type="number" name="criteria[]" id="criteria_${index}" 
-                           min="0" max="${maxScore}" value="${data.existing_scores ? data.existing_scores[index] || 0 : 0}" 
+                           min="0" max="${maxScore}" 
+                           value="${data.existing_scores?.[index] || 0}" 
                            onchange="calculateTotalScore(${maxScore}, this)">
                     <span class="max-score">/ ${maxScore}</span>
                 `;
                 form.querySelector('#criteriaContainer').appendChild(div);
             });
             
-            form.querySelector('#criteriaContainer').innerHTML += `
+            form.querySelector('#criteriaContainer').insertAdjacentHTML('beforeend', `
                 <div class="total-score">
                     <strong>Total Score: </strong>
                     <span id="displayTotal">${data.existing_score || 0}</span> / ${totalMaxScore}
                     <input type="hidden" name="total_score" id="total_score" value="${data.existing_score || 0}">
                 </div>
-            `;
+            `);
 
             document.getElementById('feedback').value = data.feedback || '';
             
@@ -88,8 +87,8 @@ function openRatingModal(submit_id, student_id, lesson_id) {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to load grading criteria. Please try again.');
-        }); 
+            showNotification('Failed to load grading criteria', 'error');
+        });
 }
 
 function calculateTotalScore(maxScore, inputElement) {
@@ -118,7 +117,7 @@ function closeRatingModal() {
 }
 
 function deleteSubmission(submit_id) {
-    if (confirm('Are you sure you want to delete this submission? This action cannot be undone.')) {
+    if (confirm('Are you sure you want to delete this submission?')) {
         fetch('../phpfile/delete_submission.php', {
             method: 'POST',
             headers: {
@@ -129,24 +128,142 @@ function deleteSubmission(submit_id) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Submission deleted successfully.');
-                location.reload();
+                document.querySelector(`tr[data-submit-id="${submit_id}"]`)?.remove();
+                showNotification('Submission deleted', 'success');
             } else {
-                alert('Failed to delete submission: ' + (data.error || 'Unknown error'));
+                throw new Error(data.error || 'Delete failed');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('An error occurred while deleting the submission.');
+            showNotification(error.message, 'error');
         });
     }
 }
 
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+function updateSubmissionRow(data) {
+    const row = document.querySelector(`tr[data-submit-id="${data.submit_id}"]`);
+    if (!row) return;
+
+    const scoreCell = row.querySelector('.score-cell, td:nth-child(9)');
+    if (scoreCell) scoreCell.textContent = `${data.newAverage}%`;
+    
+    const statusCell = row.querySelector('.status-cell, td:nth-child(10)');
+    if (statusCell) {
+        statusCell.innerHTML = data.newAverage >= 40 ? '✅ Pass' : '❌ Fail';
+    }
+    
+    row.style.backgroundColor = 'rgba(76, 175, 80, 0.3)';
+    setTimeout(() => row.style.backgroundColor = '', 1000);
+}
+
+function handleFormSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Saving...';
+
+    const formData = new FormData(form);
+    const optimisticData = {
+        submit_id: formData.get('submit_id'),
+        newAverage: formData.get('total_score')
+    };
+    updateSubmissionRow(optimisticData);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Network error');
+        return response.json();
+    })
+    .then(data => {
+        if (!data.success) throw new Error(data.error || 'Update failed');
+        
+        updateSubmissionRow(data);
+        closeRatingModal();
+        showNotification('Score updated successfully', 'success');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification(error.message, 'error');
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    const ratingForm = document.getElementById('ratingForm');
+    if (ratingForm) {
+        ratingForm.addEventListener('submit', handleFormSubmit);
+    }
+
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            const submit_id = this.dataset.submitId;
-            deleteSubmission(submit_id);
+            deleteSubmission(this.dataset.submitId);
         });
     });
+
+    const modal = document.getElementById('ratingModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this || e.target.classList.contains('cancel-btn')) {
+                closeRatingModal();
+            }
+        });
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `
+        .spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: #2ecc71;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        .notification.error {
+            background: #e74c3c;
+        }
+        .notification.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    `;
+    document.head.appendChild(style);
 });

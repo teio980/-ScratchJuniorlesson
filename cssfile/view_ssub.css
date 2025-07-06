@@ -428,3 +428,10 @@ button:hover {
     }
 }
 
+.updated-row {
+    transition: background-color 0.1s;
+}
+
+.notification {
+    opacity: 1;
+}
