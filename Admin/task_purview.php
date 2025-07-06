@@ -47,7 +47,7 @@ if (!empty($keywords)) {
     $get_Class_Work_Stmt->execute();
     $Class_Works = $get_Class_Work_Stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $get_Class_Work_Sql = "SELECT * FROM class_work WHERE class_id";
+    $get_Class_Work_Sql = "SELECT * FROM class_work ";
     $get_Class_Work_Stmt = $pdo->prepare($get_Class_Work_Sql);
     $get_Class_Work_Stmt->execute();
     $Class_Works = $get_Class_Work_Stmt->fetchAll(PDO::FETCH_ASSOC);

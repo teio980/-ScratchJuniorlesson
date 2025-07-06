@@ -122,7 +122,7 @@ if ($page > $total_pages && $total_pages > 0) {
                 </tr>
             </thead>
             <tbody>
-            <?php if (!empty($dataset)): ?>
+            <?php if (!empty($S_Game_Progress)): ?>
                 <?php 
                 if ($records_per_page === 'ALL') {
                     foreach ($S_Game_Progress as $row): ?>

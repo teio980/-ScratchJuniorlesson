@@ -6,6 +6,11 @@ function showEditForm() {
         return;
     }
 
+    if (checkboxes.length < 1) {
+        alert("Please select at least ONE user to edit.");
+        return;
+    }
+
     const row = checkboxes[0].closest('tr');
     const cells = row.querySelectorAll('td');
 

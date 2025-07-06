@@ -243,7 +243,7 @@ if ($page > $total_pages && $total_pages > 0) {
                 <span class="material-symbols-outlined">search</span>
             </button>
         </form>
-        <a href="manageChangeClass.php" class="clear_search"><span class="material-symbols-outlined">close</span></a>
+        <a href="manageChangeClass.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
     </div>
 
     <div class="records-per-page">

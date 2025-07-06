@@ -46,7 +46,7 @@ if (!empty($keywords)) {
     $get_T_Materials_Stmt->execute();
     $T_Materials = $get_T_Materials_Stmt->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    $get_T_Materials_Sql = "SELECT * FROM teacher_materials WHERE title";
+    $get_T_Materials_Sql = "SELECT * FROM teacher_materials";
     $get_T_Materials_Stmt = $pdo->prepare($get_T_Materials_Sql);
     $get_T_Materials_Stmt->execute();
     $T_Materials = $get_T_Materials_Stmt->fetchAll(PDO::FETCH_ASSOC);

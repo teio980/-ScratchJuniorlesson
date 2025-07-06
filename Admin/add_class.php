@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
     }else{
         echo "<script>
-            alert('Class Add Failde! Please Try Again.');
+            alert('Class Add Failded! Please Try Again.');
             window.location.href = 'manageClass.php';
             </script>";
             exit();

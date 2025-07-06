@@ -161,6 +161,7 @@ if ($page > $total_pages && $total_pages > 0) {
                 </tr>
             </thead>
             <tbody>
+                <?php if (!empty($ClassPerformanceDetail)): ?>
                 <?php 
                 if ($records_per_page === 'ALL') {
                     foreach ($ClassPerformanceDetail as $row): ?>
@@ -201,6 +202,11 @@ if ($page > $total_pages && $total_pages > 0) {
                         </tr>
                     <?php endfor;
                 } ?>
+                <?php else: ?>
+                <tr>
+                    <td colspan="10">No Class Performance Record.</td>
+                </tr>
+                <?php endif; ?>
             </tbody>
         </table>
         <button onclick="printTable()" class="print_button">Print Table</button>

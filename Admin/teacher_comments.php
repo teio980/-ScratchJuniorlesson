@@ -90,12 +90,12 @@ if ($page > $total_pages && $total_pages > 0) {
             <?php if (isset($_GET['limit'])): ?>
                 <input type="hidden" name="limit" value="<?php echo htmlspecialchars($_GET['limit']); ?>">
             <?php endif; ?>
-            <input type="text" name="query" id="searchInput" placeholder="Search Teacher ID..."  value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>" required>
+            <input type="text" name="query" id="searchInput" placeholder="Search Sender ID..."  value="<?php echo htmlspecialchars($_SESSION['search_query']); ?>" required>
             <button type="submit" class="search-button" name="search">
                 <span class="material-symbols-outlined">search</span>
             </button>
         </form>
-        <a href="manageUser.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
+        <a href="teacher_comments.php?clear_search=1" class="clear_search"><span class="material-symbols-outlined">close</span></a>
     </div>
     
     <div class="records-per-page">
