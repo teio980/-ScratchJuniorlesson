@@ -10,6 +10,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $class_description = $_POST["Class_description"];
     $max_capacity = $_POST["max_capacity"];
 
+    $checkClassCodeSql = "SELECT class_code from class WHERE class_code = :C_C";
+    $checkClassCodeStmt = $pdo->prepare($checkClassCodeSql);
+    $checkClassCodeStmt->bindParam(":C_C",$class_code);
+    $checkClassCodeStmt->execute();
+
+    if ($checkClassCodeStmt->rowCount() > 0) {
+        echo "<script>
+            alert('Class Code exists! Please Try Again with other Class Code');
+            window.location.href = 'manageClass.php';
+            </script>";
+            exit();
+    }
+
     $getTeacherIdSql = "SELECT teacher_id from teacher WHERE T_Username = :name";
     $getTeacherIdStmt = $pdo->prepare($getTeacherIdSql);
     $getTeacherIdStmt->bindParam(':name', $Teacher);

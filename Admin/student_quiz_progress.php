@@ -124,7 +124,7 @@ if ($page > $total_pages && $total_pages > 0) {
                 </tr>
             </thead>
             <tbody>
-            <?php if (!empty($dataset)): ?>
+            <?php if (!empty($S_Quiz_Progress)): ?>
                 <?php 
                 if ($records_per_page === 'ALL') {
                     foreach ($S_Quiz_Progress as $row): ?>
@@ -135,9 +135,9 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><?= htmlspecialchars($row['student_answer']) ?></td>
                             <?php
                             if ($row['is_correct'] == 1){
-                                echo "<td><div style='color:green;font-weight: bold;background-color: lightgreen;border-radius: 20px;'>Correct</div></td>";
+                                echo "<td><div style='color:green;font-weight: bold;background-color: lightgreen;border-radius: 20px;padding:0px 0px 0px 120px;'>Correct</div></td>";
                             }else{
-                                echo "<td><div style='color:red;font-weight: bold;background-color: indianred;border-radius: 20px;'>Wrong</div></td>";
+                                echo "<td><div style='color:red;font-weight: bold;background-color: indianred;borde r-radius: 20px;padding:0px 0px 0px 120px;'>Wrong</div></td>";
                             }
                             ?>
                             <td><?= htmlspecialchars($row['difficult']) ?></td>
@@ -152,9 +152,9 @@ if ($page > $total_pages && $total_pages > 0) {
                             <td><?= htmlspecialchars($S_Quiz_Progress[$i]['student_answer']) ?></td>
                             <?php
                             if ($S_Quiz_Progress[$i]['is_correct'] == 1){
-                                echo "<td><div style='color:green;font-weight: bold;background-color: lightgreen;border-radius: 20px;'>Correct</div></td>";
+                                echo "<td><div style='color:green;font-weight: bold;background-color: lightgreen;border-radius: 20px;padding:0px 0px 0px 120px;'>Correct</div></td>";
                             }else{
-                                echo "<td><div style='color:red;font-weight: bold;background-color: indianred;border-radius: 20px;'>Wrong</div></td>";
+                                echo "<td><div style='color:red;font-weight: bold;background-color: indianred;borde r-radius: 20px;padding:0px 0px 0px 120px;'>Wrong</div></td>";
                             }
                             ?>
                             <td><?= htmlspecialchars($S_Quiz_Progress[$i]['difficult']) ?></td>
