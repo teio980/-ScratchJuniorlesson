@@ -425,7 +425,7 @@
 
             if (!empty($pending_cards)) {
                 echo '
-                <div class="section-divider"><span class="section-title">Not Yet Submitted</span></div>
+                <div class="section-divider"><span class="section-title">Not Submitted Yet</span></div>
                 <div class="announcement-wrapper">' . $pending_cards . '</div>';
             }
 

@@ -137,6 +137,7 @@ if ($expire_time > $current_time) {
             View Submitted File
         </a>
         <p>You can re-upload to update your submission below.</p>
+        <p style="color: red;">#If edit the submission after it has been marked by the teacher, the mark will be zero.</p>
       </div>
     <?php endif; ?>
 
