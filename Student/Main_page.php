@@ -918,21 +918,37 @@
                         </form>
 
                         <div class="chat-messages">
-                            <?php
-                            $sql = "SELECT student_livechat.*, student.S_Username FROM student_livechat
-                                    JOIN student ON student_livechat.student_id = student.student_id
-                                    ORDER BY student_livechat.createtime DESC";
-                            $result = mysqli_query($connect, $sql);
-                            
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                $chat_class = ($row['student_id'] == $user_id) ? 'user' : 'other';
-                                echo "<div class='chat-message $chat_class'>";
-                                echo "<strong>" . htmlspecialchars($row['S_Username']) . ":</strong> ";
-                                echo htmlspecialchars($row['chat']);
-                                echo "</div>";
-                            }
-                            ?>
-                        </div>
+    <?php
+    if (isset($_POST['chat_id'])) {
+        $chat_id = intval($_POST['chat_id']);
+        $user_id = $_SESSION['user_id'];
+        $sql = "DELETE FROM student_livechat WHERE id = $chat_id AND student_id = '$user_id'";
+        mysqli_query($connect, $sql);
+    }
+
+    $sql = "SELECT student_livechat.*, student.S_Username FROM student_livechat
+            JOIN student ON student_livechat.student_id = student.student_id
+            ORDER BY student_livechat.createtime DESC";
+    $result = mysqli_query($connect, $sql);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $chat_class = ($row['student_id'] == $user_id) ? 'user' : 'other';
+        echo "<div class='chat-message $chat_class'>";
+        echo "<strong>" . htmlspecialchars($row['S_Username']) . ":</strong> ";
+        echo htmlspecialchars($row['chat']);
+        if ($row['student_id'] == $user_id) {
+            echo "<form method='POST' style='display:inline;'>
+                    <input type='hidden' name='chat_id' value='" . intval($row['id']) . "'>
+                    <button type='submit' onclick='return confirm(\"Are you sure?\")' style='margin-left: 10px;'>Delete</button>
+                  </form>";
+        }
+        echo "</div>";
+    }
+    ?>
+</div>
+
+
+
                     </div>
                 </div>        
             </div>
