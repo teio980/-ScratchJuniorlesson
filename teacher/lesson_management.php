@@ -95,10 +95,8 @@ if (isset($_POST['update'])) {
     $lesson_id = $_POST['lesson_id'];
     $title = $_POST['title'];
     $description = $_POST['description'];
-    $category = $_POST['category'];
     $grading_criteria = isset($_POST['scoring_criteria']) ? $_POST['scoring_criteria'] : '';
     
-    // Get current file info
     $sql = "SELECT file_name, thumbnail_name FROM lessons WHERE lesson_id = ?";
     $stmt = $connect->prepare($sql);
     $stmt->bind_param("s", $lesson_id);
@@ -371,15 +369,6 @@ function generateUniqueFilename($directory, $filename) {
                         </div>
                         
                         <div class="form-group">
-                            <label for="category">Category:</label>
-                            <select id="category" name="category" required>
-                                <option value="Assignment" <?php echo $edit_row['category'] == 'Assignment' ? 'selected' : ''; ?>>Assignment</option>
-                                <option value="Project" <?php echo $edit_row['category'] == 'Project' ? 'selected' : ''; ?>>Project</option>
-                                <option value="Exercise" <?php echo $edit_row['category'] == 'Exercise' ? 'selected' : ''; ?>>Exercise</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
                             <label for="thumbnail">Thumbnail (JPG/PNG only):</label>
                             <input type="file" id="thumbnail" name="thumbnail" accept="image/jpeg,image/png">
                             <div class="file-info">Current: <?php echo htmlspecialchars($edit_row['thumbnail_name']); ?></div>
@@ -399,7 +388,7 @@ function generateUniqueFilename($directory, $filename) {
                                 <div>
                                     <label for="criteria_count">Number of Criteria:</label>
                                     <select id="criteria_count" name="criteria_count" class="small-select">
-                                        <?php for($i=1; $i<=5; $i++): ?>
+                                        <?php for($i=1; $i<=10; $i++): ?>
                                             <option value="<?php echo $i; ?>" <?php echo count($existing_criteria) == $i ? 'selected' : ''; ?>>
                                                 <?php echo $i; ?>
                                             </option>

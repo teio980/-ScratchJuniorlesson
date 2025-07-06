@@ -11,7 +11,7 @@ $teacher_id = $_SESSION['user_id'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Assigned Lessons</title>
+    <title>My Assigned Tasks</title>
     <link rel="stylesheet" href="../cssfile/Teachermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/assigned_lessons.css">
@@ -29,7 +29,7 @@ $teacher_id = $_SESSION['user_id'];
 </head>
 <body>
     <div class="container">
-        <h1>My Assigned Lessons by Class</h1>
+        <h1>My Assigned Tasks by Class</h1>
         
         <?php
         // Handle comment deletion if requested

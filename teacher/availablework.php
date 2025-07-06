@@ -12,7 +12,7 @@ $teacher_id = $_SESSION['user_id'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assign Lesson to Class</title>
+    <title>Assign Tasks to Class</title>
     <link rel="stylesheet" href="../cssfile/Teachermain.css">
     <link rel="stylesheet" href="../cssfile/resheadteacher.css">
     <link rel="stylesheet" href="../cssfile/availablework.css">
@@ -20,7 +20,7 @@ $teacher_id = $_SESSION['user_id'];
 <body>
     <div class="container">
         <div class="section-container">
-            <h2 class="section-title">Assign Lesson to Class</h2>
+            <h2 class="section-title">Assign Tasks to Class</h2>
             <form method="POST" action="">
                 <div class="form-group">
                     <label>Select Class:</label>
