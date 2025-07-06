@@ -4,7 +4,6 @@ include '../phpfile/connect.php';
 include '../includes/connect_DB.php';
 
 function deleteSubmission($connect, $submit_id) {
-    // 获取学生和班级信息
     $info_query = "SELECT student_id, class_id FROM student_submit WHERE submit_id = ?";
     $stmt = mysqli_prepare($connect, $info_query);
     mysqli_stmt_bind_param($stmt, "s", $submit_id);
@@ -16,7 +15,6 @@ function deleteSubmission($connect, $submit_id) {
         return false;
     }
     
-    // 删除记录
     $delete_query = "DELETE FROM student_submit WHERE submit_id = ?";
     $stmt = mysqli_prepare($connect, $delete_query);
     mysqli_stmt_bind_param($stmt, "s", $submit_id);
@@ -26,7 +24,6 @@ function deleteSubmission($connect, $submit_id) {
         return false;
     }
     
-    // 更新学生平均分
     $average_query = "
         UPDATE student_class sc
         SET average_score = (
@@ -44,7 +41,6 @@ function deleteSubmission($connect, $submit_id) {
                       $info['student_id'], $info['class_id']);
     mysqli_stmt_execute($avg_stmt);
     
-    // 更新班级平均分
     $class_avg_query = "
         UPDATE class c
         SET class_average = (
@@ -62,12 +58,10 @@ function deleteSubmission($connect, $submit_id) {
     return true;
 }
 
-// 处理删除请求
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_id'])) {
     $submit_id = $_POST['submit_id'];
     $teacher_id = $_SESSION['user_id'];
     
-    // 验证老师是否有权限删除此提交
     $check_query = "
         SELECT 1 
         FROM student_submit ss

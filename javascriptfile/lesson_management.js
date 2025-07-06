@@ -10,58 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    const categorySelect = document.getElementById('category');
-    const titleInput = document.getElementById('title');
-    
-    if (categorySelect && titleInput) {
-        const prefixes = {
-            'Assignment': 'Assignment - ',
-            'Project': 'Project - ',
-            'Exercise': 'Exercise - '
-        };
-        
-        const currentCategory = categorySelect.value;
-        const currentTitle = titleInput.value;
-        
-        if (currentCategory in prefixes && !currentTitle.startsWith(prefixes[currentCategory])) {
-            let cleanTitle = currentTitle;
-            for (const prefix of Object.values(prefixes)) {
-                if (currentTitle.startsWith(prefix)) {
-                    cleanTitle = currentTitle.slice(prefix.length);
-                    break;
-                }
-            }
-            titleInput.value = prefixes[currentCategory] + cleanTitle;
-        }
-        
-        categorySelect.addEventListener('change', function() {
-            const selectedCategory = this.value;
-            const currentTitle = titleInput.value;
-            const newPrefix = prefixes[selectedCategory] || '';
-            
-            if (!currentTitle || Object.values(prefixes).some(prefix => currentTitle.startsWith(prefix))) {
-                titleInput.value = newPrefix;
-            }
-        });
-        
-        titleInput.addEventListener('input', function() {
-            const selectedCategory = categorySelect.value;
-            const currentTitle = this.value;
-            const expectedPrefix = prefixes[selectedCategory] || '';
-            
-            if (selectedCategory && expectedPrefix && !currentTitle.startsWith(expectedPrefix)) {
-                let cleanTitle = currentTitle;
-                for (const prefix of Object.values(prefixes)) {
-                    if (currentTitle.startsWith(prefix)) {
-                        cleanTitle = currentTitle.slice(prefix.length);
-                        break;
-                    }
-                }
-                this.value = expectedPrefix + cleanTitle;
-            }
-        });
-    }
-    
     const lessonEditForm = document.getElementById('lessonEditForm');
     if (lessonEditForm) {
         lessonEditForm.addEventListener('submit', function(e) {

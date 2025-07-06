@@ -107,6 +107,6 @@ if ($Classid && mysqli_num_rows($Classid) > 0) {
                 ?>
             </tbody>
         </table>
-    </div> <!-- 关闭 class-overview-container -->
+    </div>
 </body>
 </html>
